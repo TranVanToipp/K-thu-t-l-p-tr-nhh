@@ -593,31 +593,27 @@ public class CProgrammer extends NhanVien {
 
 
 file bài 3 main: 
-import java.awt.List;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Scanner;
-import java.util.Vector;
 
-public class T2_BaiTap3 {
+public class BaiTap3 {
 
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		System.out.print("Nhập danh sách các nhân viên: ");
-		int n = input.nextInt();// n là số nhân viên
+		int n = input.nextInt();
 		NhanVien[] nhanvien = new NhanVien[n];
 
 		System.out.print("Nhập thông tin cho nhân viên: ");
 		for (int i = 0; i < n; i++) {
-			System.out.print("Nhập thông tin sinh viên thứ + " + i + 1 + ":");
+			System.out.print("Nhập thông tin sinh viên thứ " + (i + 1) + ":");
 			System.out.print("Chọn loại nhân viên: (1. Nhân viên lập trình, 2 - Nhân viên kiểm chứng:)");
 			int chon = input.nextInt();
 			if (chon == 1) {
-				nhanvien[i] = new CProgrammer();
+				nhanvien[i] = new CProgram();
 			} else if (chon == 2) {
-				nhanvien[i] = new C_Tester();
+				nhanvien[i] = new C_Testter();
 			}
 			nhanvien[i].Nhap();
 			nhanvien[i].TinhLuong();
@@ -627,37 +623,38 @@ public class T2_BaiTap3 {
 		for (int i = 0; i < n; i++) {
 			System.out.println(nhanvien[i].toString());
 		}
-		System.out.print("Sắp xếp các nhân viên theo thứ tự lương giảm dần: ");
+
+		nhanvien = sortLuong(nhanvien);
+		System.out.println("Sắp xếp các nhân viên theo hệ số lương giầm dần: ");
 		for (int i = 0; i < nhanvien.length; i++) {
-			for (int j = i + 1; j < nhanvien.length; j++) {
-				NhanVien temp;
-				if (nhanvien[i].getHeSoLuong() < nhanvien[j].getHeSoLuong()) {
-					temp = nhanvien[i];
-					nhanvien[i] = nhanvien[j];
-					nhanvien[j] = temp;
-				}
-			}
-			System.out.print("Sắp xếp giảm theo hệ số lương: " + nhanvien[i].getHeSoLuong());
+			System.out.println(nhanvien[i].toString());
 		}
 
 	}
 
-	public static void SortLuong(NhanVien[] nhanvien) {
-		for (int i = 0; i < nhanvien.length; i++) {
-			for (int j = 1; j < nhanvien.length; j++) {
-				NhanVien temp;
-				if (nhanvien[i].getHeSoLuong() > nhanvien[j].getHeSoLuong()) {
-					temp = nhanvien[i];
-					nhanvien[i] = nhanvien[j];
-					nhanvien[j] = temp;
-				}
+	public static NhanVien[] sortLuong(NhanVien[] nhanvien) {
+		Arrays.sort(nhanvien, new Comparator<NhanVien>() {
+			@Override
+			public int compare(NhanVien o1, NhanVien o2) {
+				return Double.compare(o2.getHeSoLuong(), o1.getHeSoLuong());
 			}
-
-		}
-
+		});
+		return nhanvien;
+		
+		
+		
+//		for (int j = i + 1; j < nhanvien.length; j++) {
+//			NhanVien temp;
+//			if (nhanvien[i].getHeSoLuong() < nhanvien[j].getHeSoLuong()) {
+//				temp = nhanvien[i];
+//				nhanvien[i] = nhanvien[j];
+//				nhanvien[j] = temp;
+//			}
+//		}
 	}
 
 }
+
 Nhân viên: 
 import java.util.Scanner;
 
@@ -772,6 +769,9 @@ public class NhanVien {
 		m_Address = input.nextLine();
 		System.out.print("Hệ số lương: ");
 		m_WageCoefficient = input.nextDouble();
+		System.out.print("Lương cơ bản: ");
+		LuongCoBan = input.nextInt();
+		
 	}
 
 	public int TinhLuong() {
@@ -780,8 +780,7 @@ public class NhanVien {
 
 	@Override
 	public String toString() {
-		return "mã nhân viên: " + this.m_ID +" "+ "Tên nhân viên: " + this.m_Name +" "+ "Ngày tháng năm sinh: " + m_Birthday
-				+" "+ "Địa chỉ: " + m_Address +" "+ "Hệ số lương: " + m_WageCoefficient +" "+ "Lương Cơ bản" + LuongCoBan
-				+" "+ " Hệ số lương: " + HeSoLuong;
+		return "mã nhân viên: " + this.m_ID +" "+ "Tên nhân viên: " + this.m_Name +" "+ "Ngày tháng năm sinh: " +this.m_Birthday
+				+" "+ "Địa chỉ: " +this.m_Address +" "+ "Hệ số lương: " + this.m_WageCoefficient +" "+ "Lương Cơ bản" + this.LuongCoBan;
 	}
 }
