@@ -51,3 +51,737 @@ public class BaiTap1 {
 		
 	}
 }
+
+
+
+
+// Bài 1: 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+public class BaiTap1 {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		System.out.print("S1: ");
+		String s1 = input.nextLine();
+
+		System.out.print("S2: ");
+		String s2 = input.nextLine();
+		System.out.print("S1 Hội S2 là:");
+		Hoi(s1, s2);
+		String s3 = s1 + " " + s2;
+		// sử dụng phương thức replaceAll() để xóa khoảng trắng
+		String s4 = s3.replaceAll(" ", "");
+		String[] array = s4.split("");
+		Map<String, Integer> map = new HashMap<>();
+		for (String c : array) {
+			String key = c.toLowerCase();
+			if (!map.containsKey(key)) {
+				map.put(key, 1);
+			}else {
+				int count = map.get(key) + 1;
+				map.put(key, count);
+			}
+		}
+		
+		for (Map.Entry<String, Integer> entry : map.entrySet()) {
+			String key = entry.getKey();
+			int count = entry.getValue();
+			String upper = key.toUpperCase();
+			String lower = key.toLowerCase();
+			
+			if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
+				System.out.println(lower + "(" + upper + "):" + count);
+			}else if (s4.indexOf(upper) != -1) {
+				System.out.println(upper + ":" + count);
+			}else if (s4.indexOf(lower) != -1) {
+				System.out.println(lower + ":" + count);
+			}
+		}
+		
+	}
+
+	public static void CountCharacter(String str) {
+		int[] counter = new int[256];
+
+		int line = str.length();
+		for (int i = 0; i < line; i++) {
+			counter[str.charAt(i)]++;
+		}
+		char array[] = new char[str.length()];
+		for (int i = 0; i < line; i++) {
+			array[i] = str.charAt(i);
+			int flag = 0;
+			for (int j = 0; j <= i; j++) {
+				if (str.charAt(i) == array[j]) {
+					flag++;
+				}
+			}
+
+			if (flag == 1) {
+				System.out.print(str.charAt(i) + ":" + counter[str.charAt(i)] + "\n");
+			}
+		}
+	}
+
+	public static void Hoi(String s1, String s2) {
+		String[] arr1 = s1.split(" ");
+		String[] arr2 = s2.split(" ");
+		
+		for (String str1 : arr1) {
+			for (String str2 : arr2) {
+				if (str1.equalsIgnoreCase(str2)) {
+					System.out.print(str1);
+				}
+			}
+		}
+	} 
+}
+
+
+///Bài 2: file custom: 
+public class Customer {
+	public String Customer_Id;
+	public String Customer_Name;
+	public String Sex;
+	public String Birthday;
+	public String Email;
+	public String Address;
+	public String Point;
+	public Customer() {
+
+	}
+
+	public Customer(String customer_Id, String customer_Name, String sex, String birthday, String email, String address,
+			String point) {
+		super();
+		Customer_Id = customer_Id;
+		Customer_Name = customer_Name;
+		Sex = sex;
+		Birthday = birthday;
+		Email = email;
+		Address = address;
+		Point = point;
+	}
+
+	public String getCustomer_Id() {
+		return Customer_Id;
+	}
+
+	public void setCustomer_Id(String customer_Id) {
+		Customer_Id = customer_Id;
+	}
+
+	public String getCustomer_Name() {
+		return Customer_Name;
+	}
+
+	public void setCustomer_Name(String customer_Name) {
+		Customer_Name = customer_Name;
+	}
+
+	public String isSex() {
+		return Sex;
+	}
+
+	public void setSex(String sex) {
+		Sex = sex;
+	}
+
+	public String getBirthday() {
+		return Birthday;
+	}
+
+	public void setBirthday(String birthday) {
+		Birthday = birthday;
+	}
+
+	public String getEmail() {
+		return Email;
+	}
+
+	public void setEmail(String email) {
+		Email = email;
+	}
+
+	public String getAddress() {
+		return Address;
+	}
+
+	public void setAddress(String address) {
+		Address = address;
+	}
+
+	public String getPoint() {
+		return Point;
+	}
+
+	public void setPoint(String point) {
+		Point = point;
+	}
+
+	@Override
+	public String toString() {
+		return Customer_Id + "\t" + Customer_Name + "\t" + Sex + "\t" + Birthday + "\t" + Email + "\t" + Address + "\t"
+				+ Point;
+	}
+
+}
+
+
+
+file main: 
+
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Logger;
+
+public class BaiTap2 {
+
+	public void writeToFile(List<Customer> list) {
+		try {
+			FileWriter fw = new FileWriter("data.txt");// nếu có đối số true thì xóa hết dữ liệu cũ đi
+			// Add dữ liệu mới vào.
+			BufferedWriter bw = new BufferedWriter(fw);
+			for (Customer o : list) {
+				bw.write(o.toString());
+				bw.newLine();
+			}
+
+			bw.close();
+			fw.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	public List<Customer> readFromFile() {
+		List<Customer> list = new ArrayList<>();
+		try {
+			FileReader fr = new FileReader("data.txt");
+			BufferedReader br = new BufferedReader(fr);
+			String line = "";
+			while (true) {
+				line = br.readLine();
+				if (line == null) {
+					break;
+				}
+				String[] txt = line.split("\\s+");
+				String Customer_Id = txt[0];
+				String Customer_Name = txt[1];
+				String Sex = txt[2];
+				String Birthday = txt[3];
+				String Email = txt[4];
+				String Address = txt[5];
+				String Point = txt[6];
+
+				list.add(new Customer(Customer_Id, Customer_Name, Sex, Birthday, Email, Address, Point));
+//				System.out.println(line);
+			}
+
+//			while ((line = br.readLine()) != null) {
+//				System.out.println(line);
+//				Scanner input = new Scanner(System.in);
+//				System.out.println("Nhập số phần tử: ");
+//				boolean n = input.nextBoolean();
+//				boolean s1 = line.contains("10001");
+//				// s2 = line.contains("10002");
+//				boolean s3 = line.contains("10003");
+//				boolean s4 = line.contains("10004");
+//				
+//				if (n == s1) {
+//					System.out.println("Dòng đầu tiên: "+ line);
+//				}else if (n == line.contains("10002")){
+//					System.out.println("Dòng thứ 2: "+ line);
+//				}else if (n == line.contains("10003")) {
+//					System.out.println("Dòng thứ 3: "+ line);
+//				}else if (n == line.contains("10004")) {
+//					System.out.println("Dòng thứ 4: "+ line);
+//				}
+//			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return list;
+	}
+
+	public static void main(String[] args) {
+		/**
+		 * Bài tập 2: Nhập giá trị từ bàn phím rồi ghi vào file Xong đọc file ghi ra
+		 * file theo nội dung yêu cầu.
+		 */
+
+//		Customer customer = new Customer("CustomerId", "CustomerName", "Sex", "Birthday", "Email", "Address", "Point");
+//		Customer customer1 = new Customer("10001", "弥ノ地", "Female", "2000/01/12", "aaa@example.com", "大阪府", "20");
+//		Customer customer2 = new Customer("10002", "謝花", "Female", "1998/12/06", "bbb@example.com", "東京都", "100");
+//		Customer customer3 = new Customer("10003", "髪時", "Male", "1999/07/28", "ccc@example.com", "広島県", "1100");
+//		Customer customer4 = new Customer("10004", "地之己", "Male", "2001/06/30", "ddd@example.com", "長野県", "120");
+//
+//		List<Customer> list = new ArrayList<>();
+//		list.add(customer);
+//		list.add(customer1);
+//		list.add(customer2);
+//		list.add(customer3);
+//		list.add(customer4);
+
+		BaiTap2 bt = new BaiTap2();
+		List<Customer> list1 = bt.readFromFile();
+		for (Customer o : list1) {
+			System.out.println(o);
+		}
+
+		Scanner input = new Scanner(System.in);
+		System.out.print("Nhập số phần tử n: ");
+		Integer n = input.nextInt();
+		while (n < 10001 || n > 10004) {
+			System.out.print("NOT FOUND");
+			System.out.print("\nNhập số phần tử n: ");
+			n = input.nextInt();
+		}
+		while (n >= 10001 || n <= 10004) {
+			if (n == 10001) {
+				System.out.print(list1.get(1));
+				System.out.print("\nNhập số phần tử n: ");
+				n = input.nextInt();
+			} else if (n == 10002) {
+				System.out.print(list1.get(2));
+				System.out.print("\nNhập số phần tử n: ");
+				n = input.nextInt();
+			} else if (n == 10003) {
+				System.out.print(list1.get(3));
+				System.out.print("\nNhập số phần tử n: ");
+				n = input.nextInt();
+			} else if (n == 10004) {
+				System.out.print(list1.get(4));
+				System.out.print("\nNhập số phần tử n: ");
+				n = input.nextInt();
+			}
+		}
+
+	}
+
+}
+
+
+// bài 3: 
+Nhân viên: 
+import java.util.Scanner;
+
+public class NhanVien {
+	public String m_ID, m_Name, m_Address;
+	public String m_Birthday;
+	public double m_WageCoefficient;
+	protected int Luong, LuongCoBan, HeSoLuong;
+
+	Scanner input = new Scanner(System.in);
+
+	public NhanVien() {
+		super();
+	}
+
+	public NhanVien(String m_ID, String m_Name, String m_Address, String m_Birthday, double m_WageCoefficient, int luong,
+			int luongCoBan, int heSoLuong, Scanner input) {
+		super();
+		this.m_ID = m_ID;
+		this.m_Name = m_Name;
+		this.m_Address = m_Address;
+		this.m_Birthday = m_Birthday;
+		this.m_WageCoefficient = m_WageCoefficient;
+		Luong = luong;
+		LuongCoBan = luongCoBan;
+		HeSoLuong = heSoLuong;
+		this.input = input;
+	}
+
+	public String getM_ID() {
+		return m_ID;
+	}
+
+	public void setM_ID(String m_ID) {
+		this.m_ID = m_ID;
+	}
+
+	public String getM_Name() {
+		return m_Name;
+	}
+
+	public void setM_Name(String m_Name) {
+		this.m_Name = m_Name;
+	}
+
+	public String getM_Address() {
+		return m_Address;
+	}
+
+	public void setM_Address(String m_Address) {
+		this.m_Address = m_Address;
+	}
+
+	public String getM_Birthday() {
+		return m_Birthday;
+	}
+
+	public void setM_Birthday(String m_Birthday) {
+		this.m_Birthday = m_Birthday;
+	}
+
+	public double getM_WageCoefficient() {
+		return m_WageCoefficient;
+	}
+
+	public void setM_WageCoefficient(double m_WageCoefficient) {
+		this.m_WageCoefficient = m_WageCoefficient;
+	}
+
+	public int getLuong() {
+		return Luong;
+	}
+
+	public void setLuong(int luong) {
+		Luong = luong;
+	}
+
+	public int getLuongCoBan() {
+		return LuongCoBan;
+	}
+
+	public void setLuongCoBan(int luongCoBan) {
+		LuongCoBan = luongCoBan;
+	}
+
+	public int getHeSoLuong() {
+		return HeSoLuong;
+	}
+
+	public void setHeSoLuong(int heSoLuong) {
+		HeSoLuong = heSoLuong;
+	}
+
+	public Scanner getInput() {
+		return input;
+	}
+
+	public void setInput(Scanner input) {
+		this.input = input;
+	}
+	
+	
+
+	public void Nhap() {
+		System.out.print("Nhập mã nhân viên: ");
+		m_ID = input.nextLine();
+		System.out.print("Nhập tên nhân viên: ");
+		m_Name = input.nextLine();
+		System.out.print("Nhập ngày tháng năm sinh: ");
+		m_Birthday = input.nextLine();
+		System.out.print("Nhập địa chỉ:");
+		m_Address = input.nextLine();
+		System.out.print("Hệ số lương: ");
+		m_WageCoefficient = input.nextDouble();
+	}
+
+	public int TinhLuong() {
+		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return "mã nhân viên: " + this.m_ID +" "+ "Tên nhân viên: " + this.m_Name +" "+ "Ngày tháng năm sinh: " + m_Birthday
+				+" "+ "Địa chỉ: " + m_Address +" "+ "Hệ số lương: " + m_WageCoefficient +" "+ "Lương Cơ bản" + LuongCoBan
+				+" "+ " Hệ số lương: " + HeSoLuong;
+	}
+}
+
+//C_Testter: 
+
+public class C_Tester extends NhanVien {
+	private int Error;
+
+	public C_Tester() {
+		super();
+	}
+
+	public C_Tester(int error) {
+		super();
+		Error = error;
+	}
+
+	public int getError() {
+		return Error;
+	}
+
+	public void setError(int error) {
+		Error = error;
+	}
+
+	@Override
+	public void Nhap() {
+		super.Nhap();
+		System.out.print("Số lỗi: ");
+		Error = input.nextInt();
+		super.Nhap();
+
+	}
+
+	@Override
+	public int TinhLuong() {
+		this.Luong = this.LuongCoBan + this.HeSoLuong + this.Error * 100000;
+		return super.TinhLuong();
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "Số lỗi đã tìm thấy: " + this.Error;
+	}
+
+}
+
+
+//CProgram:
+
+public class CProgrammer extends NhanVien {
+	private double Overtime;
+
+	public CProgrammer() {
+		super();
+	}
+	
+	public CProgrammer(double overtime) {
+		super();
+		Overtime = overtime;
+	}
+
+	public double getOvertime() {
+		return Overtime;
+	}
+
+	public void setOvertime(double overtime) {
+		Overtime = overtime;
+	}
+	
+	
+	@Override
+	public void Nhap() {
+		// TODO Auto-generated method stub
+		super.Nhap();
+		System.out.print("Nhập tiền làm ngoài giờ: ");
+		Overtime = input.nextDouble();
+	}
+	
+	
+	@Override
+	public int TinhLuong() {
+		this.Luong = (int) (this.LuongCoBan * this.Overtime);
+		return this.Luong;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + "Tiền làm ngoài giờ: " + this.Overtime;
+	}
+}
+
+
+file bài 3 main: 
+import java.awt.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Scanner;
+import java.util.Vector;
+
+public class T2_BaiTap3 {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		System.out.print("Nhập danh sách các nhân viên: ");
+		int n = input.nextInt();// n là số nhân viên
+		NhanVien[] nhanvien = new NhanVien[n];
+
+		System.out.print("Nhập thông tin cho nhân viên: ");
+		for (int i = 0; i < n; i++) {
+			System.out.print("Nhập thông tin sinh viên thứ + " + i + 1 + ":");
+			System.out.print("Chọn loại nhân viên: (1. Nhân viên lập trình, 2 - Nhân viên kiểm chứng:)");
+			int chon = input.nextInt();
+			if (chon == 1) {
+				nhanvien[i] = new CProgrammer();
+			} else if (chon == 2) {
+				nhanvien[i] = new C_Tester();
+			}
+			nhanvien[i].Nhap();
+			nhanvien[i].TinhLuong();
+		}
+
+		System.out.print("Thông tin của các nhân viên trong công ty: \n");
+		for (int i = 0; i < n; i++) {
+			System.out.println(nhanvien[i].toString());
+		}
+		System.out.print("Sắp xếp các nhân viên theo thứ tự lương giảm dần: ");
+		for (int i = 0; i < nhanvien.length; i++) {
+			for (int j = i + 1; j < nhanvien.length; j++) {
+				NhanVien temp;
+				if (nhanvien[i].getHeSoLuong() < nhanvien[j].getHeSoLuong()) {
+					temp = nhanvien[i];
+					nhanvien[i] = nhanvien[j];
+					nhanvien[j] = temp;
+				}
+			}
+			System.out.print("Sắp xếp giảm theo hệ số lương: " + nhanvien[i].getHeSoLuong());
+		}
+
+	}
+
+	public static void SortLuong(NhanVien[] nhanvien) {
+		for (int i = 0; i < nhanvien.length; i++) {
+			for (int j = 1; j < nhanvien.length; j++) {
+				NhanVien temp;
+				if (nhanvien[i].getHeSoLuong() > nhanvien[j].getHeSoLuong()) {
+					temp = nhanvien[i];
+					nhanvien[i] = nhanvien[j];
+					nhanvien[j] = temp;
+				}
+			}
+
+		}
+
+	}
+
+}
+Nhân viên: 
+import java.util.Scanner;
+
+public class NhanVien {
+	public String m_ID, m_Name, m_Address;
+	public String m_Birthday;
+	public double m_WageCoefficient;
+	protected int Luong, LuongCoBan, HeSoLuong;
+
+	Scanner input = new Scanner(System.in);
+
+	public NhanVien() {
+		super();
+	}
+
+	public NhanVien(String m_ID, String m_Name, String m_Address, String m_Birthday, double m_WageCoefficient, int luong,
+			int luongCoBan, int heSoLuong, Scanner input) {
+		super();
+		this.m_ID = m_ID;
+		this.m_Name = m_Name;
+		this.m_Address = m_Address;
+		this.m_Birthday = m_Birthday;
+		this.m_WageCoefficient = m_WageCoefficient;
+		Luong = luong;
+		LuongCoBan = luongCoBan;
+		HeSoLuong = heSoLuong;
+		this.input = input;
+	}
+
+	public String getM_ID() {
+		return m_ID;
+	}
+
+	public void setM_ID(String m_ID) {
+		this.m_ID = m_ID;
+	}
+
+	public String getM_Name() {
+		return m_Name;
+	}
+
+	public void setM_Name(String m_Name) {
+		this.m_Name = m_Name;
+	}
+
+	public String getM_Address() {
+		return m_Address;
+	}
+
+	public void setM_Address(String m_Address) {
+		this.m_Address = m_Address;
+	}
+
+	public String getM_Birthday() {
+		return m_Birthday;
+	}
+
+	public void setM_Birthday(String m_Birthday) {
+		this.m_Birthday = m_Birthday;
+	}
+
+	public double getM_WageCoefficient() {
+		return m_WageCoefficient;
+	}
+
+	public void setM_WageCoefficient(double m_WageCoefficient) {
+		this.m_WageCoefficient = m_WageCoefficient;
+	}
+
+	public int getLuong() {
+		return Luong;
+	}
+
+	public void setLuong(int luong) {
+		Luong = luong;
+	}
+
+	public int getLuongCoBan() {
+		return LuongCoBan;
+	}
+
+	public void setLuongCoBan(int luongCoBan) {
+		LuongCoBan = luongCoBan;
+	}
+
+	public int getHeSoLuong() {
+		return HeSoLuong;
+	}
+
+	public void setHeSoLuong(int heSoLuong) {
+		HeSoLuong = heSoLuong;
+	}
+
+	public Scanner getInput() {
+		return input;
+	}
+
+	public void setInput(Scanner input) {
+		this.input = input;
+	}
+	
+	
+
+	public void Nhap() {
+		System.out.print("Nhập mã nhân viên: ");
+		m_ID = input.nextLine();
+		System.out.print("Nhập tên nhân viên: ");
+		m_Name = input.nextLine();
+		System.out.print("Nhập ngày tháng năm sinh: ");
+		m_Birthday = input.nextLine();
+		System.out.print("Nhập địa chỉ:");
+		m_Address = input.nextLine();
+		System.out.print("Hệ số lương: ");
+		m_WageCoefficient = input.nextDouble();
+	}
+
+	public int TinhLuong() {
+		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return "mã nhân viên: " + this.m_ID +" "+ "Tên nhân viên: " + this.m_Name +" "+ "Ngày tháng năm sinh: " + m_Birthday
+				+" "+ "Địa chỉ: " + m_Address +" "+ "Hệ số lương: " + m_WageCoefficient +" "+ "Lương Cơ bản" + LuongCoBan
+				+" "+ " Hệ số lương: " + HeSoLuong;
+	}
+}
