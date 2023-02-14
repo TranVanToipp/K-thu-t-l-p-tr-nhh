@@ -1,3 +1,31 @@
+Set<Character> printed = new HashSet<>();
+char[] charArray = s4.toCharArray();
+for (char c : charArray) {
+    String key = String.valueOf(c).toLowerCase();
+    int count = map.get(key);
+    String upper = key.toUpperCase();
+    String lower = key.toLowerCase();
+
+    if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
+        if (!printed.contains(c)) {
+            System.out.printf("%s(%s): %d\n", lower, upper, count);
+            printed.add(c);
+        }
+    } else if (s4.indexOf(upper) != -1) {
+        if (!printed.contains(c)) {
+            System.out.printf("%s: %d\n", upper, count);
+            printed.add(c);
+        }
+    } else if (s4.indexOf(lower) != -1) {
+        if (!printed.contains(c)) {
+            System.out.printf("%s: %d\n", lower, count);
+            printed.add(c);
+        }
+    }
+}
+
+
+
 Set<String> printed = new HashSet<>();
 char[] charArray = s4.toCharArray();
 for (char c : charArray) {
