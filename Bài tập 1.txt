@@ -1,3 +1,36 @@
+Map<String, Integer> map = new HashMap<>();
+for (String c : array) {
+    String key = c.toLowerCase();
+    if (!map.containsKey(key)) {
+        map.put(key, 1);
+    } else {
+        int count = map.get(key) + 1;
+        map.put(key, count);
+    }
+}
+
+Set<String> printed = new HashSet<>();
+for (char c : s4.toCharArray()) {
+    String key = String.valueOf(c).toLowerCase();
+    if (printed.contains(key)) {
+        continue;
+    }
+    int count = map.get(key);
+    String upper = key.toUpperCase();
+    String lower = key.toLowerCase();
+
+    if (s4.contains(upper) && s4.contains(lower)) {
+        System.out.printf("%s(%s): %d\n", lower, upper, count);
+    } else if (s4.contains(upper)) {
+        System.out.printf("%s: %d\n", upper, count);
+    } else {
+        System.out.printf("%s: %d\n", lower, count);
+    }
+    printed.add(key);
+}
+
+
+
 Set<Character> printed = new HashSet<>();
 char[] charArray = s4.toCharArray();
 for (char c : charArray) {
