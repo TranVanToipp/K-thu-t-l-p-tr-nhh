@@ -1,3 +1,62 @@
+Scanner input = new Scanner(System.in);
+		System.out.print("S1: ");
+		String s1 = "";
+		if (s1.matches("-?\\d+(\\.\\d+)?") == true) {
+			System.out.print("NOT FOUNT");
+			return;
+		} else if (s1.matches("-?\\d+(\\.\\d+)?") == false)
+			System.out.print("S2: ");
+		String s2 = input.nextLine();
+
+		if (s2.matches("-?\\d+(\\.\\d+)?") == true) {
+			System.out.print("NOT FOUNT");
+			return;
+		} else if (s2.matches("-?\\d+(\\.\\d+)?") == false)
+
+			System.out.print("S1 Hội S2 là:");
+		Hoi(s2, s1);
+		String s3 = s1 + " " + s2;
+		String s4 = s3.replaceAll(" ", "");
+		String[] array = s4.split("");
+
+		Map<String, Integer> map = new HashMap<>();
+		for (String c : array) {
+			String key = c.toLowerCase();
+			if (!map.containsKey(key)) {
+				map.put(key, 1);
+			} else {
+				int count = map.get(key) + 1;
+				map.put(key, count);
+			}
+		}
+
+		Set<Character> printed = new HashSet<>();
+		char[] charArray = s4.toCharArray();
+		for (char c : charArray) {
+			String key = String.valueOf(c).toLowerCase();
+			int count = map.get(key);
+			String upper = key.toUpperCase();
+			String lower = key.toLowerCase();
+
+			if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
+				if (!printed.contains(c)) {
+					System.out.printf("%s(%s): %d\n", lower, upper, count);
+					printed.add(c);
+				}
+			} else if (s4.indexOf(upper) != -1) {
+				if (!printed.contains(c)) {
+					System.out.printf("%s: %d\n", upper, count);
+					printed.add(c);
+				}
+			} else if (s4.indexOf(lower) != -1) {
+				if (!printed.contains(c)) {
+					System.out.printf("%s: %d\n", lower, count);
+					printed.add(c);
+				}
+			}
+		}
+
+
 Set<Character> printed = new HashSet<>();
 char[] charArray = s4.toCharArray();
 for (char c : charArray) {
