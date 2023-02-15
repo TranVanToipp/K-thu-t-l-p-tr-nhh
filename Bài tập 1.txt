@@ -1,3 +1,391 @@
+Bài 2: 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.logging.Logger;
+
+public class BaiTap1 {
+	public List<Custommer> readFromFile() {
+		List<Custommer> list = new ArrayList<>();
+		try {
+			Scanner input = new Scanner(System.in);
+			System.out.print("Nhập tên file: ");
+			String n = input.nextLine();
+			File file = new File(n);
+			if (!file.exists()) {
+				System.out.print("File không tồn tại:");
+				return list;
+			}
+			FileReader fr = new FileReader(n);
+			BufferedReader br = new BufferedReader(fr);
+			String line = "";
+			while (true) {
+				line = br.readLine();
+				if (line == null) {
+					break;
+				}
+				String[] txt = line.split(",");
+				for (int i = 0; i < txt.length; i++) {
+					txt[i] = txt[i].replaceAll("\"", "");
+				}
+				String Customer_Id = txt[0];
+				String Customer_Name = txt[1];
+				String Sex = txt[2];
+				String Birthday = txt[3];
+				String Email = txt[4];
+				String Address = txt[5];
+				String Point = txt[6];
+				list.add(new Custommer(Customer_Id, Customer_Name, Sex, Birthday, Email, Address, Point));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	public static void main(String[] args) {
+
+		BaiTap1 bt = new BaiTap1();
+		List<Custommer> list1 = bt.readFromFile();
+		if (list1.isEmpty()) {
+			return;
+		}
+		
+		for (Custommer customer : list1) {
+			System.out.printf("%-10s %-20s %-13s %-10s %-30s %-15s %-10s\n", customer.getCustomer_Id(),
+					customer.getCustomer_Name(), customer.getSex(), customer.getBirthday(), customer.getEmail(),
+					customer.getAddress(), customer.getPoint());
+		}
+
+		while (!list1.isEmpty()) {
+			Scanner input = new Scanner(System.in);
+			System.out.print("\nNhập mã khách hàng: ");
+			String n = input.nextLine();
+			boolean check = false;
+			for (Custommer customer : list1) {
+				if (customer.getCustomer_Id().equals(n)) {
+					if (Integer.parseInt(customer.getPoint()) > 0 && Integer.parseInt(customer.getPoint()) <= 100) {
+						customer.setPoint("Silver");
+					}else if (Integer.parseInt(customer.getPoint()) > 100 && Integer.parseInt(customer.getPoint()) <= 1000) {
+						customer.setPoint("Gold");
+					}else if (Integer.parseInt(customer.getPoint()) > 1000) {
+						customer.setPoint("Diamond");
+					}
+					System.out.print(customer);
+					check = true;
+				}
+			}
+			if (!check) {
+				System.out.print("Không tim thấy mã khách hàng với mã " + n);
+			}
+		}
+
+	}
+}
+
+
+
+
+
+
+
+Bài 3:
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Scanner;
+
+public class BaiTap3 {
+
+	public static void main(String[] args) {
+		Scanner input = new Scanner(System.in);
+		System.out.print("Nhập danh sách các nhân viên: ");
+		int n = input.nextInt();
+		NhanVien[] nhanvien = new NhanVien[n];
+
+		System.out.print("Nhập thông tin cho nhân viên: ");
+		for (int i = 0; i < n; i++) {
+			System.out.print("Chọn loại nhân viên: (1. Nhân viên lập trình, 2 - Nhân viên kiểm chứng:)");
+			int chon = input.nextInt();
+			if (chon == 1) {
+				nhanvien[i] = new CProgram();
+			} else if (chon == 2) {
+				nhanvien[i] = new C_Testter();
+			}else {
+				System.out.print("Giá trị không hợp lệ: ");
+				return;
+			}
+			nhanvien[i].Nhap();
+			nhanvien[i].TinhLuong();
+		}
+
+		System.out.print("Thông tin của các nhân viên trong công ty: \n");
+		for (int i = 0; i < n; i++) {
+			System.out.println(nhanvien[i].toString());
+		}
+
+		nhanvien = sortLuong(nhanvien);
+		System.out.println("Sắp xếp các nhân viên theo hệ số lương giầm dần: ");
+		for (int i = 0; i < nhanvien.length; i++) {
+			System.out.println(nhanvien[i].TinhLuong());
+		}
+
+	}
+
+	public static NhanVien[] sortLuong(NhanVien[] nhanvien) {
+		Arrays.sort(nhanvien, new Comparator<NhanVien>() {
+			@Override
+			public int compare(NhanVien o1, NhanVien o2) {
+				return Double.compare(o2.TinhLuong(), o1.TinhLuong());
+			}
+		});
+		return nhanvien;
+		
+		
+		
+//		for (int j = i + 1; j < nhanvien.length; j++) {
+//			NhanVien temp;
+//			if (nhanvien[i].getHeSoLuong() < nhanvien[j].getHeSoLuong()) {
+//				temp = nhanvien[i];
+//				nhanvien[i] = nhanvien[j];
+//				nhanvien[j] = temp;
+//			}
+//		}
+	}
+
+}
+
+
+NhanVien: 
+
+import java.util.Scanner;
+
+public class NhanVien {
+	public String m_ID, m_Name, m_Address;
+	public String m_Birthday;
+	public int m_WageCoefficient;
+	protected int Luong, LuongCoBan, HeSoLuong;
+
+	Scanner input = new Scanner(System.in);
+
+	public NhanVien() {
+		super();
+	}
+
+	public NhanVien(String m_ID, String m_Name, String m_Address, String m_Birthday, int m_WageCoefficient, int luong,
+			int luongCoBan, int heSoLuong, Scanner input) {
+		super();
+		this.m_ID = m_ID;
+		this.m_Name = m_Name;
+		this.m_Address = m_Address;
+		this.m_Birthday = m_Birthday;
+		this.m_WageCoefficient = m_WageCoefficient;
+		Luong = luong;
+		LuongCoBan = luongCoBan;
+		HeSoLuong = heSoLuong;
+		this.input = input;
+	}
+
+	public String getM_ID() {
+		return m_ID;
+	}
+
+	public void setM_ID(String m_ID) {
+		this.m_ID = m_ID;
+	}
+
+	public String getM_Name() {
+		return m_Name;
+	}
+
+	public void setM_Name(String m_Name) {
+		this.m_Name = m_Name;
+	}
+
+	public String getM_Address() {
+		return m_Address;
+	}
+
+	public void setM_Address(String m_Address) {
+		this.m_Address = m_Address;
+	}
+
+	public String getM_Birthday() {
+		return m_Birthday;
+	}
+
+	public void setM_Birthday(String m_Birthday) {
+		this.m_Birthday = m_Birthday;
+	}
+
+	public double getM_WageCoefficient() {
+		return m_WageCoefficient;
+	}
+
+	public void setM_WageCoefficient(int m_WageCoefficient) {
+		this.m_WageCoefficient = m_WageCoefficient;
+	}
+
+	public int getLuong() {
+		return Luong;
+	}
+
+	public void setLuong(int luong) {
+		Luong = luong;
+	}
+
+	public int getLuongCoBan() {
+		return LuongCoBan;
+	}
+
+	public void setLuongCoBan(int luongCoBan) {
+		LuongCoBan = luongCoBan;
+	}
+
+	public Scanner getInput() {
+		return input;
+	}
+
+	public void setInput(Scanner input) {
+		this.input = input;
+	}
+
+	public void Nhap() {
+		System.out.print("Nhập mã nhân viên: ");
+		m_ID = input.nextLine();
+		System.out.print("Nhập tên nhân viên: ");
+		m_Name = input.nextLine();
+		System.out.print("Nhập ngày tháng năm sinh: ");
+		m_Birthday = input.nextLine();
+		System.out.print("Nhập địa chỉ:");
+		m_Address = input.nextLine();
+		System.out.print("Hệ số lương: ");
+		m_WageCoefficient = input.nextInt();
+		System.out.print("Lương cơ bản: ");
+		LuongCoBan = input.nextInt();
+		
+	}
+
+	public int TinhLuong() {
+		return this.Luong;
+	}
+
+	@Override
+	public String toString() {
+		return "mã nhân viên: " + this.m_ID +" "+ "Tên nhân viên: " + this.m_Name +" "+ "Ngày tháng năm sinh: " +this.m_Birthday
+				+" "+ "Địa chỉ: " +this.m_Address +" "+ "Hệ số lương: " + this.m_WageCoefficient +" "+ "Lương Cơ bản" + this.LuongCoBan;
+	}
+}
+
+
+Programmer: 
+
+
+
+public class CProgram extends NhanVien {
+	private int Overtime;
+
+	public CProgram() {
+		super();
+	}
+
+	public CProgram(int overtime) {
+		super();
+		Overtime = overtime;
+	}
+
+	public int getOvertime() {
+		return Overtime;
+	}
+
+	public void setOvertime(int overtime) {
+		Overtime = overtime;
+	}
+
+	@Override
+	public void Nhap() {
+		// TODO Auto-generated method stub
+		super.Nhap();
+		System.out.print("Nhập tiền làm ngoài giờ: ");
+		Overtime = input.nextInt();
+	}
+
+	@Override
+	public int TinhLuong() {
+		this.Luong = this.LuongCoBan * this.m_WageCoefficient + this.Overtime;
+		return this.Luong;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "Tiền làm ngoài giờ: " + this.Overtime;
+	}
+}
+
+
+
+Testter: 
+
+
+
+
+public class C_Testter extends NhanVien {
+	private int Error;
+
+	public C_Testter() {
+		super();
+	}
+
+	public C_Testter(int error) {
+		super();
+		Error = error;
+	}
+
+	public int getError() {
+		return Error;
+	}
+
+	public void setError(int error) {
+		Error = error;
+	}
+
+	@Override
+	public void Nhap() {
+		super.Nhap();
+		System.out.print("Số lỗi: ");
+		Error = input.nextInt();
+
+	}
+
+	@Override
+	public int TinhLuong() {
+		this.Luong = this.LuongCoBan * this.m_WageCoefficient + this.Error * 100000;
+		return this.Luong;
+	}
+
+	@Override
+	public String toString() {
+		return super.toString() + "Số lỗi đã tìm thấy: " + this.Error;
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Baif2: 
