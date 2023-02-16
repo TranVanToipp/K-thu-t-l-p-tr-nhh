@@ -1,3 +1,8 @@
+ System.out.printf("%-10s%-20s%-10s%-15s%-30s%-20s%-10s\n", "CustomerId", "CustomerName", "Sex", "Birthday", "Email", "Address", "Point");
+    for (Custommer customer : list) {
+        System.out.printf("%-10s%-20s%-10s%-15s%-30s%-20s%-10s\n", customer.getCustomer_Id(), customer.getCustomer_Name(), customer.getSex(), customer.getBirthday(), customer.getEmail(), customer.getAddress(), customer.getPoint());
+    }
+
 System.out.printf("%-10s %-20s %-10s %-15s %-30s %-20s %-10s\n", "ID", "Name", "Sex", "Birthday", "Email", "Address", "Point");
 for (Custommer customer : customerList) {
 
