@@ -1,3 +1,55 @@
+String s3 = s1 + s2;
+		String s4 = s3.replaceAll(" ", "");
+		String[] array = s4.split("");
+		System.out.print("\nKí tự xuất hiện trong 2 chuỗi s1, s2:\n");
+		
+		Map<String, Integer> map = new HashMap<>();
+		for (String c : array) {
+			String key = c.toLowerCase();
+			if (!map.containsKey(key)) {
+				map.put(key, 1);
+			} else {
+				int count = map.get(key) + 1;
+				map.put(key, count);
+			}
+		}
+
+		Set<String> printed = new HashSet<>();
+		for (char c : s4.toCharArray()) {
+			String key = String.valueOf(c).toLowerCase();
+			if (printed.contains(key)) {
+				continue;
+			}
+			int count = map.get(key);
+			String upper = key.toUpperCase();
+			String lower = key.toLowerCase();
+			if (count == 1) {
+				if (s4.contains(upper)) {
+					System.out.printf("%s: %d\n", upper, count);
+				} else {
+					System.out.printf("%s: %d\n", lower, count);
+				}
+				printed.add(key);
+			}
+
+			else if (s4.contains(upper) && s4.contains(lower)) {
+				System.out.printf("%s(%s): %d\n", lower, upper, count);
+			} else if (s4.contains(upper)) {
+				System.out.printf("%s: %d\n", upper, count);
+			} else {
+				System.out.printf("%s: %d\n", lower, count);
+			}
+			printed.add(key);
+		}
+		System.out.print("\ns1 hội s2: ");
+		Union(s2, s1);
+
+
+
+ 
+ 
+ 
+ 
  System.out.printf("%-10s%-20s%-10s%-15s%-30s%-20s%-10s\n", "CustomerId", "CustomerName", "Sex", "Birthday", "Email", "Address", "Point");
     for (Custommer customer : list) {
         System.out.printf("%-10s%-20s%-10s%-15s%-30s%-20s%-10s\n", customer.getCustomer_Id(), customer.getCustomer_Name(), customer.getSex(), customer.getBirthday(), customer.getEmail(), customer.getAddress(), customer.getPoint());
