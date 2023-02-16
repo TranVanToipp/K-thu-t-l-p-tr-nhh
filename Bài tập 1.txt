@@ -1,3 +1,13 @@
+"CustomerId","CustomerName","Sex","Birthday","Email","Address","Point"
+"10001","弥ノ地","Female", "2000/01/12","aaa@example.com","大阪府","20"
+"10002","謝花","Female", "1998/12/06","bbb@example.com","東京都","100"
+"10003","髪時","Male", "1999/07/28","ccc@example.com","広島県","1100"
+"10004","地之己","Male", "2001/06/30","ddd@example.com","長野県","120"
+
+
+
+
+
 Bài 2: 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
