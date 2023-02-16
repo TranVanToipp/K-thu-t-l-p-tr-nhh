@@ -1,3 +1,7 @@
+System.out.printf("%-10s %-20s %-10s %-15s %-30s %-20s %-10s\n", "ID", "Name", "Sex", "Birthday", "Email", "Address", "Point");
+for (Custommer customer : customerList) {
+
+
 "CustomerId","CustomerName","Sex","Birthday","Email","Address","Point"
 "10001","弥ノ地","Female", "2000/01/12","aaa@example.com","大阪府","20"
 "10002","謝花","Female", "1998/12/06","bbb@example.com","東京都","100"
