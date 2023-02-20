@@ -1,3 +1,9 @@
+Msg 2738, Level 16, State 2, Line 1
+A table can only have one timestamp column. Because table 'MSTUSER' already has one, the column 'INSERT_YMD' cannot be added.
+
+
+
+
 create table MSTUSER
 (
 	PSN_CD NUMERIC (4) primary key NOT NULL,
