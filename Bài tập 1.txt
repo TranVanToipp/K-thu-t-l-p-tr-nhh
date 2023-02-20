@@ -1,3 +1,36 @@
+create table MSTUSER
+(
+	PSN_CD NUMERIC (4) primary key NOT NULL,
+	USERID VARCHAR (8),
+	PASSWORD VARCHAR(8),
+	USERNAME VARCHAR(40),
+	DELETE_YMD	TIMESTAMP DEFAULT NULL,									
+	INSERT_YMD	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,								
+	INSERT_PSN_CD NUMERIC(5)DEFAULT 0,								
+	UPDATE_YMD TIMESTAMP DEFAULT NULL,						
+	UPDATE_PSN_CD NUMERIC(5)DEFAULT 0
+)
+
+create table MSTCUSTOMER (
+	CUSTOMER_ID NUMERIC(8) primary key NOT NULL,
+	CUSTOMER_NAME VARCHAR(50),
+	SEX VARCHAR(1),
+	BIRTHDAY VARCHAR(10),
+	EMAIL VARCHAR(40),									
+	ADDRESS VARCHAR(256),								
+	DELETE_YMD TIMESTAMP(5) DEFAULT NULL,								
+	INSERT_YMD TIMESTAMP DEFAULT CURRENT_TIMESTAMP,						
+	INSERT_PSN_CD NUMERIC(5)DEFAULT 0,
+	UPDATE_YMD TIMESTAMP DEFAULT NULL,
+	UPDATE_PSN_CD NUMERIC(5)DEFAULT 0 
+)
+
+
+
+
+
+
+
 Exception in thread "main" com.microsoft.sqlserver.jdbc.SQLServerException: ドライバーが SSL (Secure Sockets Layer) 暗号化による SQL Server への安全な接続を確立できませんでした。エラー: "sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target"。 ClientConnectionId:fef5e71a-1619-4f7b-8e2e-6bbaa5a2b8e1
 	at com.microsoft.sqlserver.jdbc.SQLServerConnection.terminate(SQLServerConnection.java:3937)
 	at com.microsoft.sqlserver.jdbc.TDSChannel.enableSSL(IOBuffer.java:1950)
