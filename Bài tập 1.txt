@@ -1,3 +1,20 @@
+String user = req.getParameter("userName");
+		String pass = req.getParameter("password");
+		
+		T001Dao loginDao = new T001Dao();
+		T001Dto a = loginDao.CheckLogin(user, pass);
+		
+		if (a.equals(1)) {
+			resp.sendRedirect("Logins.jsp");
+		}else {
+			resp.sendRedirect("sdsdsd");
+		}
+
+
+
+
+
+
 Type Exception Report
 
 説明 The server encountered an unexpected condition that prevented it from fulfilling the request.
