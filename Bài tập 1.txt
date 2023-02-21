@@ -1,3 +1,19 @@
+Type Exception Report
+
+説明 The server encountered an unexpected condition that prevented it from fulfilling the request.
+
+例外
+
+java.lang.NullPointerException
+	fjs.cs.action.T001.doPost(T001.java:69)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:661)
+	javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
+	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
+注意 原因のすべてのスタックトレースは、のログに記録されています
+
+
+
+
 Msg 273, Level 16, State 1, Line 1
 Cannot insert an explicit value into a timestamp column. Use INSERT with a column list to exclude the timestamp column, or insert a DEFAULT into the timestamp column.
 
