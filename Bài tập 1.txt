@@ -1,3 +1,28 @@
+function checkInput () {
+		var btnLogin = document.getElementById("btnLogin");
+		btnLogin.addEventListener('click', (e) => {
+			event.preventDefault();
+			var user = document.getElementById("txtUserID").value;
+			var pass = document.getElementById("txtPassword").value;
+			if (user == "") {
+				console.log(111);
+				document.getElementById("lblErrorMessage").innerHTML = "ユーザーIDを入力してください。";
+				return false;
+			}
+			if (pass == "") {
+				document.getElementById("lblErrorMessage").innerHTML = "パスワードを入力してください。";
+				return false;
+			}
+			return true;
+		});
+		
+	}
+
+
+
+
+
+
 if (dto != null && dto.getSomeStringValue().equals("SomeValue")) {
     resp.sendRedirect("Logins.jsp");
 } else {
