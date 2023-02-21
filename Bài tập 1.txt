@@ -1,3 +1,9 @@
+if (dto != null && dto.getSomeStringValue().equals("SomeValue")) {
+    resp.sendRedirect("Logins.jsp");
+} else {
+    resp.sendRedirect("sdsdsd");
+}
+
 String user = req.getParameter("userName");
 		String pass = req.getParameter("password");
 		
