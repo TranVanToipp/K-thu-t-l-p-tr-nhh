@@ -1,4 +1,9 @@
 
+A fatal error has been detected by the Java Runtime Environment:
+
+
+
+
 警告: Failed to load the sqljdbc_auth.dll cause :- no sqljdbc_auth in java.library.path
 com.microsoft.sqlserver.jdbc.SQLServerException: このドライバは、統合認証を行えるようには構成されていません。
 
