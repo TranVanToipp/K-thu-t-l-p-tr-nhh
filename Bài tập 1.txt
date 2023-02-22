@@ -1,3 +1,34 @@
+public T001Dto CheckLogin(String user, String pass) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String query = "select count(*) from MSTUSER as CNT where DELETE_YMD is null @P0and USERID =?@P0and PASSWORD =?";
+			conn = new T001Dao().getConnection();
+			ps = conn.prepareStatement(query);
+			ps.setString(1, user);
+			ps.setString(2, pass);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+		        int count = rs.getInt("CNT");
+		        if (count == 1) {
+		            T001Dto a = new T001Dto(user, pass);
+		            return a;
+		        } else {
+		            // Nếu số lượng bản ghi trả về không phải là 1, thì không đăng nhập thành công
+		            return null;
+		        }
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+Incorrect syntax near '@P0and'
+
+
+
 <filter>
         <filter-name>Charset Filter</filter-name>
         <filter-class>CharsetFilter</filter-class>
