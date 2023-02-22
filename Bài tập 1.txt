@@ -1,3 +1,7 @@
+Address already in use: JVM_Bind
+
+
+
 public T001Dto CheckLogin(String user, String pass) {
 		Connection conn = null;
 		PreparedStatement ps = null;
