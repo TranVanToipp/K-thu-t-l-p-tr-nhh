@@ -1,3 +1,12 @@
+Encoding 
+
+
+Japanese text
+
+Jsp servlet
+
+
+
 Address already in use: JVM_Bind
 
 
