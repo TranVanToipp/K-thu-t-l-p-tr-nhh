@@ -1,3 +1,15 @@
+<filter>
+        <filter-name>Charset Filter</filter-name>
+        <filter-class>CharsetFilter</filter-class>
+        <init-param>
+            <param-name>requestEncoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+
+
+
+
 
 # A fatal error has been detected by the Java Runtime Environment:
 #
