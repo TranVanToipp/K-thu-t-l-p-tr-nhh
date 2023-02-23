@@ -1,5 +1,14 @@
 request.set CharacterEncoding("UTF-8");
 
+SELECT Customer_ID, Customer_name,
+CASE WHEN Sex = 0 THEN 'Male' ELSE 'Female' END AS Sex,
+Birthday, Address
+FROM MSTCUSTOMER
+WHERE Delete_YMD IS NULL
+ORDER BY Customer_ID
+
+
+
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
 
