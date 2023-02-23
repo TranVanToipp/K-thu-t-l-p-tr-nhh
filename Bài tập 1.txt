@@ -1,3 +1,46 @@
+Dao2:
+package fjs.cs.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.*;
+import java.util.ArrayList;
+
+import fjs.cs.common.DBConnection;
+import fjs.cs.dto.T002Dto;
+
+public class T002Dao {
+	public List<T002Dto> getData() {
+		List<T002Dto> list = new ArrayList<T002Dto>();
+		try {
+			String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME,\r\n" + 
+					"CASE WHEN SEX = 0 THEN 'Male' ELSE 'Female' END AS SEX,BIRTHDAY, ADDRESS\r\n" + 
+					"FROM MSTCUSTOMER WHERE DELETE_YMD IS NULL ORDER BY CUSTOMER_ID";
+			Connection conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				T002Dto dataT002 = new T002Dto();
+				dataT002.setCUSTOMER_ID(rs.getString(1));
+				dataT002.setCUSTOMER_NAME(rs.getString(2));
+				dataT002.setSEX(rs.getString(3));
+				dataT002.setBIRTHDAY(rs.getString(4));
+				dataT002.setADDRESS(rs.getString(5));
+				list.add(dataT002);
+			}
+			conn = DBConnection.disconnectDB();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+}
+
+
+
+
+
 java:
 /**
  * @(#)T002.java 16-00 2023/02/22
