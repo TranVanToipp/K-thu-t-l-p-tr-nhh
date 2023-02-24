@@ -1,3 +1,36 @@
+function isValidDate(dateString) {
+  // kiểm tra định dạng yyyy/mm/dd
+  var regEx = /^\d{4}-\d{2}-\d{2}$/;
+  if(!dateString.match(regEx)) return false;  // không đúng định dạng
+  var d = new Date(dateString);
+  var dNum = d.getTime();
+  if(!dNum && dNum !== 0) return false; // kiểm tra ngày không hợp lệ (ví dụ: 30/02/2021)
+  return d.toISOString().slice(0,10) === dateString;
+}
+
+
+
+<form onsubmit="return validateForm()" action="process.jsp" method="post">
+  <input type="text" name="date" id="date-input">
+  <input type="submit" value="Submit">
+</form>
+
+<script>
+function validateForm() {
+  var dateString = document.getElementById("date-input").value;
+  if(!isValidDate(dateString)) {
+    alert("Vui lòng nhập định dạng YYYY/MM/DD");
+    return false;
+  }
+  return true;
+}
+</script>
+
+
+
+
+
+
 UPDATE mstcustomer
 SET Delete_YMD = SYSDATE
 WHERE customer_Id IN (101, 102, 103);
