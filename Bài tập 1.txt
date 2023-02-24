@@ -1,3 +1,19 @@
+SELECT Customer_Id, Customer_Name,
+CASE
+WHEN Sex = 0 THEN 'Male'
+WHEN Sex = 1 THEN 'Female'
+END as Sex,
+Birthday, Address
+FROM Mstcustomer
+WHERE Customer_Name LIKE CONCAT('%', :param_Customer_Name, '%')
+AND Sex = :param_Sex
+AND Birthday <= :param_Birthday_To
+AND Birthday >= :param_Birthday_From
+ORDER BY Customer_Id;
+
+
+
+
 Dao2:
 package fjs.cs.dao;
 
