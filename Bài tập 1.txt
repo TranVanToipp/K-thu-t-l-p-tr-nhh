@@ -1,3 +1,31 @@
+String[] itemIds = request.getParameterValues("itemIds");
+if (itemIds != null) {
+    for (String itemId : itemIds) {
+        // Thực hiện xóa mục với ID tương ứng
+    }
+}
+
+
+<form method="POST" action="delete.jsp">
+    <table>
+        <% for (int i = 0; i < items.size(); i++) { %>
+        <tr>
+            <td><input type="checkbox" name="itemIds" value="<%= items.get(i).getId() %>"></td>
+            <td><%= items.get(i).getName() %></td>
+            <td><%= items.get(i).getDescription() %></td>
+        </tr>
+        <% } %>
+    </table>
+    <input type="submit" value="Xóa">
+</form>
+
+
+
+
+
+
+
+
 SELECT Customer_Id, Customer_Name, 
     CASE 
         WHEN Sex = 0 THEN 'Male' 
