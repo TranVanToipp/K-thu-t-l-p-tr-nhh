@@ -1,3 +1,8 @@
+UPDATE mstcustomer
+SET Delete_YMD = SYSDATE
+WHERE customer_Id IN (101, 102, 103);
+
+
 String[] itemIds = request.getParameterValues("itemIds");
 if (itemIds != null) {
     for (String itemId : itemIds) {
