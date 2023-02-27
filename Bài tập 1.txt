@@ -1,4 +1,15 @@
 String[] ids = request.getParameterValues("selectedValues");
+if (ids != null && ids.length > 0) {
+    int[] intIds = new int[ids.length];
+    for (int i = 0; i < ids.length; i++) {
+        intIds[i] = Integer.parseInt(ids[i]);
+    }
+    // sử dụng mảng intIds ở đây
+}
+
+
+
+String[] ids = request.getParameterValues("selectedValues");
 			if (ids != null && ids.length > 0) {
 			    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
 			    String idList = String.join(",", ids);
