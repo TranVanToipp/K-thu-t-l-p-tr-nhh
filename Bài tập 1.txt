@@ -1,3 +1,18 @@
+String[] ids = request.getParameterValues("selectedValues");
+			if (ids != null && ids.length > 0) {
+			    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
+			    String idList = String.join(",", ids);
+			    
+			    T002Dao daoDelete = new T002Dao();
+			    daoDelete.deleteData(idList);
+			}
+			//[["11010001","11010002"]] ////// (11010001,11010002)
+			// Lấy dữ liệu tìm kiếm và đưa vào request
+			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+			request.setAttribute("listDataSearch", resultSearch);rrr
+
+
+
 
 import java.util.ArrayList;
 import java.util.List;
