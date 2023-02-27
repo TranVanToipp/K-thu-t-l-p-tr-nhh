@@ -1,6 +1,20 @@
 
 
 
+var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+var selectedValues = [];
+for (var i = 0; i < checkboxes.length; i++) {
+  selectedValues.push(checkboxes[i].value);
+}
+var xhttp = new XMLHttpRequest();
+xhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    console.log(this.responseText);
+  }
+};
+xhttp.open("POST", "process.jsp", true);
+xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhttp.send("selectedValues=" + JSON.stringify(selectedValues));
 
 
 
