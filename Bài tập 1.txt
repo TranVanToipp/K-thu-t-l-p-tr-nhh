@@ -1,3 +1,61 @@
+<c:forEach items="${listData}" var="dept">
+            <tr>
+                <td><input type="checkbox" checked= "true" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td><a href="/CustomerSystem/T003"> ${dept.CUSTOMER_ID} </a></td>
+                <td>${dept.CUSTOMER_NAME }</td>
+                <td>${dept.SEX}</td>
+                <td>${dept.BIRTHDAY}</td>
+                <td>${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:otherwise>
+	</c:choose>
+    </table>
+		
+	<div class = "search-container__btnnav">
+		<button class = "search-container__nav-btnAdd">Add New</button>
+		<button type = "submit" class = "search-container__nav-btnAdd" >Delete</button>
+			
+		</div>
+	</div>
+	
+	
+	
+	
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		try {
+			String name = request.getParameter("txtCustomerName");
+			String sex = request.getParameter("browser");
+			String birthdayFrom = request.getParameter("txtBirthdayFromName");
+			String birthdayTo = request.getParameter("txtBirthdayToName");
+			T002Dao daoSearch = new T002Dao();
+			
+			// Xử lý chức năng xóa
+			//String[] ids = request.getParameterValues("checkboxAll");
+//			if (ids != null && ids.length > 0) {
+//			    String idList = String.join(",", ids);
+			    //daoSearch.deleteData(idList);
+			//}
+			
+			// Lấy dữ liệu tìm kiếm và đưa vào request
+			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+			request.setAttribute("listDataSearch", resultSearch);
+			
+			
+			//String[] selecValue = request.getParameterValues("selectedValues");
+			//daoSearch.deleteData(selecValue);
+			
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+			rd.forward(request, response);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
 public List<T002Dto> deleteData(String[] selecValue) {
     List<T002Dto> listDelete = new ArrayList<T002Dto>();
     Connection conn = null;
