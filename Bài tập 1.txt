@@ -1,3 +1,9 @@
+String[] id = {"10001","10002"};
+String[] idArray = id[0].split(",");
+String id2 = Arrays.toString(idArray);
+
+
+
 String[] ids = request.getParameterValues("selectedValues");
 			if (ids != null && ids.length > 0) {
 			    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
