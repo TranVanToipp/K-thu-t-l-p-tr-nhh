@@ -1,3 +1,19 @@
+String[] ids = request.getParameterValues("selectedValues");
+			if (ids != null && ids.length > 0) {
+			    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
+			    String idList = String.join(",", ids);
+			   
+			    // Loại bỏ các dấu ngoặc kép trong chuỗi
+			    idList = idList.replace("[\"", "").replace("\"]", "");
+			    String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
+			    String[] result2 = result.split(" ");
+			    
+			    daoSearch.deleteData(result2);
+			   
+			}
+
+
+
 public List<T002Dto> deleteData(String[] selecValue) {
     List<T002Dto> listDelete = new ArrayList<T002Dto>();
     Connection conn = null;
