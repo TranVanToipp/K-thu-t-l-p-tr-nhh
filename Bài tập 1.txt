@@ -2,6 +2,39 @@ public List<T002Dto> deleteData(String[] selecValue) {
     List<T002Dto> listDelete = new ArrayList<T002Dto>();
     Connection conn = null;
     try {
+        String query = "UPDATE MSTCUSTOMER "
+                     + "SET Delete_YMD = CURRENT_TIMESTAMP "
+                     + "WHERE customer_Id IN (";
+        for (int i = 0; i < selecValue.length; i++) {
+            String[] ids = selecValue[i].split(",");
+            for (int j = 0; j < ids.length; j++) {
+                query += "?,";
+            }
+        }
+        query = query.substring(0, query.length() - 1) + ")";
+        conn = new DBConnection().getConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
+        int paramIndex = 1;
+        for (int i = 0; i < selecValue.length; i++) {
+            String[] ids = selecValue[i].split(",");
+            for (int j = 0; j < ids.length; j++) {
+                ps.setLong(paramIndex++, Long.parseLong(ids[j]));
+            }
+        }
+        ps.executeUpdate();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return listDelete;
+}
+
+
+
+
+public List<T002Dto> deleteData(String[] selecValue) {
+    List<T002Dto> listDelete = new ArrayList<T002Dto>();
+    Connection conn = null;
+    try {
         conn = new DBConnection().getConnection();
         String query = "UPDATE MSTCUSTOMER SET Delete_YMD = CURRENT_TIMESTAMP";
         if (selecValue.length > 0) {
