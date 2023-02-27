@@ -1,3 +1,16 @@
+// Lấy giá trị các checkbox được chọn
+String[] ids = request.getParameterValues("checkboxAll");
+if (ids != null && ids.length > 0) {
+    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
+    String idList = String.join(",", ids);
+    // Tạo một đối tượng T002Dao để thực hiện xóa dữ liệu
+    T002Dao daoDelete = new T002Dao();
+    daoDelete.deleteData(idList);
+}
+
+
+
+
 <c:forEach items="${listData}" var="dept">
             <tr>
                 <td><input type="checkbox" checked= "true" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
