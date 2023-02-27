@@ -1,3 +1,27 @@
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String> s1 = new ArrayList<>();
+        s1.add("10001");
+        s1.add("10002");
+
+        List<Integer> s2 = new ArrayList<>();
+        for (String s : s1) {
+            s2.add(Integer.parseInt(s));
+        }
+
+        System.out.println(s2); // [10001, 10002]
+    }
+}
+
+
+
+
+
+
 // Lấy giá trị các checkbox được chọn
 String[] ids = request.getParameterValues("checkboxAll");
 if (ids != null && ids.length > 0) {
