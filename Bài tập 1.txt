@@ -1,4 +1,20 @@
-
+public List<T002Dto> deleteData(String[] selecValue) {
+		List<T002Dto> listDelete = new ArrayList<T002Dto>();
+	    Connection conn = null;
+		try {
+			String query = "UPDATE MSTCUSTOMER\r\n"
+					+ "SET Delete_YMD = CURRENT_TIMESTAMP\r\n"
+					+ "WHERE customer_Id IN (?)";
+			conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setLong(1, selecValue);
+			ResultSet rs = ps.executeQuery();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return listDelete;
+		
+	}
 
 
 var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
