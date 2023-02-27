@@ -1,3 +1,12 @@
+String a = "10001,10002";
+JSONArray jsonArray = new JSONArray("[" + a + "]");
+String[] b = new String[jsonArray.length()];
+for (int i = 0; i < jsonArray.length(); i++) {
+    b[i] = jsonArray.getString(i);
+}
+
+
+
 String result = str.replaceAll("[^\\d,]", "").replace("\"", "");
 System.out.println(result);
 
