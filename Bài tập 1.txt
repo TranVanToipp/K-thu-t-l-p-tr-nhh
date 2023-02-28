@@ -1,3 +1,25 @@
+function isGmail(input) {
+  // Biểu thức chính quy kiểm tra định dạng gmail
+  var gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  
+  // Kiểm tra định dạng email
+  if (input.match(gmailRegex)) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+var input = document.getElementById("myInput").value;
+if (isGmail(input)) {
+  console.log("Định dạng email đúng");
+} else {
+  console.log("Định dạng email không đúng");
+}
+
+
+
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 
