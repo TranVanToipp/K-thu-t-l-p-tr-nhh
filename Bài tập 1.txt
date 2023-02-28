@@ -1,3 +1,17 @@
+<c:when test="${not empty ListA}">
+        <c:forEach items="${ListA}" var="dept">
+            <tr>
+                <td><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td><a href="/CustomerSystem/T003"> ${dept.CUSTOMER_ID} </a></td>
+                <td>${dept.CUSTOMER_NAME }</td>
+                <td>${dept.SEX}</td>
+                <td>${dept.BIRTHDAY}</td>
+                <td>${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:when>
+
+
 String[] ids = request.getParameterValues("selectedValues");
 if (ids != null && ids.length > 0) {
     int[] intIds = new int[ids.length];
