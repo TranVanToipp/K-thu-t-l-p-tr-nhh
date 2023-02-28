@@ -1,3 +1,17 @@
+<c:choose>
+<c:when test="${empty ListA}">
+<p>ListA is empty.</p>
+</c:when>
+<c:when test="${fn:length(ListA) > 15}">
+<p>ListA has more than 15 elements.</p>
+</c:when>
+<c:otherwise>
+<p>ListA has less than or equal to 15 elements.</p>
+</c:otherwise>
+</c:choose>
+
+
+
 <c:when test="${not empty ListA}">
         <c:forEach items="${ListA}" var="dept">
             <tr>
