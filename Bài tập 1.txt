@@ -1,3 +1,54 @@
+if (result != null) {
+    HttpSession session = request.getSession();
+    session.setAttribute("psnCd", result.getPSN_CD());
+    response.sendRedirect("/CustomerSystem_Servlet_Jsp/T002");
+}
+
+
+HttpSession session = request.getSession();
+T003Dao dao = new T003Dao();
+int status = dao.update(dto, session);
+
+
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    try {
+        String id = request.getParameter("customerId");
+        String name = request.getParameter("customerName");
+        String sex = request.getParameter("sex");
+        String birthday = request.getParameter("birthday");
+        String email = request.getParameter("email");
+        String address = request.getParameter("address");
+        
+        T003Dto dto = new T003Dto();
+        dto.setCUSTOMER_ID(Integer.parseInt(id));
+        dto.setCUSTOMER_NAME(name);
+        dto.setSEX(sex);
+        dto.setBIRTHDAY(birthday);
+        dto.setEMAIL(email);
+        dto.setADDRESS(address);
+        
+        HttpSession session = request.getSession();
+        String psnCd = (String) session.getAttribute("psnCd");
+        T003Dao dao = new T003Dao();
+        int status = dao.update(dto, psnCd);
+        if (status > 0) {
+            // cập nhật thành công, chuyển hướng về trang thông báo thành công
+            response.sendRedirect("success.jsp");
+        } else {
+            // cập nhật không thành công, chuyển hướng về trang thông báo lỗi
+            response.sendRedirect("error.jsp");
+        }
+        
+    } catch (Exception e) {
+        e.printStackTrace();
+        // nếu có lỗi xảy ra, chuyển hướng về trang thông báo lỗi
+        response.sendRedirect("error.jsp");
+    }
+}
+
+
+
+
 <c:if test="${listData != null and listData.size() > 15}">
 	<c:if test="${tag == endP}">
 		<button id="btnNext" disabled style="pointer-events: none;"><a href="/CustomerSystem_Servlet_Jsp/T002?index=${tag+1}">></a></button>
