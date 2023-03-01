@@ -1,3 +1,8 @@
+
+<option value="1" ${dto.SEX == '1' ? 'selected' : ''}>Nam</option>
+<option value="0" ${dto.SEX == '0' ? 'selected' : ''}>Nữ</option>
+
+
 protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     try {
         String id = req.getParameter("userId");
