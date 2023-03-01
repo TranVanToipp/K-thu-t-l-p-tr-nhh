@@ -1,3 +1,60 @@
+protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    try {
+        String id = req.getParameter("userId");
+        String name = req.getParameter("txtCustomerName");
+        String sex = req.getParameter("cboSex");
+        String birthday = req.getParameter("txtCustomerBirthday");
+        String email = req.getParameter("txtCustomerEmail");
+        String address = req.getParameter("txaAddress");
+        HttpSession session = req.getSession();
+        T003Dao dao = new T003Dao();
+        int status = 0;
+        String action = req.getParameter("action");
+        if (action.equals("save")) {
+            T003Dto dto = new T003Dto();
+            dto.setCUSTOMER_NAME(name);
+            dto.setSEX(sex);
+            dto.setBIRTHDAY(birthday);
+            dto.setEMAIL(email);
+            dto.setADDRESS(address);
+            status = dao.save(dto, session);
+        } else if (action.equals("update")) {
+            T003Dto dto = new T003Dto();
+            dto.setCUSTOMER_ID(Integer.parseInt(id));
+            dto.setCUSTOMER_NAME(name);
+            dto.setSEX(sex);
+            dto.setBIRTHDAY(birthday);
+            dto.setEMAIL(email);
+            dto.setADDRESS(address);
+            status = dao.update(dto, session);
+        }
+        if (status > 0) {
+            // operation successful, redirect to success page
+            resp.sendRedirect("/CustomerSystem/T002");
+        } else {
+            // operation unsuccessful, redirect to error page
+            resp.sendRedirect("error.jsp");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 public int update(T003Dto u, HttpSession session) throws SQLException {
     int status = 0;
     Connection con = null;
