@@ -1,3 +1,6 @@
+T003Dto dto = T003Dao.getCustomerById(Integer.parseInt(customerId));
+    request.setAttribute("dto", dto);
+
 if (result != null) {
     HttpSession session = request.getSession();
     session.setAttribute("psnCd", result.getPSN_CD());
