@@ -1,802 +1,3 @@
-public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo) {
-    List<T002Dto> listSearch = new ArrayList<T002Dto>();
-    Connection conn = null;
-    try {
-        String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS \r\n"
-                + "FROM MSTCUSTOMER\r\n"
-                + "WHERE 1=1 ";
-        if (name != null && !name.isEmpty()) {
-            query += "AND CUSTOMER_NAME LIKE ? ";
-        }
-        if (sex != null && !sex.isEmpty()) {
-            query += "AND SEX = ? ";
-        }
-        if (birthdayFrom != null && !birthdayFrom.isEmpty()) {
-            query += "AND BIRTHDAY >= ? ";
-        }
-        if (birthdayTo != null && !birthdayTo.isEmpty()) {
-            query += "AND BIRTHDAY <= ? ";
-        }
-        query += "ORDER BY CUSTOMER_ID;\r\n";
-        new DbConnection();
-        conn = DbConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement(query);
-        int parameterIndex = 1;
-        if (name != null && !name.isEmpty()) {
-            ps.setString(parameterIndex++, "%" + name + "%");
-        }
-        if (sex != null && !sex.isEmpty()) {
-            ps.setString(parameterIndex++, sex);
-        }
-        if (birthdayFrom != null && !birthdayFrom.isEmpty()) {
-            ps.setString(parameterIndex++, birthdayFrom);
-        }
-        if (birthdayTo != null && !birthdayTo.isEmpty()) {
-            ps.setString(parameterIndex++, birthdayTo);
-        }
-        ResultSet rs = ps.executeQuery();
-        while(rs.next()) {
-            T002Dto dataT002Search = new T002Dto();
-            dataT002Search.setCUSTOMER_ID(rs.getString(1));
-            dataT002Search.setCUSTOMER_NAME(rs.getString(2));
-            dataT002Search.setSEX(rs.getString(3));
-            dataT002Search.setBIRTHDAY(rs.getString(4));
-            dataT002Search.setADDRESS(rs.getString(5));
-            listSearch.add(dataT002Search);
-        }
-        conn.close();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return listSearch;
-}
-
-
-
-
-
-
-
-
-
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		try {
-			String name = request.getParameter("txtCustomerName");
-			String sex = request.getParameter("browser");
-			String birthdayFrom = request.getParameter("txtBirthdayFromName");
-			String birthdayTo = request.getParameter("txtBirthdayToName");
-			T002Dao daoSearch = new T002Dao();
-			if (name == null || name.trim().isEmpty()) {
-			    name = null;
-			}
-			if (sex == null || sex.trim().isEmpty()) {
-			    sex = null;
-			}
-			if (birthdayFrom == null || birthdayFrom.trim().isEmpty()) {
-			    birthdayFrom = null;
-			}
-			if (birthdayTo == null || birthdayTo.trim().isEmpty()) {
-			    birthdayTo = null;
-			}
-			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
-			request.setAttribute("listDataSearch", resultSearch);
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
-			rd.forward(request, response);
-			//L蘯･y data cﾃ｡c ﾃｴ checkbox ﾄ柁ｰ盻｣c checked
-			String[] ids = request.getParameterValues("selectedValues");
-			if (ids != null && ids.length > 0) {
-			    String idList = String.join(",", ids);
-			   
-			    // Lo蘯｡i b盻� cﾃ｡c d蘯･u ngo蘯ｷc kﾃｩp trong chu盻擁
-			    idList = idList.replace("[\"", "").replace("\"]", "");
-			    String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
-			    String[] result2 = result.split(",");
-			    if (result2.length == 16) {
-			    	String[] result3 = Arrays.copyOfRange(result2, 1, result2.length);
-		    		daoSearch.deleteData(result3);
-			    }else {
-			    	for (int i = 0;i< result2.length; i++) {
-				    	if (result2.length == 16) {
-				    		daoSearch.deleteData(result2);
-				    	}
-				    	daoSearch.deleteData(result2);
-				    }
-			    }
-			    
-			}
-			
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
-
-
-
-
-
-public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo) {
-    List<T002Dto> listSearch = new ArrayList<T002Dto>();
-    Connection conn = null;
-    try {
-        String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS \r\n"
-        		+ "FROM MSTCUSTOMER\r\n"
-        		+ "WHERE (CUSTOMER_NAME LIKE ? OR ? IS NULL) \r\n"
-        		+ "  AND (SEX = ? OR ? = '' OR ? IS NULL) \r\n"
-        		+ "  AND (BIRTHDAY >= ? OR ? IS NULL)\r\n"
-        		+ "  AND (BIRTHDAY <= ? OR ? IS NULL)\r\n"
-        		+ "ORDER BY CUSTOMER_ID;\r\n";
-        new DbConnection();
-		conn = DbConnection.getConnection();
-        PreparedStatement ps = conn.prepareStatement(query);
-        ps.setString(1, "%" + name + "%");
-        ps.setString(2, "%" + name + "%");
-        ps.setString(3, sex);
-        ps.setString(4, sex);
-        ps.setString(5, sex);
-        ps.setString(6, birthdayFrom);
-        ps.setString(7, birthdayFrom);
-        ps.setString(8, birthdayTo);
-        ps.setString(9, birthdayTo);
-        ResultSet rs = ps.executeQuery();
-        while(rs.next()) {
-            T002Dto dataT002Search = new T002Dto();
-            dataT002Search.setCUSTOMER_ID(rs.getString(1));
-            dataT002Search.setCUSTOMER_NAME(rs.getString(2));
-            dataT002Search.setSEX(rs.getString(3));
-            dataT002Search.setBIRTHDAY(rs.getString(4));
-            dataT002Search.setADDRESS(rs.getString(5));
-            listSearch.add(dataT002Search);
-        }
-        conn.close();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return listSearch;
-}
-
-
-
-
-
-
-Exception processing async thread queue
-Exception processing async thread queue
--1
-
-
-
-
-
-<option value="1" ${dto.SEX == '1' ? 'selected' : ''}>Nam</option>
-<option value="0" ${dto.SEX == '0' ? 'selected' : ''}>Nữ</option>
-
-
-protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    try {
-        String id = req.getParameter("userId");
-        String name = req.getParameter("txtCustomerName");
-        String sex = req.getParameter("cboSex");
-        String birthday = req.getParameter("txtCustomerBirthday");
-        String email = req.getParameter("txtCustomerEmail");
-        String address = req.getParameter("txaAddress");
-        HttpSession session = req.getSession();
-        T003Dao dao = new T003Dao();
-        int status = 0;
-        String action = req.getParameter("action");
-        if (action.equals("save")) {
-            T003Dto dto = new T003Dto();
-            dto.setCUSTOMER_NAME(name);
-            dto.setSEX(sex);
-            dto.setBIRTHDAY(birthday);
-            dto.setEMAIL(email);
-            dto.setADDRESS(address);
-            status = dao.save(dto, session);
-        } else if (action.equals("update")) {
-            T003Dto dto = new T003Dto();
-            dto.setCUSTOMER_ID(Integer.parseInt(id));
-            dto.setCUSTOMER_NAME(name);
-            dto.setSEX(sex);
-            dto.setBIRTHDAY(birthday);
-            dto.setEMAIL(email);
-            dto.setADDRESS(address);
-            status = dao.update(dto, session);
-        }
-        if (status > 0) {
-            // operation successful, redirect to success page
-            resp.sendRedirect("/CustomerSystem/T002");
-        } else {
-            // operation unsuccessful, redirect to error page
-            resp.sendRedirect("error.jsp");
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-public int update(T003Dto u, HttpSession session) throws SQLException {
-    int status = 0;
-    Connection con = null;
-    try{  
-        con = new DbConnection().getConnection(); 
-        String query = "UPDATE mstcustomer SET CUSTOMER_NAME = ?, SEX = ?, BIRTHDAY = ?, EMAIL = ?, ADDRESS = ?, DELETE_YMD = NULL, UPDATE_YMD = CURRENT_TIMESTAMP, UPDATE_PSN_CD = (SELECT PSN_CD FROM mstuser WHERE USERID = ?) WHERE CUSTOMER_ID = ?"; // câu truy vấn
-        PreparedStatement ps = con.prepareStatement(query);  
-        ps.setString(1, u.getCUSTOMER_NAME());  
-        ps.setString(2, u.getSEX());  
-        ps.setString(3, u.getBIRTHDAY());  
-        ps.setString(4, u.getEMAIL());  
-        ps.setString(5, u.getADDRESS());  
-        ps.setString(6, (String) session.getAttribute("psnCd")); // lấy giá trị của psnCd từ session
-        ps.setInt(7, u.getCUSTOMER_ID());  
-        status = ps.executeUpdate();  
-    } catch(Exception e) {
-        System.out.println(e);
-    } finally {
-        // đóng kết nối sau khi thực hiện xong
-        try {
-            con.close();
-        } catch(Exception e) {
-            System.out.println(e);
-        }
-    }
-    return status;
-}
-
-
-
-
-T003Dto dto = T003Dao.getCustomerById(Integer.parseInt(customerId));
-    request.setAttribute("dto", dto);
-
-if (result != null) {
-    HttpSession session = request.getSession();
-    session.setAttribute("psnCd", result.getPSN_CD());
-    response.sendRedirect("/CustomerSystem_Servlet_Jsp/T002");
-}
-
-
-HttpSession session = request.getSession();
-T003Dao dao = new T003Dao();
-int status = dao.update(dto, session);
-
-
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    try {
-        String id = request.getParameter("customerId");
-        String name = request.getParameter("customerName");
-        String sex = request.getParameter("sex");
-        String birthday = request.getParameter("birthday");
-        String email = request.getParameter("email");
-        String address = request.getParameter("address");
-        
-        T003Dto dto = new T003Dto();
-        dto.setCUSTOMER_ID(Integer.parseInt(id));
-        dto.setCUSTOMER_NAME(name);
-        dto.setSEX(sex);
-        dto.setBIRTHDAY(birthday);
-        dto.setEMAIL(email);
-        dto.setADDRESS(address);
-        
-        HttpSession session = request.getSession();
-        String psnCd = (String) session.getAttribute("psnCd");
-        T003Dao dao = new T003Dao();
-        int status = dao.update(dto, psnCd);
-        if (status > 0) {
-            // cập nhật thành công, chuyển hướng về trang thông báo thành công
-            response.sendRedirect("success.jsp");
-        } else {
-            // cập nhật không thành công, chuyển hướng về trang thông báo lỗi
-            response.sendRedirect("error.jsp");
-        }
-        
-    } catch (Exception e) {
-        e.printStackTrace();
-        // nếu có lỗi xảy ra, chuyển hướng về trang thông báo lỗi
-        response.sendRedirect("error.jsp");
-    }
-}
-
-
-
-
-<c:if test="${listData != null and listData.size() > 15}">
-	<c:if test="${tag == endP}">
-		<button id="btnNext" disabled style="pointer-events: none;"><a href="/CustomerSystem_Servlet_Jsp/T002?index=${tag+1}">></a></button>
-		<button id="btnLast" disabled style="pointer-events: none;"><a href="/CustomerSystem_Servlet_Jsp/T002?index=<%= endP %>">>></a></button>
-	</c:if>
-	<c:if test="${tag < endP}">
-		<button id="btnNext"><a href="/CustomerSystem_Servlet_Jsp/T002?index=${tag+1}">></a></button>
-		<button id="btnLast"><a href="/CustomerSystem_Servlet_Jsp/T002?index=<%= endP %>">>></a></button>
-	</c:if>
-</c:if>
-
-
-
-CREATE SEQUENCE SEQ_CUSTOMER_ID 
-START WITH 1 
-INCREMENT BY 1 
-MINVALUE 1 
-MAXVALUE 1000000 
-CYCLE;
-
-INSERT INTO mstcustomer (Customer_Id, Customer_Name, Sex, Birthday, Email, Address, Delete_YMD, Insert_Ymd, Insert_Psn_Cd, Update_YMD, Update_Psn_Cd) 
-VALUES (NEXT VALUE FOR SEQ_CUSTOMER_ID, 'Customer_Name_Value', 'Sex_Value', 'Birthday_Value', 'Email_Value', 'Address_Value', NULL, CURRENT_TIMESTAMP, 'Insert_Psn_Cd_Value', CURRENT_TIMESTAMP,
-
-
-
-NEXT_VALUE_FOR(SEQ_CUSTOMER_ID)
-
-
-CREATE SEQUENCE SEQ_CUSTOMER_ID
-START WITH 1
-INCREMENT BY 1
-MINVALUE 1
-MAXVALUE 1000000
-NOCYCLE;
-
-INSERT INTO mstcustomer (Customer_Id, Customer_Name, Sex, Birthday, Email, Address, Delete_YMD, Insert_Ymd, Insert_Psn_Cd, Update_YMD, Update_Psn_Cd) 
-VALUES (SEQ_CUSTOMER_ID.NEXTVAL, 'Customer_Name_Value', 'Sex_Value', 'Birthday_Value', 'Email_Value', 'Address_Value', NULL, CURRENT_TIMESTAMP, 'Insert_Psn_Cd_Value', CURRENT_TIMESTAMP, 'Update_Psn_Cd_Value');
-
-
-
-
-
-function isGmail(input) {
-  // Biểu thức chính quy kiểm tra định dạng gmail
-  var gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
-  
-  // Kiểm tra định dạng email
-  if (input.match(gmailRegex)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-var input = document.getElementById("myInput").value;
-if (isGmail(input)) {
-  console.log("Định dạng email đúng");
-} else {
-  console.log("Định dạng email không đúng");
-}
-
-
-
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-
-
-<c:choose>
-<c:when test="${empty ListA}">
-<p>ListA is empty.</p>
-</c:when>
-<c:when test="${fn:length(ListA) > 15}">
-<p>ListA has more than 15 elements.</p>
-</c:when>
-<c:otherwise>
-<p>ListA has less than or equal to 15 elements.</p>
-</c:otherwise>
-</c:choose>
-
-
-
-<c:when test="${not empty ListA}">
-        <c:forEach items="${ListA}" var="dept">
-            <tr>
-                <td><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
-                <td><a href="/CustomerSystem/T003"> ${dept.CUSTOMER_ID} </a></td>
-                <td>${dept.CUSTOMER_NAME }</td>
-                <td>${dept.SEX}</td>
-                <td>${dept.BIRTHDAY}</td>
-                <td>${dept.ADDRESS}</td>
-            </tr>
-        </c:forEach>
-    </c:when>
-
-
-String[] ids = request.getParameterValues("selectedValues");
-if (ids != null && ids.length > 0) {
-    int[] intIds = new int[ids.length];
-    for (int i = 0; i < ids.length; i++) {
-        intIds[i] = Integer.parseInt(ids[i]);
-    }
-    // sử dụng mảng intIds ở đây
-}
-
-
-
-String[] ids = request.getParameterValues("selectedValues");
-			if (ids != null && ids.length > 0) {
-			    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
-			    String idList = String.join(",", ids);
-			   
-			    // Loại bỏ các dấu ngoặc kép trong chuỗi
-			    idList = idList.replace("[\"", "").replace("\"]", "");
-			    String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
-			    String[] result2 = result.split(" ");
-			    
-			    daoSearch.deleteData(result2);
-			   
-			}
-
-
-
-public List<T002Dto> deleteData(String[] selecValue) {
-    List<T002Dto> listDelete = new ArrayList<T002Dto>();
-    Connection conn = null;
-    try {
-        String query = "UPDATE MSTCUSTOMER "
-                     + "SET Delete_YMD = CURRENT_TIMESTAMP "
-                     + "WHERE customer_Id IN (";
-        for (int i = 0; i < selecValue.length; i++) {
-            String[] ids = selecValue[i].split(",");
-            for (int j = 0; j < ids.length; j++) {
-                query += "?,";
-            }
-        }
-        query = query.substring(0, query.length() - 1) + ")";
-        conn = new DBConnection().getConnection();
-        PreparedStatement ps = conn.prepareStatement(query);
-        int paramIndex = 1;
-        for (int i = 0; i < selecValue.length; i++) {
-            String[] ids = selecValue[i].split(",");
-            for (int j = 0; j < ids.length; j++) {
-                ps.setLong(paramIndex++, Long.parseLong(ids[j]));
-            }
-        }
-        ps.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return listDelete;
-}
-
-
-
-
-public List<T002Dto> deleteData(String[] selecValue) {
-    List<T002Dto> listDelete = new ArrayList<T002Dto>();
-    Connection conn = null;
-    try {
-        conn = new DBConnection().getConnection();
-        String query = "UPDATE MSTCUSTOMER SET Delete_YMD = CURRENT_TIMESTAMP";
-        if (selecValue.length > 0) {
-            query += " WHERE customer_Id IN (";
-            for (int i = 0; i < selecValue.length; i++) {
-                query += "?,";
-            }
-            query = query.substring(0, query.length() - 1) + ")";
-        }
-        PreparedStatement ps = conn.prepareStatement(query);
-        for (int i = 0; i < selecValue.length; i++) {
-            ps.setLong(i + 1, Long.parseLong(selecValue[i]));
-        }
-        ps.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return listDelete;
-}
-
-
-
-UPDATE MSTCUSTOMER SET Delete_YMD = CURRENT_TIMESTAMP WHERE customer_Id IN (?)
-
-public List<T002Dto> deleteData(String[] selecValue) {
-	    List<T002Dto> listDelete = new ArrayList<T002Dto>();
-	    Connection conn = null;
-	    try {
-	        String query = "UPDATE MSTCUSTOMER "
-	                     + "SET Delete_YMD = CURRENT_TIMESTAMP "
-	                     + "WHERE customer_Id IN (";
-	        for (int i = 0; i < selecValue.length; i++) {
-	            query += "?,";
-	        }
-	        query = query.substring(0, query.length() - 1) + ")";
-	        conn = new DBConnection().getConnection();
-	        PreparedStatement ps = conn.prepareStatement(query);
-	        for (int i = 0; i < selecValue.length; i++) {
-	            ps.setLong(i + 1, Long.parseLong(selecValue[i]));
-	        }
-	        ps.executeUpdate();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return listDelete;
-	}
-
-
-String a = "10001,10002";
-JSONArray jsonArray = new JSONArray("[" + a + "]");
-String[] b = new String[jsonArray.length()];
-for (int i = 0; i < jsonArray.length(); i++) {
-    b[i] = jsonArray.getString(i);
-}
-
-
-
-String result = str.replaceAll("[^\\d,]", "").replace("\"", "");
-System.out.println(result);
-
-
-
-if (ids != null && ids.length > 0) {
-    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
-    String idList = String.join(",", ids);
-    
-    // Loại bỏ các dấu ngoặc kép trong chuỗi
-    idList = idList.replace("[\"", "").replace("\"]", "");
-    
-    T002Dao daoDelete = new T002Dao();
-    daoDelete.deleteData(idList);
-}
-
-
-
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		try {
-			String name = request.getParameter("txtCustomerName");
-			String sex = request.getParameter("browser");
-			String birthdayFrom = request.getParameter("txtBirthdayFromName");
-			String birthdayTo = request.getParameter("txtBirthdayToName");
-			T002Dao daoSearch = new T002Dao();
-			
-			
-			String[] ids = request.getParameterValues("selectedValues");
-			if (ids != null && ids.length > 0) {
-			    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
-			    String idList = String.join(",", ids);
-			    T002Dao daoDelete = new T002Dao();
-			    //[1001,1002]
-			    daoDelete.deleteData(idList);
-			}
-			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
-			request.setAttribute("listDataSearch", resultSearch);
-			
-			
-			//String[] selecValue = request.getParameterValues("selectedValues");
-			//daoSearch.deleteData(selecValue);
-			
-			
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
-			rd.forward(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
-
-public List<T002Dto> deleteData(String selecValue) {
-		List<T002Dto> listDelete = new ArrayList<T002Dto>();
-	    Connection conn = null;
-		try {
-			String query = "UPDATE MSTCUSTOMER\r\n"
-					+ "SET Delete_YMD = CURRENT_TIMESTAMP\r\n"
-					+ "WHERE customer_Id IN (?)";
-			conn = new DBConnection().getConnection();
-			PreparedStatement ps = conn.prepareStatement(query);
-			ps.setString(1, selecValue);
-			ResultSet rs = ps.executeQuery();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listDelete;
-		
-	}
-
-
-
-
-
-String[] id = {"10001","10002"};
-String[] idArray = id[0].split(",");
-String id2 = Arrays.toString(idArray);
-
-
-
-String[] ids = request.getParameterValues("selectedValues");
-			if (ids != null && ids.length > 0) {
-			    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
-			    String idList = String.join(",", ids);
-			    
-			    T002Dao daoDelete = new T002Dao();
-			    daoDelete.deleteData(idList);
-			}
-			//[["11010001","11010002"]] ////// (11010001,11010002)
-			// Lấy dữ liệu tìm kiếm và đưa vào request
-			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
-			request.setAttribute("listDataSearch", resultSearch);rrr
-
-
-
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class Main {
-    public static void main(String[] args) {
-        List<String> s1 = new ArrayList<>();
-        s1.add("10001");
-        s1.add("10002");
-
-        List<Integer> s2 = new ArrayList<>();
-        for (String s : s1) {
-            s2.add(Integer.parseInt(s));
-        }
-
-        System.out.println(s2); // [10001, 10002]
-    }
-}
-
-
-
-
-
-
-// Lấy giá trị các checkbox được chọn
-String[] ids = request.getParameterValues("checkboxAll");
-if (ids != null && ids.length > 0) {
-    // Chuyển mảng ids sang chuỗi ngăn cách bởi dấu phẩy
-    String idList = String.join(",", ids);
-    // Tạo một đối tượng T002Dao để thực hiện xóa dữ liệu
-    T002Dao daoDelete = new T002Dao();
-    daoDelete.deleteData(idList);
-}
-
-
-
-
-<c:forEach items="${listData}" var="dept">
-            <tr>
-                <td><input type="checkbox" checked= "true" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
-                <td><a href="/CustomerSystem/T003"> ${dept.CUSTOMER_ID} </a></td>
-                <td>${dept.CUSTOMER_NAME }</td>
-                <td>${dept.SEX}</td>
-                <td>${dept.BIRTHDAY}</td>
-                <td>${dept.ADDRESS}</td>
-            </tr>
-        </c:forEach>
-    </c:otherwise>
-	</c:choose>
-    </table>
-		
-	<div class = "search-container__btnnav">
-		<button class = "search-container__nav-btnAdd">Add New</button>
-		<button type = "submit" class = "search-container__nav-btnAdd" >Delete</button>
-			
-		</div>
-	</div>
-	
-	
-	
-	
-protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		try {
-			String name = request.getParameter("txtCustomerName");
-			String sex = request.getParameter("browser");
-			String birthdayFrom = request.getParameter("txtBirthdayFromName");
-			String birthdayTo = request.getParameter("txtBirthdayToName");
-			T002Dao daoSearch = new T002Dao();
-			
-			// Xử lý chức năng xóa
-			//String[] ids = request.getParameterValues("checkboxAll");
-//			if (ids != null && ids.length > 0) {
-//			    String idList = String.join(",", ids);
-			    //daoSearch.deleteData(idList);
-			//}
-			
-			// Lấy dữ liệu tìm kiếm và đưa vào request
-			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
-			request.setAttribute("listDataSearch", resultSearch);
-			
-			
-			//String[] selecValue = request.getParameterValues("selectedValues");
-			//daoSearch.deleteData(selecValue);
-			
-			
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
-			rd.forward(request, response);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
-
-public List<T002Dto> deleteData(String[] selecValue) {
-    List<T002Dto> listDelete = new ArrayList<T002Dto>();
-    Connection conn = null;
-    try {
-        String query = "UPDATE MSTCUSTOMER "
-                     + "SET Delete_YMD = CURRENT_TIMESTAMP "
-                     + "WHERE customer_Id IN (";
-        for (int i = 0; i < selecValue.length; i++) {
-            query += "?,";
-        }
-        query = query.substring(0, query.length() - 1) + ")";
-        conn = new DBConnection().getConnection();
-        PreparedStatement ps = conn.prepareStatement(query);
-        for (int i = 0; i < selecValue.length; i++) {
-            ps.setLong(i + 1, Long.parseLong(selecValue[i]));
-        }
-        ps.executeUpdate();
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-    return listDelete;
-}
-
-
-
-
-public List<T002Dto> deleteData(String[] selecValue) {
-		List<T002Dto> listDelete = new ArrayList<T002Dto>();
-	    Connection conn = null;
-		try {
-			String query = "UPDATE MSTCUSTOMER\r\n"
-					+ "SET Delete_YMD = CURRENT_TIMESTAMP\r\n"
-					+ "WHERE customer_Id IN (?)";
-			conn = new DBConnection().getConnection();
-			PreparedStatement ps = conn.prepareStatement(query);
-			ps.setLong(1, selecValue);
-			ResultSet rs = ps.executeQuery();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listDelete;
-		
-	}
-
-
-var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-var selectedValues = [];
-for (var i = 0; i < checkboxes.length; i++) {
-  selectedValues.push(checkboxes[i].value);
-}
-var xhttp = new XMLHttpRequest();
-xhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-    console.log(this.responseText);
-  }
-};
-xhttp.open("POST", "process.jsp", true);
-xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xhttp.send("selectedValues=" + JSON.stringify(selectedValues));
-
-
-
-
-
-
-
-
-
-
-
-
-T001.java: 
 /**
  * @(#)T001.java 01-00 2021/07/16
  *
@@ -869,16 +70,17 @@ public class T001 extends HttpServlet {
 			String user = req.getParameter("userName");
 			String pass = req.getParameter("password");
 			T001Dao loginDao = new T001Dao();
-			T001Dto result = loginDao.CheckLogin(user, pass);
-			
+			T001Dto result = loginDao.checkLogin(user, pass);
+			T001Dto getSession = loginDao.getSession(user);
 			/**
-			 * Nếu đăng nhập thành công, chuyển hướng tới trang T002_Search
-			 * Ngoài ra: Lưu thông báo lỗi và chuyển hướng trang T001_Login
-			 * thông báo lỗi.
+			 * N蘯ｿu ﾄ惰ハg nh蘯ｭp thﾃ�nh cﾃｴng, chuy盻ハ hﾆｰ盻嬾g t盻嬖 trang T002_Search
+			 * Ngoﾃ�i ra: Lﾆｰu thﾃｴng bﾃ｡o l盻擁 vﾃ� chuy盻ハ hﾆｰ盻嬾g trang T001_Login
+			 * thﾃｴng bﾃ｡o l盻擁.
 			 */
 			if (result != null) {
-				HttpSession session=req.getSession();  
-		        session.setAttribute("name",user);  
+				HttpSession session=req.getSession(); 
+				session.setAttribute("psnCd", result.getPSN_CD());
+		        session.setAttribute("name",getSession.getUSERNAME());  
 		        resp.sendRedirect("/CustomerSystem/T002");
 			} else {
 				String message = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
@@ -892,8 +94,22 @@ public class T001 extends HttpServlet {
 	}
 }
 
+/**
+font-size: 15px;
+font-weight: 300;
+line-height: 18px;
+height: 36px;
+margin: 10px;
+overflow: hidden;
+display: block;
+display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 1;
+width: 100px;
+*/
 
-T002.java
+
+
 /**
  * @(#)T002.java 16-00 2023/02/22
  *
@@ -907,7 +123,9 @@ package fjs.cs.action;
 
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -932,6 +150,7 @@ import fjs.cs.dao.T002Dao;
 import fjs.cs.dto.T001Dto;
 import fjs.cs.dto.T002Dto;
 
+
 public class T002 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	/**
@@ -943,47 +162,110 @@ public class T002 extends HttpServlet {
 	 * @throws ServletException, IOException
 	 * @since 1.00
 	 */
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		String indexPage = request.getParameter("index");
+		if (indexPage == null) {
+			indexPage = "1";
+		}
+		
+		int index = Integer.parseInt(indexPage);
+		request.setAttribute("tag", index);
 		T002Dao dao = new T002Dao();
-		List<T002Dto> list = dao.getData();
-		req.setAttribute("listData", list);
-		req.getRequestDispatcher(Constants.T002_SEARCH);
-		RequestDispatcher myRD = null;
-		// Hien thi man hinh Login
-		myRD = req.getRequestDispatcher(Constants.T002_SEARCH);
-		myRD.forward(req, resp);
+		
+		//get data
+		List<T002Dto> list = null;
+		int count;
+		try {
+			list = dao.getData();
+			request.setAttribute("listData", list);
+			count = dao.getDataPage();
+			int endpage = count/15;
+			if (count % 15 != 0) {
+				endpage++;
+			}
+			List<T002Dto> listPage = dao.pagingData(index);
+			request.setAttribute("ListA", listPage);
+			request.setAttribute("endP", endpage);
+			request.getRequestDispatcher(Constants.T002_SEARCH);
+			RequestDispatcher myRD = null;
+			// Hien thi man hinh Search
+			myRD = request.getRequestDispatcher(Constants.T002_SEARCH);
+			myRD.forward(request, response);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * Event man hinh
 	 * 
-	 * @param HttpServletRequest  req
-	 * @param HttpServletResponse resp
+	 * @param HttpServletRequest  request
+	 * @param HttpServletResponse response
 	 * @return RequestDispatcher
 	 * @throws ServletException, IOException
 	 * @since 1.00
 	 */
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		resp.setContentType("text/html");
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
 		try {
-			String name = req.getParameter("txtCustomerName");
-			String sex = req.getParameter("browser");
-			String birthdayFrom = req.getParameter("txtBirthdayFromName");
-			String birthdayTo = req.getParameter("txtBirthdayToName");
+			String name = request.getParameter("txtCustomerName");
+			String sex = request.getParameter("browser");
+			String birthdayFrom = request.getParameter("txtBirthdayFromName");
+			String birthdayTo = request.getParameter("txtBirthdayToName");
 			T002Dao daoSearch = new T002Dao();
-			List<T002Dto> resultSearch =  daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo, null);
-			req.setAttribute("listDataSearch", resultSearch);
+			if (name == null || name.trim().isEmpty()) {
+			    name = null;
+			}
+			if (sex == null || sex.trim().isEmpty()) {
+			    sex = null;
+			}
+			if (birthdayFrom == null || birthdayFrom.trim().isEmpty()) {
+			    birthdayFrom = null;
+			}
+			if (birthdayTo == null || birthdayTo.trim().isEmpty()) {
+			    birthdayTo = null;
+			}
+			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+			
+			request.setAttribute("listDataSearch", resultSearch);
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+			rd.forward(request, response);
+			//L蘯･y data cﾃ｡c ﾃｴ checkbox ﾄ柁ｰ盻｣c checked
+			String[] ids = request.getParameterValues("selectedValues");
+			if (ids != null && ids.length > 0) {
+			    String idList = String.join(",", ids);
+			   
+			    // Lo蘯｡i b盻� cﾃ｡c d蘯･u ngo蘯ｷc kﾃｩp trong chu盻擁
+			    idList = idList.replace("[\"", "").replace("\"]", "");
+			    String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
+			    String[] result2 = result.split(",");
+			    if (result2.length == 16) {
+			    	String[] result3 = Arrays.copyOfRange(result2, 1, result2.length);
+		    		daoSearch.deleteData(result3);
+			    }else {
+			    	for (int i = 0;i< result2.length; i++) {
+				    	if (result2.length == 16) {
+				    		daoSearch.deleteData(result2);
+				    	}
+				    	daoSearch.deleteData(result2);
+				    }
+			    }
+			}	
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 }
 
-T003.java
+
+
+
 package fjs.cs.action;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -991,8 +273,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import fjs.cs.common.Constants;
+import fjs.cs.dao.T003Dao;
+import fjs.cs.dto.T003Dto;
 
 public class T003 extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -1009,7 +294,17 @@ public class T003 extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		RequestDispatcher myRD = null;
-		// Hien thi man hinh Login
+		String id = req.getParameter("id");
+		if (id != null) {
+			T003Dto dto;
+			try {
+				dto = T003Dao.getCustomerById(Integer.parseInt(id));
+				req.setAttribute("dto", dto);
+			} catch (NumberFormatException | SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		// Hien thi man hinh Edit
 		myRD = req.getRequestDispatcher(Constants.T003_EDIT);
 		myRD.forward(req, resp);
 	}
@@ -1024,11 +319,51 @@ public class T003 extends HttpServlet {
 	 * @since 1.00
 	 */
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+		try {
+			String id = req.getParameter("userId");
+			String name = req.getParameter("txtCustomerName");
+			String sex = req.getParameter("cboSex");
+			String birthday = req.getParameter("txtCustomerBirthday");
+			String email = req.getParameter("txtCustomerEmail");
+			String address = req.getParameter("txaAddress");
+	        HttpSession session = req.getSession();
+	        
+	        /**
+	         * Ki盻ノ tra n蘯ｿu id mﾃ� cﾃｳ d盻ｯ li盻㎡ thﾃｬ lﾃ� update
+	         * Ngoﾃ�i ra: id khﾃｴng cﾃｳ d盻ｯ li盻㎡ lﾃ� save
+	         */
+	        int status = 0;
+	        T003Dao dao = new T003Dao();
+	        if (id == "") {
+	        	T003Dto dtosave = new T003Dto();
+	        	dtosave.setCUSTOMER_NAME(name);
+	        	dtosave.setSEX(sex);
+	        	dtosave.setBIRTHDAY(birthday);
+	        	dtosave.setEMAIL(email);
+	        	dtosave.setADDRESS(address);
+	            status = dao.save(dtosave, session);
+	        }else if (id != "") {	 
+	        	T003Dto dto = new T003Dto();
+		        dto.setCUSTOMER_ID(Integer.parseInt(id));
+		        dto.setCUSTOMER_NAME(name);
+		        dto.setSEX(sex);
+		        dto.setBIRTHDAY(birthday);
+		        dto.setEMAIL(email);
+		        dto.setADDRESS(address);
+	        	status = dao.update(dto, session);
+	        }
+	        if (status > 0) {
+	            resp.sendRedirect("/CustomerSystem/T002");
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
-paket:
-Constants.java
+
+
+
+
 /**
  * @(#)T001.java 01-00 2021/07/16
  *
@@ -1060,18 +395,34 @@ public class Constants {
 	public static final String MESSAGE_ERROR_USER_NOT_EXIST = "ユーザーIDまたはパスワードが不正です。";
 	
 	public static final String MESSAGE_CHECKOFF = "行を選択してください。";
-	
-	public static final String MESSAGE_TO_SMALL_FROM = "There is an error in the range input of Birthday";
-	
+	//T002(Search)
+	// Thong bao loi khong nhap duoc user
+	public static final String USER_NOT_ERROR = "ユーザーIDを入力してください。";
+	//Thong bao loi khong nhap duoc password
+	public static final String PASSWORD_NOT_ERROR = "パスワードを入力してください。";
+	//Thong bao loi chua checked
+	public static final String CHECKED_NOT_ERROR = "行を選択してください。";
+	//Thong bao sai dinh dang bitrhday from
 	public static final String MESSAGE_ERROR_FROM = "Invalid Birthday (From).";
+	//Thong bao sao dinh dang birthday to
 	public static final String MESSAGE_ERROR_TO = "Invalid Birthday (To).";
-	
-	
+	//Thông báo sai ngày bắt đầu lớn hơn ngày kết thúc.
+	public static final String MESSAGE_ERROR_FROM_BIGGER_TO = "There is an error in the range input of Birthday";
+	//Thông báo sai định dạng birthday
+	//T003(Edit)
+	public static final String MESSAGE_ERROR_BIRTHDAY = "誕生日が不正です。";
+	//Thông báo lỗi sai định dạng email
+	public static final String MESSAGE_ERROR_FORMAT_EMAIL = "メールアドレスが不正です。";
+	// CSDL
+	public static final String USER = "sa";
+    public static final String PASS = "TranVanToi234";
+	public static final String DB_DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
+	public static final String CONNECTION_URL = "jdbc:sqlserver://TOI-TV-TTV-VM\\SQLEXPRESS:1433;databaseName=CustomerSystem";
 	
 }
 
 
-DBConnection.java
+
 package fjs.cs.common;
 
 import java.sql.Connection;
@@ -1080,20 +431,18 @@ import java.sql.SQLException;
 
 public class DBConnection {
 	public Connection getConnection() throws SQLException {
-		
 		Connection connection = null;
 		try {
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-			String connectionURL = "jdbc:sqlserver://TOI-TV-TTV-VM\\SQLEXPRESS:1433;databaseName=CustomerSystem";
-			connection = DriverManager.getConnection(connectionURL, "sa", "TranVanToi234");
+			Class.forName(Constants.DB_DRIVER);
+			String connectionURL = Constants.CONNECTION_URL;
+			connection = DriverManager.getConnection(connectionURL, Constants.USER, Constants.PASS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return connection;
 	}
 	
-	public static Connection disconnectDB() throws SQLException {
-		Connection connection = null;
+	public static Connection disconnectDB(Connection connection) throws SQLException {
 		try {
 			if (connection != null) {
 				connection.close();
@@ -1106,7 +455,8 @@ public class DBConnection {
 }
 
 
-T001Dao.java
+
+
 /**
  * @(#)T001Dao.java 01-00 2021/07/16
  *
@@ -1133,9 +483,10 @@ import java.sql.SQLException;
 
 import fjs.cs.common.DBConnection;
 import fjs.cs.dto.T001Dto;
+import fjs.cs.dto.T002Dto;
 
 public class T001Dao {
-	public T001Dto CheckLogin(String user, String pass) {
+	public T001Dto checkLogin(String user, String pass) throws SQLException {
 		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -1149,40 +500,72 @@ public class T001Dao {
 			while (rs.next()) {
 		        int count = rs.getInt("CNT");
 		        if (count == 1) {
-		            T001Dto a = new T001Dto(user, pass);
-		            return a;
+		            T001Dto result = new T001Dto(user, pass, null, null);
+		            return result;
 		        } else {
 		            return null;
 		        }
 			}
-			conn = DBConnection.disconnectDB();
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
+		}
+		return null;
+	}
+	
+	public T001Dto getSession(String user) throws SQLException {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		try {
+			String query = "select * from MSTUSER where USERID =?";
+			conn = new DBConnection().getConnection();
+			ps = conn.prepareStatement(query);
+			ps.setString(1, user);
+			rs = ps.executeQuery();
+			while (rs.next()) {
+				T001Dto data = new T001Dto();
+				data.setPSN_CD(rs.getString(1));
+				data.setUSERID(rs.getString(2));
+				data.setPASSWORD(rs.getString(3));
+				data.setUSERNAME(rs.getString(4));
+		         return data;
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
 		}
 		return null;
 	}
 }
 
 
-T002dao.java
+
+
+
 package fjs.cs.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import fjs.cs.common.DBConnection;
 import fjs.cs.dto.T002Dto;
 
 public class T002Dao {
-	public List<T002Dto> getData() {
+	public List<T002Dto> getData() throws SQLException {
 		List<T002Dto> list = new ArrayList<T002Dto>();
+		Connection conn = null;
 		try {
 			String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME,\r\n" + 
 					"CASE WHEN SEX = 0 THEN 'Male' ELSE 'Female' END AS SEX,BIRTHDAY, ADDRESS\r\n" + 
 					"FROM MSTCUSTOMER WHERE DELETE_YMD IS NULL ORDER BY CUSTOMER_ID";
-			Connection conn = new DBConnection().getConnection();
+			conn = new DBConnection().getConnection();
 			PreparedStatement ps = conn.prepareStatement(query);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
@@ -1194,51 +577,244 @@ public class T002Dao {
 				dataT002.setADDRESS(rs.getString(5));
 				list.add(dataT002);
 			}
-			conn = DBConnection.disconnectDB();
 		}catch(Exception e) {
 			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
 		}
 		return list;
 	}
 	
-	public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo, String address) {
-		List<T002Dto> listSearch = new ArrayList<T002Dto>();
-		try {
-			String query = "select CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS FROM MSTCUSTOMER\r\n" + 
-					"WHERE CUSTOMER_NAME LIKE '%%' \r\n" + 
-					"    AND SEX = ?\r\n" + 
-					"	AND BIRTHDAY >= ? \r\n" + 
-					"    AND BIRTHDAY <= ? \r\n" + 
-					"    \r\n" + 
-					"ORDER BY CUSTOMER_ID;";
-			Connection con = new DBConnection().getConnection();
-			PreparedStatement ps = con.prepareStatement(query);
-			ps.setString(1, "%"+ name +"%");
-			ps.setString(2, sex);
-			ps.setString(3, birthdayFrom);
-			ps.setString(4, birthdayTo);
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-				T002Dto dataT002Search = new T002Dto();
-				dataT002Search.setCUSTOMER_ID(rs.getString(1));
-				dataT002Search.setCUSTOMER_NAME(rs.getString(2));
-				dataT002Search.setSEX(rs.getString(3));
-				dataT002Search.setBIRTHDAY(rs.getString(4));
-				dataT002Search.setADDRESS(rs.getString(5));
-				listSearch.add(dataT002Search);
-			}
-			con = DBConnection.disconnectDB();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return listSearch;
+	public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo) {
+	    List<T002Dto> listSearch = new ArrayList<T002Dto>();
+	    Connection conn = null;
+	    try {
+	        String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS \r\n"
+	                + "FROM MSTCUSTOMER\r\n"
+	                + "WHERE 1=1 ";
+	        if (name != null && !name.isEmpty()) {
+	            query += "AND CUSTOMER_NAME LIKE ? ";
+	        }
+	        if (sex != null && !sex.isEmpty()) {
+	            query += "AND SEX = ? ";
+	        }
+	        if (birthdayFrom != null && !birthdayFrom.isEmpty()) {
+	            query += "AND BIRTHDAY >= ? ";
+	        }
+	        if (birthdayTo != null && !birthdayTo.isEmpty()) {
+	            query += "AND BIRTHDAY <= ? ";
+	        }
+	        query += "ORDER BY CUSTOMER_ID;\r\n";
+	       
+	        conn =  new DBConnection().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        int parameterIndex = 1;
+	        if (name != null && !name.isEmpty()) {
+	            ps.setString(parameterIndex++, "%" + name + "%");
+	        }
+	        if (sex != null && !sex.isEmpty()) {
+	            ps.setString(parameterIndex++, sex);
+	        }
+	        if (birthdayFrom != null && !birthdayFrom.isEmpty()) {
+	            ps.setString(parameterIndex++, birthdayFrom);
+	        }
+	        if (birthdayTo != null && !birthdayTo.isEmpty()) {
+	            ps.setString(parameterIndex++, birthdayTo);
+	        }
+	        ResultSet rs = ps.executeQuery();
+	        while(rs.next()) {
+	            T002Dto dataT002Search = new T002Dto();
+	            dataT002Search.setCUSTOMER_ID(rs.getString(1));
+	            dataT002Search.setCUSTOMER_NAME(rs.getString(2));
+	            dataT002Search.setSEX(rs.getString(3));
+	            dataT002Search.setBIRTHDAY(rs.getString(4));
+	            dataT002Search.setADDRESS(rs.getString(5));
+	            listSearch.add(dataT002Search);
+	        }
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return listSearch;
+	}
+
+
+	
+	public List<T002Dto> deleteData(String[] selecValue) throws SQLException {
+	    List<T002Dto> listDelete = new ArrayList<T002Dto>();
+	    Connection conn = null;
+	    try {
+	        String query = "UPDATE MSTCUSTOMER "
+	                     + "SET Delete_YMD = CURRENT_TIMESTAMP "
+	                     + "WHERE customer_Id IN (";
+	        for (int i = 0; i < selecValue.length; i++) {
+	        	String[] ids = selecValue[0].split(",");
+	            for (int j = 0; j < ids.length; j++) {
+	                query += "?,";
+	            }
+	        }
+	        query = query.substring(0, query.length() - 1) + ")";
+	        conn = new DBConnection().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        for (int i = 0; i < selecValue.length; i++) {
+	            ps.setLong(i + 1, Long.parseLong(selecValue[i]));
+	        }
+	        ps.executeUpdate();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }finally {
+	    	DBConnection.disconnectDB(conn);
+	    }
+	    return listDelete;
 	}
 	
+	
+	public int getDataPage() throws SQLException {
+		String query = "select count(*) from MSTCUSTOMER";
+		Connection conn = null;
+		try {
+			conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				return rs.getInt(1);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
+	    }
+		return 0;
+	}
+	
+	public List<T002Dto> pagingData(int index) throws SQLException {
+		List<T002Dto> list = new ArrayList<>();
+		Connection conn = null;
+		String query = "select CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS from MSTCUSTOMER order by CUSTOMER_ID OFFSET ? ROWS FETCH NEXT 15 ROWS ONLY";
+		try {
+			conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setInt(1, (index-1)*15);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				T002Dto datapagin = new T002Dto();
+				datapagin.setCUSTOMER_ID(rs.getString(1));
+				datapagin.setCUSTOMER_NAME(rs.getString(2));
+				datapagin.setSEX(rs.getString(3));
+				datapagin.setBIRTHDAY(rs.getString(4));
+				datapagin.setADDRESS(rs.getString(5));
+	            list.add(datapagin);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
+	    }
+		return list;
+	}
 	
 }
 
 
-T001Dto.java
+
+
+
+package fjs.cs.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import fjs.cs.common.DBConnection;
+import fjs.cs.dto.T001Dto;
+import fjs.cs.dto.T002Dto;
+import fjs.cs.dto.T003Dto;
+
+public class T003Dao {
+	public int update(T003Dto u, HttpSession session) throws SQLException {
+		int status = 0;
+		Connection conn = null;
+		try {
+			conn = new DBConnection().getConnection();
+			String query = "UPDATE MSTCUSTOMER SET CUSTOMER_NAME = ?, SEX = ?, BIRTHDAY = ?, EMAIL = ?, ADDRESS = ?, DELETE_YMD = NULL, UPDATE_YMD = CURRENT_TIMESTAMP, UPDATE_PSN_CD = (SELECT PSN_CD FROM mstuser WHERE USERID = ?) WHERE CUSTOMER_ID = ?";
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, u.getCUSTOMER_NAME());
+			ps.setString(2, u.getSEX());
+			ps.setString(3, u.getBIRTHDAY());
+			ps.setString(4, u.getEMAIL());
+			ps.setString(5, u.getADDRESS());
+			ps.setString(6, (String) session.getAttribute("psnCd"));
+			ps.setInt(7, u.getCUSTOMER_ID());
+			status = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.disconnectDB(conn);
+		}
+		return status;
+	}
+
+	public static T003Dto getCustomerById(int id) throws SQLException {
+		T003Dto customerId = null;
+		Connection conn = null;
+		try {
+			String query = "select * from MSTCUSTOMER where CUSTOMER_ID=?";
+			conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				customerId = new T003Dto();
+				customerId.setCUSTOMER_ID(rs.getInt("CUSTOMER_ID"));
+				customerId.setCUSTOMER_NAME(rs.getString("CUSTOMER_NAME"));
+				customerId.setSEX(rs.getString("SEX"));
+				customerId.setBIRTHDAY(rs.getString("BIRTHDAY"));
+				customerId.setEMAIL(rs.getString("Email"));
+				customerId.setADDRESS(rs.getString("ADDRESS"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
+		}
+		return customerId;
+	}
+
+	public int save(T003Dto save, HttpSession session) throws SQLException {
+		int status = 0;
+		Connection conn = null;
+		try {
+			String query = "INSERT INTO MSTCUSTOMER (CUSTOMER_ID, CUSTOMER_NAME, SEX, BIRTHDAY, EMAIL, ADDRESS, DELETE_YMD, INSERT_YMD, INSERT_PSN_CD, UPDATE_YMD, UPDATE_PSN_CD) \r\n" + 
+					"VALUES (NEXT VALUE FOR SEQ_CUSTOMER_ID, ?, ?, ?, ?, ?, NULL, CURRENT_TIMESTAMP, ?, CURRENT_TIMESTAMP, ?)";
+			conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, save.getCUSTOMER_NAME());
+			ps.setString(2, save.getSEX());
+			ps.setString(3, save.getBIRTHDAY());
+			ps.setString(4, save.getEMAIL());
+			ps.setString(5, save.getADDRESS());
+			ps.setString(6, (String) session.getAttribute("psnCd"));
+			ps.setString(7, (String) session.getAttribute("psnCd"));
+			status = ps.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			DBConnection.disconnectDB(conn);
+		}
+		return status;
+	}
+
+}
+
+
+
+
+
 /**
  * @(#)T001Dto.java 01-00 2021/07/16
  *
@@ -1258,16 +834,18 @@ package fjs.cs.dto;
  * 
  */
 public class T001Dto {
-	public String USERID, PASSWORD;
+	public String USERID, PASSWORD, PSN_CD, USERNAME;
 
 	public T001Dto() {
 
 	}
 
-	public T001Dto(String uSERID, String pASSWORD) {
+	public T001Dto(String uSERID, String pASSWORD, String pSN_CD, String uSERNAME) {
 		super();
 		USERID = uSERID;
 		PASSWORD = pASSWORD;
+		PSN_CD = pSN_CD;
+		USERNAME = uSERNAME;
 	}
 
 	public String getUSERID() {
@@ -1285,10 +863,27 @@ public class T001Dto {
 	public void setPASSWORD(String pASSWORD) {
 		PASSWORD = pASSWORD;
 	}
+
+	public String getPSN_CD() {
+		return PSN_CD;
+	}
+
+	public void setPSN_CD(String pSN_CD) {
+		PSN_CD = pSN_CD;
+	}
+
+	public String getUSERNAME() {
+		return USERNAME;
+	}
+
+	public void setUSERNAME(String uSERNAME) {
+		USERNAME = uSERNAME;
+	}
 }
 
 
-T002Dto.java
+
+
 package fjs.cs.dto;
 
 public class T002Dto {
@@ -1301,7 +896,7 @@ public class T002Dto {
 	public T002Dto(String cUSTOMER_ID, String cUSTOMER_NAME, String sEX, String bIRTHDAY, String aDDRESS) {
 		super();
 		CUSTOMER_ID = cUSTOMER_ID;
-		CUSTOMER_NAME = cUSTOMER_NAME;
+		CUSTOMER_NAME = cUSTOMER_NAME; 
 		SEX = sEX;
 		BIRTHDAY = bIRTHDAY;
 		ADDRESS = aDDRESS;
@@ -1349,8 +944,80 @@ public class T002Dto {
 }
 
 
-css:
-common.css
+
+
+package fjs.cs.dto;
+
+public class T003Dto {
+	public int CUSTOMER_ID;
+	public String  CUSTOMER_NAME, SEX, EMAIL, BIRTHDAY, ADDRESS;
+
+	public T003Dto() {
+		
+	}
+
+	public T003Dto(int cUSTOMER_ID, String cUSTOMER_NAME, String sEX, String eMAIL, String bIRTHDAY, String aDDRESS) {
+		super();
+		CUSTOMER_ID = cUSTOMER_ID;
+		CUSTOMER_NAME = cUSTOMER_NAME;
+		SEX = sEX;
+		EMAIL = eMAIL;
+		BIRTHDAY = bIRTHDAY;
+		ADDRESS = aDDRESS;
+	}
+
+	public int getCUSTOMER_ID() {
+		return CUSTOMER_ID;
+	}
+
+	public void setCUSTOMER_ID(int cUSTOMER_ID) {
+		CUSTOMER_ID = cUSTOMER_ID;
+	}
+
+	public String getCUSTOMER_NAME() {
+		return CUSTOMER_NAME;
+	}
+
+	public void setCUSTOMER_NAME(String cUSTOMER_NAME) {
+		CUSTOMER_NAME = cUSTOMER_NAME;
+	}
+
+	public String getSEX() {
+		return SEX;
+	}
+
+	public void setSEX(String sEX) {
+		SEX = sEX;
+	}
+
+	public String getEMAIL() {
+		return EMAIL;
+	}
+
+	public void setEMAIL(String eMAIL) {
+		EMAIL = eMAIL;
+	}
+
+	public String getBIRTHDAY() {
+		return BIRTHDAY;
+	}
+
+	public void setBIRTHDAY(String bIRTHDAY) {
+		BIRTHDAY = bIRTHDAY;
+	}
+
+	public String getADDRESS() {
+		return ADDRESS;
+	}
+
+	public void setADDRESS(String aDDRESS) {
+		ADDRESS = aDDRESS;
+	}
+}
+
+
+
+
 :root {
 	-while-color: #fff; -
 	-black-color: #000; -
@@ -1371,8 +1038,17 @@ html {
 	font-family: 'Roboto', sans-serif;
 	box-sizing: border-box;
 }
+.footer {
+	position: fixed;
+    bottom: 20px;
+    right: 0;
+    left: 0;
+    padding: 0px 15px;
+}
 
-T001.css
+
+
+
 #main {
 	background-color: #ccffff;
 	padding: 20px 15px;
@@ -1463,17 +1139,23 @@ T001.css
 	margin-top: 5px;
 }
 
-T002.css
+
+
 .search-container {
 	background-color: #ccffff;
 }
 
 .search-container__dan {
-	padding: 20px;
+	margin-top: 2px;
 }
 
 .search-container__text {
 	color: #000000;
+	
+}
+
+.search-container__text_text {
+	font-size: 16px;
 }
 
 .search-container__line {
@@ -1488,6 +1170,7 @@ T002.css
 	padding-top: 20px;
 	display: flex;
 	justify-content: space-between;
+	font-size: 16px;
 }
 
 .search-container__logo {
@@ -1501,6 +1184,7 @@ T002.css
 	height: 60px;
 	padding: 20px;
 	background-color: #ffff99;
+	    padding: 12px 0px;
 }
 
 .handalSearch-customerName {
@@ -1517,10 +1201,16 @@ T002.css
 
 .handalSearch-btnSearch {
 	display: flex;
+	
 }
 
+#btnSearch {
+	font-size: 16px;
+    padding: 1px 17px;
+    background-color: #c0c0c0;
+}
 .handalSearch-customercommon {
-	line-height: 20px;
+	line-height: 36px;
 }
 
 .search-container__handalSearch--margin {
@@ -1528,15 +1218,15 @@ T002.css
 }
 
 .handalSearch-customerName__text {
-	min-width: 120px;
+	min-width: 150px;
 }
 
 .handalSearch-customerSex__text {
-	min-width: 30px;
+	min-width: 50px;
 }
 
 .handalSearch-BirthdayFrom__text {
-	min-width: 50px;
+	min-width: 70px;
 }
 
 .search-container__btnContext--chuyenhuong {
@@ -1546,7 +1236,7 @@ T002.css
 
 .search-container__btnContext--start button {
 	font-size: 20px;
-	padding: 2px;
+    
 }
 
 .search-container__btnContext--end button {
@@ -1555,17 +1245,15 @@ T002.css
 }
 
 .search-container__btnContext--start lable {
-	font-size: 10px;
 	margin-left: 15px;
 }
 
 .search-container__btnContext--end lable {
-	font-size: 10px;
 	margin-right: 15px;
 }
 
 .search-container__btnContext--chuyenhuong {
-	margin: 30px 0;
+	margin: 15px 0;
 }
 
 .search-container__table {
@@ -1592,7 +1280,6 @@ table tr:nth-child(1) {
 
 th, td {
 	text-align: left;
-	padding: 10px;
 }
 
 .search-container__btnnav {
@@ -1600,26 +1287,234 @@ th, td {
 	margin-top: 20px;
 }
 
+.search-container__btnnav button {
+	background-color: #c0c0c0;
+}
+
 .search-container__btnnav .search-container__nav-btnAdd {
 	margin-right: 10px;
+	padding: 2px 24px;
+}
+
+button a {
+	text-decoration: none;
+	padding: 2px 24px;
+}
+
+#cboSex {
+	width: 100px;
+}
+
+#btnFirst a {
+	padding: 2px 18px;
+	background-color: #c0c0c0;
+}
+
+#btnPrevious a {
+	padding: 2px 18px;
+	background-color: #c0c0c0;
+	color: #000;
+}
+
+#btnPreviouss a {
+	padding: 2px 24px;
+	background-color: #c0c0c0;
+}
+
+#btnNext a {
+	background-color: #c0c0c0;
+	color: #000;
+}
+
+#txtCustomerInput {
+	
+}
+.searchtable-check {
+	
+}
+
+.searchtable-id {
+	font-weight: 300;
+    line-height: 34px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    width: 70px;
+}
+
+.searchtable-sex {
+	
+}
+
+.searchtable-birthday {
+	
+}
+
+.searchtable-address {
+	font-weight: 300;
+	line-height: 34px;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	width: 250px;
+}
+
+.searchtable-name {
+	font-weight: 300;
+	line-height: 34px;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 1;
+	width: 200px;
 }
 
 
 
-thư mục include
-footer.jsp
+.edit-container__headerText{
+	font-size: 16px;
+}
+
+.edit-container__wellcom {
+	display: flex;
+	justify-content: space-between;
+}
+
+.edit-container__wellcom {
+	margin-top: 30px;
+}
+
+.line-br {
+	width: 100%;
+    height: 20px;
+    background-color: #3366ff;
+    font-size: 16px;
+    color: #fff;
+    padding: 5px 13px;
+    margin-top: 25px;
+}
+.edit-container__content{
+	margin: 0 0 100% 0;
+	text-align: center;
+}
+
+.edit-container__content--error {
+	font-size: 15px;
+	color: #f00000;
+	margin-top: 10px;
+	height: 30px;
+	width: 100%;
+}
+
+.edit-container__content-Id {
+	display: flex;
+    padding-top: 73px;
+    justify-content: center;
+}
+
+.edit-container__content-IdText {
+	margin-left: -522px;
+	position: relative;
+}
+
+.edit-container__content-IdLable {
+	position: absolute;
+    margin-left: -13%;
+}
+
+.edit-container__content-Sex {
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	margin-right: 291px;
+}
+
+.edit-container__content-Name {
+	margin-top: 25px;
+}
+
+.edit-container__contentName-input {
+	margin-right: 20px;
+}
+
+.edit-container__content-Sexlable {
+	width: 147px;
+	position: relative;
+	margin-left: -19%;
+}
+
+.edit-container__contentBirthday-input {
+	margin-right: 86px;
+}
+
+.edit-container__contentEmail-input {
+	margin-right: 104px
+}
+
+.edit-container__contentAddress-input {
+	margin-right: 88px;
+}
+
+.edit-container__btnContent {
+	padding: 30px 66px;
+}
+
+.edit-container__btnContent button {
+	padding: 10px 50px;
+	background-color: #c0c0c0;
+}
+
+.edit-container__btnContent-Save {
+    margin-right: 160px;
+}
+
+.edit-container__btnContent-margin {
+	margin-top: 40px;
+}
+
+#cboSex {
+	position: absolute;
+    margin-left: 177px;
+    height: 30px;
+    width: 11%;
+}
+
+.cbooption {
+	height: 50px;
+    width: 11%;
+}
+
+.form-with__input {
+	height: 40px;
+    width: 25%;
+}
+
+#txaAddress {
+	height: 80px;
+    width: 25%;
+    resize: none;
+}
+
+#txtCustomerEmail {	
+	text-decoration: underline;
+}
+
+
+
+
 <footer class="footer">
 		<div class="header-br"></div>
 		<div class="footer-text__copyright">Copyright (c) 2000-2008
 			FUJINET, All Rights Reserved.</div>
-		</footer>
-	</div>
-</body>
-</html>
+	</footer>
+</div>
 
-header.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style type="text/css">
   <%@include file="/WEB-INF/css/common.css"%>
 </style>
@@ -1634,19 +1529,218 @@ header.jsp
 			<div class="header-br"></div>
 		</div>
 		
-thư mục jsp
-T001.jsp
+		
+		
+		
+
+var btnClear = document.getElementById("btnClear");
+	btnClear.addEventListener('click', (event) => {
+		event.preventDefault();
+		document.getElementById("txtUserID").value = "";
+		document.getElementById("txtPassword").value = "";
+		document.getElementById("lblErrorMessage").innerHTML = "";
+	});
+
+	function checkInput () {
+			var user = document.getElementById("txtUserID").value;
+			var pass = document.getElementById("txtPassword").value;
+			if (user == "") {
+				document.getElementById("lblErrorMessage").innerHTML = '<%=errorMessageUser%>';
+				return false;
+			}
+			if (pass == "") {
+				document.getElementById("lblErrorMessage").innerHTML = '<%=errorMessagePassword%>';
+				return false;
+			}
+			return true;
+		
+	}
+	
+	
+	
+	function deleteRows() {
+	var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+	var btnDeleteFa = document.querySelector(".search-container__nav-btnAdd");
+	
+	var selectedValues = [];
+	for (var i = 0; i < checkboxes.length; i++) {
+	  selectedValues.push(checkboxes[i].value);
+	}
+	
+	if (selectedValues == "") {
+		alert('<%=checkedNot%>');
+		return false;
+	}else {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+		  if (this.readyState == 4 && this.status == 200) {
+		    console.log(this.responseText);
+		  }
+		};
+		xhttp.open("POST", "/CustomerSystem/T002", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("selectedValues=" + JSON.stringify(selectedValues));
+	}
+} 
+
+	checkBox = (source) => {
+		var checkBoxAll = document.getElementsByName("checkboxAll");
+		for (var i = 0; i < checkBoxAll.length; i++) {
+			checkBoxAll[i].checked = source.checked;
+		}
+	}
+	
+	isValidDate = (txtDate) => {
+		var currVal = txtDate;
+		if (currVal == '') {
+			return false;
+		}
+		 var rxDatePattern = /^(\d{4})(\/|-)(\d{1,2})(\/|-)(\d{1,2})$/; 
+		 var dtArray = currVal.match(rxDatePattern); 
+		 
+		 if (dtArray == null) 
+		      return false;
+		 //check for mm/dd/yyyy format.
+		 dtMonth = dtArray[3];
+		 dtDay = dtArray[5];
+		 dtYear = dtArray[1];
+		 
+		 if (dtMonth < 1 || dtMonth > 12) {
+			 return false;
+		 }else if (dtDay < 1 || dtDay > 31) {
+			 return false; 
+		 }else if ((dtMonth==4 || dtMonth==6 || dtMonth==9 || dtMonth==11) && dtDay ==31) 
+			 return false;
+		 else if (dtMonth == 2) {
+			 var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+		        if (dtDay> 29 || (dtDay ==29 && !isleap)) 
+		                return false;
+		 }
+		 return true;
+	}
+	
+	function validateForm() {
+		  var dateStringFrom = document.querySelector(".txtCustomerValidateFROM").value;
+		  const dateStringTo = document.querySelector(".txtCustomerValidateTO").value;
+		  if (dateStringFrom != "" || dateStringTo != "") {
+		  if(!isValidDate(dateStringFrom)) {
+				alert('<%=messageErrorFrom%>');
+				return;
+		  	}
+		  if (!isValidDate(dateStringTo)) {
+			  alert('<%=messageErrorTo%>');
+			  return;
+		  }
+	  	 var dateFromUpdate = dateStringFrom.split("/").join("");
+		 var dateToUpdate =  dateStringTo.split("/").join("");
+		 if (dateFromUpdate > dateToUpdate) {
+			alert('<%=messageErrorFromBiggerTo%>');
+			return;
+		 }
+		
+	}
+		  
+}
+	
+	
+	const dateFrom = document.querySelector(".txtCustomerValidateFROM").value;
+	const dateTo = document.querySelector(".txtCustomerValidateTO").value;
+	
+	
+	
+	isValidDate = (txtDate) => {
+	var currVal = txtDate;
+	if (currVal == '') {
+		return false;
+	}
+	 var rxDatePattern = /^(\d{4})(\/|-)(\d{1,2})(\/|-)(\d{1,2})$/; 
+	 var dtArray = currVal.match(rxDatePattern); 
+	 
+	 if (dtArray == null) 
+	      return false;
+	 //check for mm/dd/yyyy format.
+	 dtMonth = dtArray[3];
+	 dtDay = dtArray[5];
+	 dtYear = dtArray[1];
+	 
+	 if (dtMonth < 1 || dtMonth > 12) {
+		 return false;
+	 }else if (dtDay < 1 || dtDay > 31) {
+		 return false; 
+	 }else if ((dtMonth==4 || dtMonth==6 || dtMonth==9 || dtMonth==11) && dtDay ==31) 
+		 return false;
+	 else if (dtMonth == 2) {
+		 var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+	        if (dtDay> 29 || (dtDay ==29 && !isleap)) 
+	                return false;
+	 }
+	 return true;
+}
+
+function isGmail(input) {
+	  // Biểu thức chính quy kiểm tra định dạng gmail
+	  var gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+	  
+	  // Kiểm tra định dạng email
+	  if (input.match(gmailRegex)) {
+	    return false;
+	  } 
+	 return true;
+}
+
+checkInput = () => {
+	const dateStringBirthday= document.querySelector("#txtCustomerBirthday").value;
+	const lblMessage = document.querySelector(".edit-container__content--error");
+	var inputEmail = document.getElementById("txtCustomerEmail").value;
+	  if(!isValidDate(dateStringBirthday)) {
+		  lblMessage.innerHTML = '<%=messageErrorBirthday%>';
+	    return false;
+	  }
+	  if (isGmail(inputEmail)) {
+			lblMessage.innerHTML = '<%=messageErrorEmail%>';
+			return false;
+	  }
+	  return true;
+}
+
+var btnClear = document.getElementById("btnClearEdit")
+btnClear.addEventListener('click', (event) => {
+		event.preventDefault();
+		document.querySelector(".edit-container__content--error").innerHTML = "";
+		document.querySelector("#txtCustomerName").value = "";
+		document.querySelector("#txtCustomerBirthday").value = "";
+		document.querySelector("#txtCustomerEmail").value = "";
+		document.querySelector("#txaAddress").value = "";
+	});
+
+function forgetButon() {
+	var a = document.querySelector(".edit-container__btnContent-Save").innerHTML = "Add New";
+	console.log(a);
+}
 
 
+
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="fjs.cs.dao.T003Dao,fjs.cs.common.Constants"%>  
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <style type="text/css">
   <%@include file="/WEB-INF/css/T001.css"%>
 </style>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/common.css"%>
+</style>
+
 <title>Login - Training</title>
 </head>
 <body>
-	<style type="text/jsp">
-  		<%@include file="/WEB-INF/include/header.jsp"%>
-	</style>
+	<div id="main">
+		<div class="header">
+			<h3 class="header-text">Training</h3>
+			<div class="header-br"></div>
+		</div>
 		<div class="content">
 			<div class="content-text">Login</div>
 			<div class="content-login">
@@ -1684,43 +1778,28 @@ T001.jsp
 			</div>
 		</div>
 		<footer class="footer">
-		<div class="header-br"></div>
-		<div class="footer-text__copyright">Copyright (c) 2000-2008
+			<div class="header-br"></div>
+			<div class="footer-text__copyright">Copyright (c) 2000-2008
 			FUJINET, All Rights Reserved.</div>
 		</footer>
 	</div>
 </body>
-
+<% String errorMessageUser = Constants.USER_NOT_ERROR; %>
+<% String errorMessagePassword = Constants.PASSWORD_NOT_ERROR; %>
 <script>
-	var btnClear = document.getElementById("btnClear");
-	btnClear.addEventListener('click', (event) => {
-		event.preventDefault();
-		document.getElementById("txtUserID").value = "";
-		document.getElementById("txtPassword").value = "";
-		document.getElementById("lblErrorMessage").innerHTML = "";
-	});
-
-	function checkInput () {
-			var user = document.getElementById("txtUserID").value;
-			var pass = document.getElementById("txtPassword").value;
-			if (user == "") {
-				document.getElementById("lblErrorMessage").innerHTML = "ユーザーIDを入力してください。";
-				return false;
-			}
-			if (pass == "") {
-				document.getElementById("lblErrorMessage").innerHTML = "パスワードを入力してください。";
-				return false;
-			}
-			return true;
-		
-	}
+	<%@include file="/WEB-INF/javascript/T001.js"%>
 </script>
+
 </html>
 
-T002.jsp
+
+
+
 <%@page import="java.awt.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@page import="fjs.cs.dao.T003Dao,fjs.cs.common.Constants"%>  
 
 <title>Search - Training</title>
 </head>
@@ -1731,7 +1810,6 @@ T002.jsp
   <%@include file="/WEB-INF/css/T002.css"%>
 </style>
 <body>
-
 
 <style type="text/jsp">
   <%@include file="/WEB-INF/include/header.jsp"%>
@@ -1739,3404 +1817,308 @@ T002.jsp
 
 <div class = "search-container">
 	<div class = "search-container__dan">
-		<div class = "search-container__text">
+		<div class = "search-container__text search-container__text_text">
 			Login > Search Customer
 		</div>
 	<div class = "search-container__context">
-			<%
-				 if (session.getAttribute("name") != null) {
-			%>
+			<%if (session.getAttribute("name") != null) {%>
 				<div class = "search-container__logo">
 					<div>Welcome <%=session.getAttribute("name") %></div>
 				</div>
 			<%} %>
 		
-		<a href = "#" class = "search-container__logout">
-			Log Out
-		</a>
+			<a href = "#" class = "search-container__logout search-container__text_text" onclick = "Logout() ">
+    			Log Out
+			</a>
+			<script>
+				function Logout() {
+				    <% session.removeAttribute("name"); %>  // Xóa session "name"
+				    
+				}
+			</script>
 	</div>
 	
 	<div class = "search-container__line"></div>
 	
 	
-<form id = "form-Search" action = "#" method = "POST" onsubmit="return validateForm()">
+<form id = "form-Search" action ="/CustomerSystem/T002" method = "POST" >
 	<div class = "search-container__handalSearch">
 		<div class = "search-container__handalSearch--margin handalSearch-customerName">
-			<div class = "handalSearch-customercommon handalSearch-customerName__text">Customer Name</div>
+			<div class = "handalSearch-customercommon handalSearch-customerName__text search-container__text_text">Customer Name</div>
 			<input id = "txtCustomerName" name = "txtCustomerName" maxLength = "50"/>
 		</div>
 		
 		<div class = "search-container__handalSearch--margin handalSearch-customerSex">
-			<div class = "handalSearch-customercommon handalSearch-customerSex__text">Sex</div>
+			<div class = "handalSearch-customercommon handalSearch-customerSex__text search-container__text_text">Sex</div>
 			<select name="browser" id = "cboSex">
-				<option value="">blank</option>
-		      	<option value="">Male</option>
-		     	 <option value="">Female</option>
+				<option value=""></option>
+		      	<option value="0">Male</option>
+		     	 <option value="1">Female</option>
 			</select>
 		</div>
 		
 		<div class = "search-container__handalSearch--margin handalSearch-BirthdayFrom">
-			<div class = "handalSearch-customercommon handalSearch-BirthdayFrom__text">Birthday</div>
+			<div class = "handalSearch-customercommon handalSearch-BirthdayFrom__text search-container__text_text">Birthday</div>
 			<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" name = "txtBirthdayFromName" maxLength = "10"/>
 			<lable class = "handalSearch-BirthdayFrom__ngangcach">～</lable>
 			<input id = "txtBirthdayTo" class = "txtCustomerValidateTO" name = "txtBirthdayToName" maxLength = "10"/>
 		</div>
 		
 		<div class = "handalSearch-btnSearch">
-			<button type = "submit" id = "btnSearch">Search</button>
+			<button type = "submit" id = "btnSearch" onclick ="validateForm()">Search</button>
 		</div>
 	</div>
 </form>
 	
 	<div class = "search-container__btnContext--chuyenhuong">
 		<div class = "search-container__btnContext--start">
+					<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+					<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
 			<%
-				if (request.getAttribute("listData") == null) {
+				if (request.getAttribute("ListA") != null) {
 			%>
-				<button disabled id = "btnFirst"><<</button>
-				<button disabled id = "btnPrevious"><</button>
+				
+				<c:if test="${tag == 1 and listData.size() <= 15 }">				
+					<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+					<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+				</c:if>
+				<c:if test="${tag > 1 }">	
+					<button id = "btnFirst"><a href="/CustomerSystem/T002?index=<%=1 %>"><<</a></button>			
+					<button id = "btnPrevious"><a href="/CustomerSystem/T002?index=${tag-1}"><</a></button>
+				</c:if>
 			<%
 				}
 			%>
 			
-			<%
-				if (request.getAttribute("listData") != null) {
-			%>
-				<button id = "btnFirst"><<</button>
-				<button id = "btnPrevious"><</button>
-			<%
-				}
-			%>
-			
-			<lable class = "search-container__btnContext--textstart">Previous</lable>
+			<lable class = "search-container__btnContext--textstart search-container__text_text">Previous</lable>
 		</div>
 		
 		<div class = "search-container__btnContext--end">
-			<lable class = "search-container__btnContext--textend">Next</lable>
+			<lable class = "search-container__btnContext--textend search-container__text_text">Next</lable>
 			<%
-				if (request.getAttribute("listData") == null) {
+				if (request.getAttribute("ListA") == null) {
 			%>
-				<button  disabled id = "btnNext">></button>
-				<button disabled id = "btnPrevious">>></button>
+				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
 			<%
 				}
 			%>
 			
 			<%
-				if (request.getAttribute("listData") != null) {
+				if (request.getAttribute("ListA") != null) {
+				int endP = (Integer) request.getAttribute("endP"); 
 			%>
-				<button id = "btnNext">></button>
-				<button id = "btnPrevious">>></button>
+			<c:if test="${tag >= endP}">			
+				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+			</c:if>
+			<c:if test="${tag < endP}">			
+				<button id = "btnNext" ><a href="/CustomerSystem/T002?index=${tag+1}">></a></button>
+				<button id="btnPrevious"><a href="/CustomerSystem/T002?index=<%= endP %>">>></a></button>
+			</c:if>		
 			<%
 				}
 			%>
 		</div>
 	</div>
+	<form action ="/CustomerSystem/T002" method = "POST" onsubmit = "return deleteRows();">
 	<table class = "search-container__table">
         <tr class = "search-container__table--tieude">
-        	<th><input type="checkbox" id = "checkAll" name="checkboxAll" value="" onclick = "checkBox(this)"></th>
-            <th>Customer ID</th>
-            <th>Customer Name</th>
-            <th>Sex</th>
-            <th>Birthday</th>
-            <th>Address</th>
+        	<th class = "searchtable-trcheck"><input type="checkbox" id = "checkAll" name="checkboxAll" value="" onclick = "checkBox(this)"></th>
+            <th class = "searchtable-trid">Customer ID</th>
+            <th class = "searchtable-trname">Customer Name</th>
+            <th class = "searchtable-trsex">Sex</th>
+            <th class = "searchtable-trbirthday">Birthday</th>
+            <th class = "searchtable-traddress">Address</th>
         </tr>
-        
-	<c:forEach items="${listData}" var="dept">
-        <tr>
-            <td><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
-            <td><a href="/CustomerSystem/T003"> ${dept.CUSTOMER_ID} </a></td>
-            <td>${dept.CUSTOMER_NAME }</td>
-            <td>${dept.SEX}</td>
-            <td>${dept.BIRTHDAY}</td>
-            <td>${dept.ADDRESS}</td>
-        </tr>
+	<c:choose>
+    <c:when test="${not empty listDataSearch}">
+        <c:forEach items="${listDataSearch}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
         </c:forEach>
+    </c:when>
+    <c:when test="${not empty ListA}">
+        <c:forEach items="${ListA}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:when>
+    <c:otherwise>
+        <c:forEach items="${ListA}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:otherwise>
+	</c:choose>
     </table>
-		
 	<div class = "search-container__btnnav">
-		<button class = "search-container__nav-btnAdd">Add New</button>
+		<button class = "search-container__nav-btnAdd"><a href="/CustomerSystem/T003" >Add new</a></button>
 			<%
-				if (request.getAttribute("listData") == null) {
+				if (request.getAttribute("ListA") != null) {
 			%>
-				<button disabled class = "search-container__nav-btnAdd">Delete</button>
+				<button type = "submit"  class = "search-container__nav-btnAdd" >Delete</button>
 			<%
 				}
 			%>
 			
 			<%
-				if (request.getAttribute("listData") != null) {
+				if (request.getAttribute("ListA") == null) {
 			%>
-				<button class = "search-container__nav-btnAdd">Delete</button>
+			<button type = "submit" disabled style="pointer-events: none;" onclick="deleteRows()"class = "search-container__nav-btnAdd" >Delete</button>
 			<%
 				}
 			%>
 		</div>
+	</form>
 	</div>
+	<footer class="footer">
+		<div class="header-br"></div>
+		<div class="footer-text__copyright">Copyright (c) 2000-2008
+			FUJINET, All Rights Reserved.</div>
+	</footer>
 </div>
+</div>
+<%String checkedNot = Constants.CHECKED_NOT_ERROR; %>
+<%String messageErrorTo = Constants.MESSAGE_ERROR_TO; %>
+<%String messageErrorFrom = Constants.MESSAGE_ERROR_FROM; %>
+<%String messageErrorFromBiggerTo = Constants.MESSAGE_ERROR_FROM_BIGGER_TO; %>
 <script>
-	checkBox = (source) => {
-		var checkBoxAll = document.getElementsByName("checkboxAll");
-		for (var i = 0; i < checkBoxAll.length; i++) {
-			checkBoxAll[i].checked = source.checked;
-		}
-	}
-	
-	
-	isValidDate = (txtDate) => {
-		var currVal = txtDate;
-		if (currVal == '') {
-			return false;
-		}
-		 var rxDatePattern = /^(\d{4})(\/|-)(\d{1,2})(\/|-)(\d{1,2})$/; 
-		 var dtArray = currVal.match(rxDatePattern); 
-		 
-		 if (dtArray == null) 
-		      return false;
-		 //check for mm/dd/yyyy format.\
-		 dtMonth = dtArray[3];
-		 dtDay = dtArray[5];
-		 dtYear = dtArray[1];
-		 
-		 if (dtMonth < 1 || dtMonth > 12) {
-			 return false;
-		 }else if (dtDay < 1 || dtDay > 31) {
-			 return false; 
-		 }else if ((dtMonth==4 || dtMonth==6 || dtMonth==9 || dtMonth==11) && dtDay ==31) 
-			 return false;
-		 else if (dtMonth == 2) {
-			 var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
-		        if (dtDay> 29 || (dtDay ==29 && !isleap)) 
-		                return false;
-		 }
-		 return true;
-	}
-	
-	function validateForm() {
-		  const dateStringFrom = document.querySelector(".txtCustomerValidateFROM").value;
-		  const dateStringTo = document.querySelector(".txtCustomerValidateTO").value;
-		  if(!isValidDate(dateStringFrom)) {
-		    alert("Invalid Birthday (From).");
-		    return false;
-		  }
-		  if (!isValidDate(dateStringTo)) {
-			  alert("Invalid Birthday (To).");
-			  return false;
-		  }
-	  	 var dateFromUpdate = dateStringFrom.split("/").join(""));
-		 var dateToUpdate =  dateStringTo.split("/").join(""));
-		 console.log(dateFromUpdate);
-		 console.log(dateToUpdate);
-		 if (dateFromUpdate > dateToUpdate) {
-			alert("There is an error in the range input of Birthday");
-		 }
-		  return true;
-		}
-	
-	const dateFrom = document.querySelector(".txtCustomerValidateFROM").value;
-	const dateTo = document.querySelector(".txtCustomerValidateTO").value;
+	<%@include file="/WEB-INF/javascript/T002.js"%>
 </script>
+
 </body>
 </html>
 
 
-web_ìn
-<?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-	id="WebApp_ID" version="3.0">
 
-	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
-	</welcome-file-list>
 
-	<servlet>
-		<servlet-name>T001</servlet-name>
-		<servlet-class>fjs.cs.action.T001</servlet-class>
-	</servlet>
 
-	<servlet-mapping>
-		<servlet-name>T001</servlet-name>
-		<url-pattern>/T001</url-pattern>
-	</servlet-mapping>
-
-
-	<servlet>
-		<servlet-name>T002</servlet-name>
-		<servlet-class>fjs.cs.action.T002</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>T002</servlet-name>
-		<url-pattern>/T002</url-pattern>
-	</servlet-mapping>
-	
-	<servlet>
-		<servlet-name>T003</servlet-name>
-		<servlet-class>fjs.cs.action.T003</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>T003</servlet-name>
-		<url-pattern>/T003</url-pattern>
-	</servlet-mapping>
-</web-app>
-
-
-index.jsp
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Insert title here</title>
-</head>
-<script language="JavaScript">
-win = window.location.href="T001";
-</script>
-</html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function isValidDate(dateString) {
-  // kiểm tra định dạng yyyy/mm/dd
-  var regEx = /^\d{4}-\d{2}-\d{2}$/;
-  if(!dateString.match(regEx)) return false;  // không đúng định dạng
-  var d = new Date(dateString);
-  var dNum = d.getTime();
-  if(!dNum && dNum !== 0) return false; // kiểm tra ngày không hợp lệ (ví dụ: 30/02/2021)
-  return d.toISOString().slice(0,10) === dateString;
-}
-
-
-
-<form onsubmit="return validateForm()" action="process.jsp" method="post">
-  <input type="text" name="date" id="date-input">
-  <input type="submit" value="Submit">
-</form>
-
-<script>
-function validateForm() {
-  var dateString = document.getElementById("date-input").value;
-  if(!isValidDate(dateString)) {
-    alert("Vui lòng nhập định dạng YYYY/MM/DD");
-    return false;
-  }
-  return true;
-}
-</script>
-
-
-
-
-
-
-UPDATE mstcustomer
-SET Delete_YMD = SYSDATE
-WHERE customer_Id IN (101, 102, 103);
-
-
-String[] itemIds = request.getParameterValues("itemIds");
-if (itemIds != null) {
-    for (String itemId : itemIds) {
-        // Thực hiện xóa mục với ID tương ứng
-    }
-}
-
-
-<form method="POST" action="delete.jsp">
-    <table>
-        <% for (int i = 0; i < items.size(); i++) { %>
-        <tr>
-            <td><input type="checkbox" name="itemIds" value="<%= items.get(i).getId() %>"></td>
-            <td><%= items.get(i).getName() %></td>
-            <td><%= items.get(i).getDescription() %></td>
-        </tr>
-        <% } %>
-    </table>
-    <input type="submit" value="Xóa">
-</form>
-
-
-
-
-
-
-
-
-SELECT Customer_Id, Customer_Name, 
-    CASE 
-        WHEN Sex = 0 THEN 'Male' 
-        WHEN Sex = 1 THEN 'Female' 
-    END as Sex, 
-    Birthday, Address 
-FROM Mstcustomer 
-WHERE Customer_Name LIKE '%Nguyen%' 
-    AND Sex = 0 
-    AND Birthday <= '1995-12-31' 
-    AND Birthday >= '1990-01-01' 
-ORDER BY Customer_Id;
-
-
-
-
-
-SELECT Customer_Id, Customer_Name,
-CASE
-WHEN Sex = 0 THEN 'Male'
-WHEN Sex = 1 THEN 'Female'
-END as Sex,
-Birthday, Address
-FROM Mstcustomer
-WHERE Customer_Name LIKE CONCAT('%', :param_Customer_Name, '%')
-AND Sex = :param_Sex
-AND Birthday <= :param_Birthday_To
-AND Birthday >= :param_Birthday_From
-ORDER BY Customer_Id;
-
-
-
-
-Dao2:
-package fjs.cs.dao;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.*;
-import java.util.ArrayList;
-
-import fjs.cs.common.DBConnection;
-import fjs.cs.dto.T002Dto;
-
-public class T002Dao {
-	public List<T002Dto> getData() {
-		List<T002Dto> list = new ArrayList<T002Dto>();
-		try {
-			String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME,\r\n" + 
-					"CASE WHEN SEX = 0 THEN 'Male' ELSE 'Female' END AS SEX,BIRTHDAY, ADDRESS\r\n" + 
-					"FROM MSTCUSTOMER WHERE DELETE_YMD IS NULL ORDER BY CUSTOMER_ID";
-			Connection conn = new DBConnection().getConnection();
-			PreparedStatement ps = conn.prepareStatement(query);
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-				T002Dto dataT002 = new T002Dto();
-				dataT002.setCUSTOMER_ID(rs.getString(1));
-				dataT002.setCUSTOMER_NAME(rs.getString(2));
-				dataT002.setSEX(rs.getString(3));
-				dataT002.setBIRTHDAY(rs.getString(4));
-				dataT002.setADDRESS(rs.getString(5));
-				list.add(dataT002);
-			}
-			conn = DBConnection.disconnectDB();
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-}
-
-
-
-
-
-java:
-/**
- * @(#)T002.java 16-00 2023/02/22
- *
- * Copyright(C) 2023 by TranVanToi  LTV
- *
- * Last_Update 2023/02/22.
- * Version 1.00.
- */
-
-package fjs.cs.action;
-
-
-import java.io.IOException;
-import java.util.List;
-
-/**
- * T002
- * 
- * @version 1.00
- * @since 1.00
- * @author toi_tv_ttv
- * 
- */
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import fjs.cs.common.Constants;
-import fjs.cs.dao.T001Dao;
-import fjs.cs.dao.T002Dao;
-import fjs.cs.dto.T001Dto;
-import fjs.cs.dto.T002Dto;
-
-public class T002 extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	/**
-	 * Init man hinh
-	 * 
-	 * @param HttpServletRequest  req
-	 * @param HttpServletResponse resp
-	 * @return RequestDispatcher
-	 * @throws ServletException, IOException
-	 * @since 1.00
-	 */
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		T002Dao dao = new T002Dao();
-		List<T002Dto> list = dao.getData();
-		req.setAttribute("listData", list);
-		req.getRequestDispatcher(Constants.T002_SEARCH);
-		RequestDispatcher myRD = null;
-		// Hien thi man hinh Login
-		myRD = req.getRequestDispatcher(Constants.T002_SEARCH);
-		myRD.forward(req, resp);
-	}
-	
-	/**
-	 * Event man hinh
-	 * 
-	 * @param HttpServletRequest  req
-	 * @param HttpServletResponse resp
-	 * @return RequestDispatcher
-	 * @throws ServletException, IOException
-	 * @since 1.00
-	 */
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-	}
-}
-
-
-
-
-T002: 
 <%@page import="java.awt.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
- <%@ taglib prefix="c" uri="http://java.sun.com/jsp/html/core" %> 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<%@ page import="fjs.cs.dao.T003Dao,fjs.cs.common.Constants" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Search - Training</title>
-</head>
 <style type="text/css">
-  <%@include file="/WEB-INF/css/T002.css"%>
+  <%@include file="/WEB-INF/css/T001.css"%>
+</style>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/T003.css"%>
 </style>
 <style type="text/css">
   <%@include file="/WEB-INF/css/common.css"%>
 </style>
+<title>Edit - Training</title>
+</head>
 <body>
-<div class = "search-container">
-	<div class = "search-container__dan">
-		<div class = "search-container__text">
-			Login > Search Customer
+	<div id="main">
+		<div class="header">
+			<h3 class="header-text">Training</h3>
+			<div class="header-br"></div>
 		</div>
-	<div class = "search-container__context">
-			<%
-				 if (session.getAttribute("name") != null) {
-			%>
-				<div class = "search-container__logo">
-					<div>Welcome <%=session.getAttribute("name") %></div>
+		<div class = "edit-container">
+			<div class = "edit-container__header">
+				<span class = "edit-container__headerText edit-container__headerText">Login > Search Customer > Edit Customer Info</span>
+				<div class = "edit-container__wellcom">
+				<%if (session.getAttribute("name") != null) {%>
+				<div class = "edit-container__wellcomLeft edit-container__headerText">
+						<div>Welcome <%=session.getAttribute("name") %></div>
 				</div>
-			<%} %>
-		
-		<a href = "#" class = "search-container__logout">
-			Log Out
-		</a>
-	</div>
-	
-	<div class = "search-container__line"></div>
-	
-	
-	
-	<div class = "search-container__handalSearch">
-		<div class = "search-container__handalSearch--margin handalSearch-customerName">
-			<div class = "handalSearch-customercommon handalSearch-customerName__text">Customer Name</div>
-			<input id = "txtCustomerName" maxLength = "50"/>
+				<%} %>
+					<div class = "edit-container__wellcomRight edit-container__headerText"><a href = "#">Log Out</a></div>
+				</div>
+			<div class = "line-br">Edit</div>
 		</div>
-		
-		<div class = "search-container__handalSearch--margin handalSearch-customerSex">
-			<div class = "handalSearch-customercommon handalSearch-customerSex__text">Sex</div>
-			<select name="browser" id = "cboSex">
-				<option value="">blank</option>
-		      	<option value="">Male</option>
-		     	 <option value="">Female</option>
-			</select>
-		</div>
-		
-		<div class = "search-container__handalSearch--margin handalSearch-BirthdayFrom">
-			<div class = "handalSearch-customercommon handalSearch-BirthdayFrom__text">Birthday</div>
-			<input id = "txtBirthdayForm" maxLength = "10"/>
-			<lable class = "handalSearch-BirthdayFrom__ngangcach">～</lable>
-			<input id = "txtBirthdayTo" maxLength = "10"/>
-		</div>
-		
-		<div class = "handalSearch-btnSearch">
-			<button type = "submit" id = "btnSearch">Search</button>
-		</div>
-	</div>
-		
-	<div class = "search-container__btnContext--chuyenhuong">
-		<div class = "search-container__btnContext--start">
-			<button id = "btnFirst"><<</button>
-			<button id = "btnPrevious"><</button>
-			<lable class = "search-container__btnContext--textstart">Previous</lable>
-		</div>
-		
-		<div class = "search-container__btnContext--end">
-			<lable class = "search-container__btnContext--textend">Next</lable>
-			<button id = "btnNext">></button>
-			<button id = "btnPrevious">>></button>
-		</div>
-	</div>
-	<table class = "search-container__table">
-        <tr class = "search-container__table--tieude">
-        	<th><input type="checkbox" name="sport" value=""></th>
-            <th>Customer ID</th>
-            <th>Customer Name</th>
-            <th>Sex</th>
-            <th>Birthday</th>
-            <th>Address</th>
-        </tr>
-        
-	<c:forEach items="${listData}" var="dept">
-        <tr>
-            <td><input type="checkbox" name="sport" value=""></td>
-            <td><a href="#"> ${dept.CUSTOMER_ID} </a></td>
-            <td>${dept.CUSTOMER_NAME }</td>
-            <td>${dept.SEX}</td>
-            <td>${dept.BIRTHDAY}</td>
-            <td>${dept.ADDRESS}</td>
-        </tr>
-        </c:forEach>
-    </table>
-		
-	<div class = "search-container__btnnav">
-		<button class = "search-container__nav-btnAdd">Add New</button>
-		<button class = "search-container__nav-btnAdd">Delete</button>
-	</div>
-	</div>
-</div>
-</body>
-</html>
-
-
-
-
-
-request.set CharacterEncoding("UTF-8");
-
-SELECT Customer_ID, Customer_name,
-CASE WHEN Sex = 0 THEN 'Male' ELSE 'Female' END AS Sex,
-Birthday, Address
-FROM MSTCUSTOMER
-WHERE Delete_YMD IS NULL
-ORDER BY Customer_ID
-
-
-
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
-
-
-Encoding 
-
-
-Japanese text
-
-Jsp servlet
-
-
-
-Address already in use: JVM_Bind
-
-
-
-public T001Dto CheckLogin(String user, String pass) {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		ResultSet rs = null;
-		try {
-			String query = "select count(*) from MSTUSER as CNT where DELETE_YMD is null @P0and USERID =?@P0and PASSWORD =?";
-			conn = new T001Dao().getConnection();
-			ps = conn.prepareStatement(query);
-			ps.setString(1, user);
-			ps.setString(2, pass);
-			rs = ps.executeQuery();
-			while (rs.next()) {
-		        int count = rs.getInt("CNT");
-		        if (count == 1) {
-		            T001Dto a = new T001Dto(user, pass);
-		            return a;
-		        } else {
-		            // Nếu số lượng bản ghi trả về không phải là 1, thì không đăng nhập thành công
-		            return null;
-		        }
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-Incorrect syntax near '@P0and'
-
-
-
-<filter>
-        <filter-name>Charset Filter</filter-name>
-        <filter-class>CharsetFilter</filter-class>
-        <init-param>
-            <param-name>requestEncoding</param-name>
-            <param-value>UTF-8</param-value>
-        </init-param>
-    </filter>
-
-
-
-
-
-# A fatal error has been detected by the Java Runtime Environment:
-#
-#  EXCEPTION_ACCESS_VIOLATION (0xc0000005) at pc=0x000000005149f273, pid=14612, tid=0x0000000000003a3c
-#
-# JRE version: Java(TM) SE Runtime Environment (8.0_144-b01) (build 1.8.0_144-b01)
-# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.144-b01 mixed mode windows-amd64 compressed oops)
-# Problematic frame:
-# V  [jvm.dll+0x13f273]
-#
-# Failed to write core dump. Minidumps are not enabled by default on client versions of Windows
-#
-# An error report file with more information is saved as:
-
-
-
-A fatal error has been detected by the Java Runtime Environment:
-
-
-
-
-警告: Failed to load the sqljdbc_auth.dll cause :- no sqljdbc_auth in java.library.path
-com.microsoft.sqlserver.jdbc.SQLServerException: このドライバは、統合認証を行えるようには構成されていません。
-
-
-
-
-
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/base.css" type="text/css">
-
-<style type="text/css">
-  <%@include file="/WEB-INF/css/base.css"%>
-</style>
-
-<title>Sample</title>
-</head>
-<body>
-	<div id="main">
-		<div class="header">
-			<h3 class="header-text">Training</h3>
-			<div class="header-br"></div>
-		</div>
-		<div class="content">
-			<div class="content-text">Login</div>
-			<div class="content-login">
-				<form action="/CustomerSystem/T001" name="frmLogin" method="POST" ">
-					<div class="content-login__header">
-						<h3>LOGIN</h3>
-						<label id="lblErrorMessage"></label>
-					</div>
-					<div class="content-login__container">
-
-						<div class="form-group">
-							<label for="fullname" class="form-label form-label__userID">User
-								Id: </label> <input id="txtUserID" name="userName" maxlength="8"
-								type="text" class="form-control">
-						</div>
-						<div class="form-group__password">
-							<label for="password" class="form-label">Password: </label> <input
-								id="txtPassword" name="password" type="password" maxlength="8"
-								class="form-control">
-						</div>
-						<div class="form-group__btn">
-							<button type="submit" id="btnLogin" class="form-submit">Login</button>
-							<button id="btnClear" class="form-submit">Clear</button>
-						</div>
-
-					</div>
-
-				</form>
+	<form action = "/CustomerSystem/T003" method = "POST" onsubmit = "return checkInput()">
+		<div class = "edit-container__content">
+			<div class = "edit-container__content--error"></div>
+			
+			<div class = "edit-container__content-Id">
+				<div class = "edit-container__content-IdText edit-container__headerText">Customser Id</div>
+				<lable for="userId" class = "edit-container__content-IdLable edit-container__headerText" id = "lblCustomerID" name = "lblCustomerID">${dto.CUSTOMER_ID}</lable>
+				<input type="text" hidden id="userId" name="userId" value="${dto.CUSTOMER_ID}">
 			</div>
+			
+			<div class = "edit-container__content-Name">
+				<lable class = "edit-container__contentName-input edit-container__headerText">Customser Name</lable>
+				<input id = "txtCustomerName" type="text" class = "form-with__input" name = "txtCustomerName" maxlenght = "50" value = "${dto.CUSTOMER_NAME}"/>
+			</div>
+			
+			<div class = "edit-container__content-Sex edit-container__btnContent-margin">
+				<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
+				<select  id="cboSex" name = "cboSex">
+				  <option class = "cbooption" value=""></option>
+				  <option class = "cbooption" value="0" ${dto.SEX == '0' ? 'selected' : ''}>Male</option>
+				  <option class = "cbooption" value="1" ${dto.SEX == '1' ? 'selected' : ''}>Female</option>
+				</select>
+			</div>
+			
+			<div class = "edit-container__content-Birthday edit-container__btnContent-margin">
+				<lable class = "edit-container__contentBirthday-input edit-container__headerText">Birthday</lable>
+				<input id = "txtCustomerBirthday"  class = "form-with__input" name = "txtCustomerBirthday" maxlenght = 50 value= "${dto.BIRTHDAY }"/>
+			</div>
+			
+			<div class = "edit-container__content-Email edit-container__btnContent-margin">
+				<lable class = "edit-container__contentEmail-input edit-container__headerText">Email</lable>
+				<input id = "txtCustomerEmail" type="text" class = "form-with__input" name ="txtCustomerEmail" maxlenght = 50 value="${dto.EMAIL }"/>
+			</div>
+			
+			<div class = "edit-container__content-Address edit-container__btnContent-margin">
+				<lable class = "edit-container__contentAddress-input edit-container__headerText">Address</lable>
+				<textarea id="txaAddress" type="text" maxlength="256"  name = "txaAddress">${dto.ADDRESS}</textarea>
+			</div>
+			
+			<div class = "edit-container__btnContent">
+			<c:if test = "${empty dto.CUSTOMER_ID}">
+				<button type = "submit" class = "edit-container__btnContent-Save">Add New</button>
+			</c:if>
+			<c:if test = "${not empty dto.CUSTOMER_ID}">
+				<button type = "submit" class = "edit-container__btnContent-Save">Save</button>
+			</c:if>
+				<button  id = "btnClearEdit" class = "edit-container__btnContent-Clear">Clear</button>
+			</div>
+			
+		</div>
+	</form>
+			
+			
 		</div>
 		<footer class="footer">
-		<div class="header-br"></div>
-		<div class="footer-text__copyright">Copyright (c) 2000-2008
+			<div class="header-br"></div>
+			<div class="footer-text__copyright">Copyright (c) 2000-2008
 			FUJINET, All Rights Reserved.</div>
 		</footer>
 	</div>
+	<%String messageErrorBirthday = Constants.MESSAGE_ERROR_BIRTHDAY; %>
+	<%String messageErrorEmail = Constants.MESSAGE_ERROR_FORMAT_EMAIL; %>
+	<script>
+		<%@include file ="/WEB-INF/javascript/T003.js"%>
+	</script>
+	
 </body>
-
-<script>
-	var btnClear = document.getElementById("btnClear");
-	btnClear.addEventListener('click', (event) => {
-		event.preventDefault();
-		console.log("data");
-		document.getElementById("txtUserID").value = "";
-		document.getElementById("txtPassword").value = "";
-		document.getElementById("lblErrorMessage").innerHTML = "";
-	});
-
-	function checkInput () {
-		var btnLogin = document.getElementById("btnLogin");
-		btnLogin.addEventListener('click', (e) => {
-			event.preventDefault();
-			var user = document.getElementById("txtUserID").value;
-			var pass = document.getElementById("txtPassword").value;
-			if (user == "") {
-				document.getElementById("lblErrorMessage").innerHTML = "ユーザーIDを入力してください。";
-				return false;
-			}
-			if (pass == "") {
-				document.getElementById("lblErrorMessage").innerHTML = "パスワードを入力してください。";
-				return false;
-			}
-			return true;
-		});
-		
-	}
-</script>
 </html>
 
 
 
 
-
-
-
-
-function checkInput () {
-		var btnLogin = document.getElementById("btnLogin");
-		btnLogin.addEventListener('click', (e) => {
-			event.preventDefault();
-			var user = document.getElementById("txtUserID").value;
-			var pass = document.getElementById("txtPassword").value;
-			if (user == "") {
-				console.log(111);
-				document.getElementById("lblErrorMessage").innerHTML = "ユーザーIDを入力してください。";
-				return false;
-			}
-			if (pass == "") {
-				document.getElementById("lblErrorMessage").innerHTML = "パスワードを入力してください。";
-				return false;
-			}
-			return true;
-		});
-		
-	}
-
-
-
-
-
-
-if (dto != null && dto.getSomeStringValue().equals("SomeValue")) {
-    resp.sendRedirect("Logins.jsp");
-} else {
-    resp.sendRedirect("sdsdsd");
-}
-
-String user = req.getParameter("userName");
-		String pass = req.getParameter("password");
-		
-		T001Dao loginDao = new T001Dao();
-		T001Dto a = loginDao.CheckLogin(user, pass);
-		
-		if (a.equals(1)) {
-			resp.sendRedirect("Logins.jsp");
-		}else {
-			resp.sendRedirect("sdsdsd");
-		}
-
-
-
-
-
-
-Type Exception Report
-
-説明 The server encountered an unexpected condition that prevented it from fulfilling the request.
-
-例外
-
-java.lang.NullPointerException
-	fjs.cs.action.T001.doPost(T001.java:69)
-	javax.servlet.http.HttpServlet.service(HttpServlet.java:661)
-	javax.servlet.http.HttpServlet.service(HttpServlet.java:742)
-	org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:52)
-注意 原因のすべてのスタックトレースは、のログに記録されています
-
-
-
-
-Msg 273, Level 16, State 1, Line 1
-Cannot insert an explicit value into a timestamp column. Use INSERT with a column list to exclude the timestamp column, or insert a DEFAULT into the timestamp column.
-
-
-
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Sample</title>
-</head>
-
-<style>
-:root { 
-	-while-color: #fff; -
-	-black-color: #000; -
-	-text-color: #ccc; -
-	-privary-key: #f60;
-}
-
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
-	box-sizing: inherit;
-}
-
-html {
-	font-size: 62.5%;
-	line-height: 1.6rem;
-	font-family: 'Roboto', sans-serif;
-	box-sizing: border-box;
-}
-
-#main {
-	background-color: #ccffff;
-	padding: 20px 15px;
-	height: 969px;
-}
-
-.header-br {
-	border: 1px solid #000000;
-	margin-top: 30px;
-}
-
-.header-text {
-	color: #ff0000;
-	font-size: 35px;
-}
-
-.content-login__header h3 {
-	color: #5066ff;
-	margin-top: 170px;
-	font-size: 30px;
-	margin-bottom: 10px;
-}
-
-.content-text {
-	font-size: 20px;
-	margin-top: 10px;
-}
-
-.content-login {
-	text-align: center;
-}
-
-.form-label {
-	font-size: 20px;
-}
-
-#lblErrorMessage {
-	color: #ff0000;
-	font-size: 13px;
-}
-
-.form-group__btn {
-	margin-bottom: 425px;
-}
-
-.content-login__container {
-	margin-top: 20px;
-}
-
-.form-submit {
-	background-color: #c0c0c0;
-	color: #000000;
-}
-
-#txtUserID {
-	font-size: 30px;
-}
-
-#txtPassword {
-	font-size: 30px;
-}
-
-.form-group__password {
-	margin-top: 10px;
-}
-
-.form-group__btn {
-	margin-top: 50px;
-}
-
-#btnClear {
-	margin-left: 200px;
-}
-
-.form-group__btn button {
-	font-size: 20px;
-	padding: 5px 25px;
-}
-
-.form-label__userID {
-	padding-right: 21px;
-}
-
-.footer-text__copyright {
-	font-size: 20px;
-	margin-top: 5px;
-}
-</style>
-<body>
-	<div id="main">
-		<div class="header">
-			<h3 class="header-text">Training</h3>
-			<div class="header-br"></div>
-		</div>
-		<div class="content">
-			<div class="content-text">Login</div>
-			<div class="content-login">
-				
-					<div class="content-login__header">
-						<h3>LOGIN</h3>
-						<label id="lblErrorMessage">Error Message</label>
-					</div>
-					<div class="content-login__container">
-
-						<div class="form-group">
-							<label for="fullname" class="form-label form-label__userID">User
-								Id: </label> <input id="txtUserID" name="userName" maxlength="8"
-								type="text" required class="form-control">
-						</div>
-						<div class="form-group__password">
-							<label for="password" class="form-label">Password: </label> <input
-								id="txtPassword" name="password" required type="password"
-								maxlength="8" class="form-control">
-						</div>
-						<div class="form-group__btn">
-							<button type="submit" id="btnLogin" class="form-submit">Login</button>
-							<button id="btnClear" class="form-submit"
-								onclick="clearData()">Clear</button>
-						</div>
-
-					</div>
-			
-
-			</div>
-		</div>
-
-		<footer class="footer">
-		<div class="header-br"></div>
-		<div class="footer-text__copyright">Copyright (c) 2000-2008
-			FUJINET, All Rights Reserved.</div>
-		</footer>
-
-
-	</div>
-</body>
-
-<script>
-	function clearData() {
-		console.log("data");
-		document.getElementById("txtUserID").value = "";
-		document.getElementById("txtPassword").value = "";
-		document.getElementById("lblErrorMessage").value = "";
-	}
-</script>
-</html>
-
-
-
-
-
-
-Msg 2738, Level 16, State 2, Line 1
-A table can only have one timestamp column. Because table 'MSTUSER' already has one, the column 'INSERT_YMD' cannot be added.
-
-
-
-
-create table MSTUSER
-(
-	PSN_CD NUMERIC (4) primary key NOT NULL,
-	USERID VARCHAR (8),
-	PASSWORD VARCHAR(8),
-	USERNAME VARCHAR(40),
-	DELETE_YMD	TIMESTAMP DEFAULT NULL,									
-	INSERT_YMD	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,								
-	INSERT_PSN_CD NUMERIC(5)DEFAULT 0,								
-	UPDATE_YMD TIMESTAMP DEFAULT NULL,						
-	UPDATE_PSN_CD NUMERIC(5)DEFAULT 0
-)
-
-create table MSTCUSTOMER (
-	CUSTOMER_ID NUMERIC(8) primary key NOT NULL,
-	CUSTOMER_NAME VARCHAR(50),
-	SEX VARCHAR(1),
-	BIRTHDAY VARCHAR(10),
-	EMAIL VARCHAR(40),									
-	ADDRESS VARCHAR(256),								
-	DELETE_YMD TIMESTAMP(5) DEFAULT NULL,								
-	INSERT_YMD TIMESTAMP DEFAULT CURRENT_TIMESTAMP,						
-	INSERT_PSN_CD NUMERIC(5)DEFAULT 0,
-	UPDATE_YMD TIMESTAMP DEFAULT NULL,
-	UPDATE_PSN_CD NUMERIC(5)DEFAULT 0 
-)
-
-
-
-
-
-
-
-Exception in thread "main" com.microsoft.sqlserver.jdbc.SQLServerException: ドライバーが SSL (Secure Sockets Layer) 暗号化による SQL Server への安全な接続を確立できませんでした。エラー: "sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target"。 ClientConnectionId:fef5e71a-1619-4f7b-8e2e-6bbaa5a2b8e1
-	at com.microsoft.sqlserver.jdbc.SQLServerConnection.terminate(SQLServerConnection.java:3937)
-	at com.microsoft.sqlserver.jdbc.TDSChannel.enableSSL(IOBuffer.java:1950)
-	at com.microsoft.sqlserver.jdbc.SQLServerConnection.connectHelper(SQLServerConnection.java:3456)
-	at com.microsoft.sqlserver.jdbc.SQLServerConnection.login(SQLServerConnection.java:3077)
-	at com.microsoft.sqlserver.jdbc.SQLServerConnection.connectInternal(SQLServerConnection.java:2919)
-	at com.microsoft.sqlserver.jdbc.SQLServerConnection.connect(SQLServerConnection.java:1787)
-	at com.microsoft.sqlserver.jdbc.SQLServerDriver.connect(SQLServerDriver.java:1229)
-	at java.sql.DriverManager.getConnection(DriverManager.java:664)
-	at java.sql.DriverManager.getConnection(DriverManager.java:247)
-	at connectCSDL.main(connectCSDL.java:14)
-Caused by: javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
-	at sun.security.ssl.Alerts.getSSLException(Alerts.java:192)
-	at sun.security.ssl.SSLSocketImpl.fatal(SSLSocketImpl.java:1959)
-	at sun.security.ssl.Handshaker.fatalSE(Handshaker.java:302)
-	at sun.security.ssl.Handshaker.fatalSE(Handshaker.java:296)
-	at sun.security.ssl.ClientHandshaker.serverCertificate(ClientHandshaker.java:1514)
-	at sun.security.ssl.ClientHandshaker.processMessage(ClientHandshaker.java:216)
-	at sun.security.ssl.Handshaker.processLoop(Handshaker.java:1026)
-	at sun.security.ssl.Handshaker.process_record(Handshaker.java:961)
-	at sun.security.ssl.SSLSocketImpl.readRecord(SSLSocketImpl.java:1072)
-	at sun.security.ssl.SSLSocketImpl.performInitialHandshake(SSLSocketImpl.java:1385)
-	at sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:1413)
-	at sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:1397)
-	at com.microsoft.sqlserver.jdbc.TDSChannel.enableSSL(IOBuffer.java:1839)
-	... 8 more
-Caused by: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
-	at sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:397)
-	at sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:302)
-	at sun.security.validator.Validator.validate(Validator.java:260)
-	at sun.security.ssl.X509TrustManagerImpl.validate(X509TrustManagerImpl.java:324)
-	at sun.security.ssl.X509TrustManagerImpl.checkTrusted(X509TrustManagerImpl.java:229)
-	at sun.security.ssl.X509TrustManagerImpl.checkServerTrusted(X509TrustManagerImpl.java:105)
-	at com.microsoft.sqlserver.jdbc.HostNameOverrideX509TrustManager.checkServerTrusted(SQLServerTrustManager.java:86)
-	at sun.security.ssl.AbstractTrustManagerWrapper.checkServerTrusted(SSLContextImpl.java:985)
-	at sun.security.ssl.ClientHandshaker.serverCertificate(ClientHandshaker.java:1496)
-	... 16 more
-Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
-	at sun.security.provider.certpath.SunCertPathBuilder.build(SunCertPathBuilder.java:141)
-	at sun.security.provider.certpath.SunCertPathBuilder.engineBuild(SunCertPathBuilder.java:126)
-	at java.security.cert.CertPathBuilder.build(CertPathBuilder.java:280)
-	at sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:392)
-
-
-
-
-
-
-
-
-
-String s3 = s1 + s2;
-		String s4 = s3.replaceAll(" ", "");
-		String[] array = s4.split("");
-		System.out.print("\nKí tự xuất hiện trong 2 chuỗi s1, s2:\n");
-		
-		Map<String, Integer> map = new HashMap<>();
-		for (String c : array) {
-			String key = c.toLowerCase();
-			if (!map.containsKey(key)) {
-				map.put(key, 1);
-			} else {
-				int count = map.get(key) + 1;
-				map.put(key, count);
-			}
-		}
-
-		Set<String> printed = new HashSet<>();
-		for (char c : s4.toCharArray()) {
-			String key = String.valueOf(c).toLowerCase();
-			if (printed.contains(key)) {
-				continue;
-			}
-			int count = map.get(key);
-			String upper = key.toUpperCase();
-			String lower = key.toLowerCase();
-			if (count == 1) {
-				if (s4.contains(upper)) {
-					System.out.printf("%s: %d\n", upper, count);
-				} else {
-					System.out.printf("%s: %d\n", lower, count);
-				}
-				printed.add(key);
-			}
-
-			else if (s4.contains(upper) && s4.contains(lower)) {
-				System.out.printf("%s(%s): %d\n", lower, upper, count);
-			} else if (s4.contains(upper)) {
-				System.out.printf("%s: %d\n", upper, count);
-			} else {
-				System.out.printf("%s: %d\n", lower, count);
-			}
-			printed.add(key);
-		}
-		System.out.print("\ns1 hội s2: ");
-		Union(s2, s1);
-
-
-
- 
- 
- 
- 
- System.out.printf("%-10s%-20s%-10s%-15s%-30s%-20s%-10s\n", "CustomerId", "CustomerName", "Sex", "Birthday", "Email", "Address", "Point");
-    for (Custommer customer : list) {
-        System.out.printf("%-10s%-20s%-10s%-15s%-30s%-20s%-10s\n", customer.getCustomer_Id(), customer.getCustomer_Name(), customer.getSex(), customer.getBirthday(), customer.getEmail(), customer.getAddress(), customer.getPoint());
-    }
-
-System.out.printf("%-10s %-20s %-10s %-15s %-30s %-20s %-10s\n", "ID", "Name", "Sex", "Birthday", "Email", "Address", "Point");
-for (Custommer customer : customerList) {
-
-
-"CustomerId","CustomerName","Sex","Birthday","Email","Address","Point"
-"10001","弥ノ地","Female", "2000/01/12","aaa@example.com","大阪府","20"
-"10002","謝花","Female", "1998/12/06","bbb@example.com","東京都","100"
-"10003","髪時","Male", "1999/07/28","ccc@example.com","広島県","1100"
-"10004","地之己","Male", "2001/06/30","ddd@example.com","長野県","120"
-
-
-
-
-
-Bài 2: 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.logging.Logger;
-
-public class BaiTap1 {
-	public List<Custommer> readFromFile() {
-		List<Custommer> list = new ArrayList<>();
-		try {
-			Scanner input = new Scanner(System.in);
-			System.out.print("Nhập tên file: ");
-			String n = input.nextLine();
-			File file = new File(n);
-			if (!file.exists()) {
-				System.out.print("File không tồn tại:");
-				return list;
-			}
-			FileReader fr = new FileReader(n);
-			BufferedReader br = new BufferedReader(fr);
-			String line = "";
-			while (true) {
-				line = br.readLine();
-				if (line == null) {
-					break;
-				}
-				String[] txt = line.split(",");
-				for (int i = 0; i < txt.length; i++) {
-					txt[i] = txt[i].replaceAll("\"", "");
-				}
-				String Customer_Id = txt[0];
-				String Customer_Name = txt[1];
-				String Sex = txt[2];
-				String Birthday = txt[3];
-				String Email = txt[4];
-				String Address = txt[5];
-				String Point = txt[6];
-				list.add(new Custommer(Customer_Id, Customer_Name, Sex, Birthday, Email, Address, Point));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public static void main(String[] args) {
-
-		BaiTap1 bt = new BaiTap1();
-		List<Custommer> list1 = bt.readFromFile();
-		if (list1.isEmpty()) {
-			return;
-		}
-		
-		for (Custommer customer : list1) {
-			System.out.printf("%-10s %-20s %-13s %-10s %-30s %-15s %-10s\n", customer.getCustomer_Id(),
-					customer.getCustomer_Name(), customer.getSex(), customer.getBirthday(), customer.getEmail(),
-					customer.getAddress(), customer.getPoint());
-		}
-
-		while (!list1.isEmpty()) {
-			Scanner input = new Scanner(System.in);
-			System.out.print("\nNhập mã khách hàng: ");
-			String n = input.nextLine();
-			boolean check = false;
-			for (Custommer customer : list1) {
-				if (customer.getCustomer_Id().equals(n)) {
-					if (Integer.parseInt(customer.getPoint()) > 0 && Integer.parseInt(customer.getPoint()) <= 100) {
-						customer.setPoint("Silver");
-					}else if (Integer.parseInt(customer.getPoint()) > 100 && Integer.parseInt(customer.getPoint()) <= 1000) {
-						customer.setPoint("Gold");
-					}else if (Integer.parseInt(customer.getPoint()) > 1000) {
-						customer.setPoint("Diamond");
-					}
-					System.out.print(customer);
-					check = true;
-				}
-			}
-			if (!check) {
-				System.out.print("Không tim thấy mã khách hàng với mã " + n);
-			}
-		}
-
-	}
-}
-
-
-
-
-
-
-
-Bài 3:
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
-
-public class BaiTap3 {
-
-	public static void main(String[] args) {
-		Scanner input = new Scanner(System.in);
-		System.out.print("Nhập danh sách các nhân viên: ");
-		int n = input.nextInt();
-		NhanVien[] nhanvien = new NhanVien[n];
-
-		System.out.print("Nhập thông tin cho nhân viên: ");
-		for (int i = 0; i < n; i++) {
-			System.out.print("Chọn loại nhân viên: (1. Nhân viên lập trình, 2 - Nhân viên kiểm chứng:)");
-			int chon = input.nextInt();
-			if (chon == 1) {
-				nhanvien[i] = new CProgram();
-			} else if (chon == 2) {
-				nhanvien[i] = new C_Testter();
-			}else {
-				System.out.print("Giá trị không hợp lệ: ");
-				return;
-			}
-			nhanvien[i].Nhap();
-			nhanvien[i].TinhLuong();
-		}
-
-		System.out.print("Thông tin của các nhân viên trong công ty: \n");
-		for (int i = 0; i < n; i++) {
-			System.out.println(nhanvien[i].toString());
-		}
-
-		nhanvien = sortLuong(nhanvien);
-		System.out.println("Sắp xếp các nhân viên theo hệ số lương giầm dần: ");
-		for (int i = 0; i < nhanvien.length; i++) {
-			System.out.println(nhanvien[i].TinhLuong());
-		}
-
-	}
-
-	public static NhanVien[] sortLuong(NhanVien[] nhanvien) {
-		Arrays.sort(nhanvien, new Comparator<NhanVien>() {
-			@Override
-			public int compare(NhanVien o1, NhanVien o2) {
-				return Double.compare(o2.TinhLuong(), o1.TinhLuong());
-			}
-		});
-		return nhanvien;
-		
-		
-		
-//		for (int j = i + 1; j < nhanvien.length; j++) {
-//			NhanVien temp;
-//			if (nhanvien[i].getHeSoLuong() < nhanvien[j].getHeSoLuong()) {
-//				temp = nhanvien[i];
-//				nhanvien[i] = nhanvien[j];
-//				nhanvien[j] = temp;
-//			}
-//		}
-	}
-
-}
-
-
-NhanVien: 
-
-import java.util.Scanner;
-
-public class NhanVien {
-	public String m_ID, m_Name, m_Address;
-	public String m_Birthday;
-	public int m_WageCoefficient;
-	protected int Luong, LuongCoBan, HeSoLuong;
-
-	Scanner input = new Scanner(System.in);
-
-	public NhanVien() {
-		super();
-	}
-
-	public NhanVien(String m_ID, String m_Name, String m_Address, String m_Birthday, int m_WageCoefficient, int luong,
-			int luongCoBan, int heSoLuong, Scanner input) {
-		super();
-		this.m_ID = m_ID;
-		this.m_Name = m_Name;
-		this.m_Address = m_Address;
-		this.m_Birthday = m_Birthday;
-		this.m_WageCoefficient = m_WageCoefficient;
-		Luong = luong;
-		LuongCoBan = luongCoBan;
-		HeSoLuong = heSoLuong;
-		this.input = input;
-	}
-
-	public String getM_ID() {
-		return m_ID;
-	}
-
-	public void setM_ID(String m_ID) {
-		this.m_ID = m_ID;
-	}
-
-	public String getM_Name() {
-		return m_Name;
-	}
-
-	public void setM_Name(String m_Name) {
-		this.m_Name = m_Name;
-	}
-
-	public String getM_Address() {
-		return m_Address;
-	}
-
-	public void setM_Address(String m_Address) {
-		this.m_Address = m_Address;
-	}
-
-	public String getM_Birthday() {
-		return m_Birthday;
-	}
-
-	public void setM_Birthday(String m_Birthday) {
-		this.m_Birthday = m_Birthday;
-	}
-
-	public double getM_WageCoefficient() {
-		return m_WageCoefficient;
-	}
-
-	public void setM_WageCoefficient(int m_WageCoefficient) {
-		this.m_WageCoefficient = m_WageCoefficient;
-	}
-
-	public int getLuong() {
-		return Luong;
-	}
-
-	public void setLuong(int luong) {
-		Luong = luong;
-	}
-
-	public int getLuongCoBan() {
-		return LuongCoBan;
-	}
-
-	public void setLuongCoBan(int luongCoBan) {
-		LuongCoBan = luongCoBan;
-	}
-
-	public Scanner getInput() {
-		return input;
-	}
-
-	public void setInput(Scanner input) {
-		this.input = input;
-	}
-
-	public void Nhap() {
-		System.out.print("Nhập mã nhân viên: ");
-		m_ID = input.nextLine();
-		System.out.print("Nhập tên nhân viên: ");
-		m_Name = input.nextLine();
-		System.out.print("Nhập ngày tháng năm sinh: ");
-		m_Birthday = input.nextLine();
-		System.out.print("Nhập địa chỉ:");
-		m_Address = input.nextLine();
-		System.out.print("Hệ số lương: ");
-		m_WageCoefficient = input.nextInt();
-		System.out.print("Lương cơ bản: ");
-		LuongCoBan = input.nextInt();
-		
-	}
-
-	public int TinhLuong() {
-		return this.Luong;
-	}
-
-	@Override
-	public String toString() {
-		return "mã nhân viên: " + this.m_ID +" "+ "Tên nhân viên: " + this.m_Name +" "+ "Ngày tháng năm sinh: " +this.m_Birthday
-				+" "+ "Địa chỉ: " +this.m_Address +" "+ "Hệ số lương: " + this.m_WageCoefficient +" "+ "Lương Cơ bản" + this.LuongCoBan;
-	}
-}
-
-
-Programmer: 
-
-
-
-public class CProgram extends NhanVien {
-	private int Overtime;
-
-	public CProgram() {
-		super();
-	}
-
-	public CProgram(int overtime) {
-		super();
-		Overtime = overtime;
-	}
-
-	public int getOvertime() {
-		return Overtime;
-	}
-
-	public void setOvertime(int overtime) {
-		Overtime = overtime;
-	}
-
-	@Override
-	public void Nhap() {
-		// TODO Auto-generated method stub
-		super.Nhap();
-		System.out.print("Nhập tiền làm ngoài giờ: ");
-		Overtime = input.nextInt();
-	}
-
-	@Override
-	public int TinhLuong() {
-		this.Luong = this.LuongCoBan * this.m_WageCoefficient + this.Overtime;
-		return this.Luong;
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + "Tiền làm ngoài giờ: " + this.Overtime;
-	}
-}
-
-
-
-Testter: 
-
-
-
-
-public class C_Testter extends NhanVien {
-	private int Error;
-
-	public C_Testter() {
-		super();
-	}
-
-	public C_Testter(int error) {
-		super();
-		Error = error;
-	}
-
-	public int getError() {
-		return Error;
-	}
-
-	public void setError(int error) {
-		Error = error;
-	}
-
-	@Override
-	public void Nhap() {
-		super.Nhap();
-		System.out.print("Số lỗi: ");
-		Error = input.nextInt();
-
-	}
-
-	@Override
-	public int TinhLuong() {
-		this.Luong = this.LuongCoBan * this.m_WageCoefficient + this.Error * 100000;
-		return this.Luong;
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + "Số lỗi đã tìm thấy: " + this.Error;
-	}
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Baif2: 
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.logging.Logger;
-
-public class BaiTap2 {
-	public List<Customer> readFromFile() {
-		List<Customer> list = new ArrayList<>();
-		try {
-			/**
-			 * Nhập tên file inport 
-			 */
-			Scanner input = new Scanner(System.in);
-			System.out.print("Nhập tên file: ");
-			String n = input.nextLine();
-			FileReader fr = new FileReader(n);
-			BufferedReader br = new BufferedReader(fr);
-			String line = "";
-			while (true) {
-				line = br.readLine();
-				if (line == null) {
-					break;
-				}
-				String[] txt = line.split(",");
-				String Customer_Id = txt[0];
-				String Customer_Name = txt[1] + "      ";
-				String Sex = txt[2];
-				String Birthday = "    " + txt[3];
-				String Email = txt[4];
-				String Address = txt[5];
-				String Point = txt[6];
-				list.add(new Customer(Customer_Id, Customer_Name, Sex, Birthday, Email, Address, Point));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public static void main(String[] args) {
-
-		BaiTap2 bt = new BaiTap2();
-		List<Customer> list1 = bt.readFromFile();
-		for (Customer o : list1) {
-			System.out.println(o);
-		}
-
-		Scanner input = new Scanner(System.in);
-		System.out.print("Nhập mã khách hàng: ");
-		String n = input.nextLine();
-//		if (list1.contains(n)) {
-//			System.out.print("DÒNG 1");
-//		}
-		
-//		for (int i = 0; i < list1.size(); i++) {
-//			if (list1.size() == 5) {
-//				System.out.print(list1.get(i));
-//			}
-//		}
-		
-//		for (int i = 0 ; i < list1.size(); i++) {
-//			if (list1.get(i).equals(n)) {
-//				System.out.print(list1.get(i));
-//			}else {
-//				System.out.print("S1111ystem.out.print(customer);");
-//			}
-//		}
-		
-		for (Customer customer : list1) {
-			if (customer.getCustomer_Id().equals(n)) {
-				System.out.print(customer);
-			}else {
-				//System.out.print(customer.getCustomer_Id());
-			}
-		}
-//		while (n < 10001 || n > 10004) {
-//			System.out.print("Tìm kiếm không thấy");
-//			System.out.print("\nNhập mã khách hàng: ");
-//			n = input.nextInt();
-//		}
-//		while (n >= 10001 || n <= 10004) {
-//			if (n == 10001) {
-//				list1.get(1).Point = "Silver";
-//				System.out.print(list1.get(1));
-//				System.out.print("\nNhập mã khách hàng: ");
-//				n = input.nextInt();
-//			} else if (n == 10002) {
-//				list1.get(2).Point = "Silver";
-//				System.out.print(list1.get(2));
-//				System.out.print("\nNhập mã khách hàng: ");
-//				n = input.nextInt();
-//			} else if (n == 10003) {
-//				list1.get(3).Point = "Diamond";
-//				System.out.print(list1.get(3));
-//				System.out.print("\nNhập mã khách hàng: ");
-//				n = input.nextInt();
-//			} else if (n == 10004) {
-//				list1.get(4).Point = "Gold";
-//				System.out.print(list1.get(4));
-//				System.out.print("\nNNhập mã khách hàng: ");
-//				n = input.nextInt();
-//			}
-//		}
-
-	}
-
-}
-
-
-//Custommer:
-public class Customer {
-	public String Customer_Id;
-	public String Customer_Name;
-	public String Sex;
-	public String Birthday;
-	public String Email;
-	public String Address;
-	public String Point;
-	public Customer() {
-
-	}
-
-	public Customer(String customer_Id, String customer_Name, String sex, String birthday, String email, String address,
-			String point) {
-		super();
-		Customer_Id = customer_Id;
-		Customer_Name = customer_Name;
-		Sex = sex;
-		Birthday = birthday;
-		Email = email;
-		Address = address;
-		Point = point;
-	}
-
-	public String getCustomer_Id() {
-		return Customer_Id;
-	}
-
-	public void setCustomer_Id(String customer_Id) {
-		Customer_Id = customer_Id;
-	}
-
-	public String getCustomer_Name() {
-		return Customer_Name;
-	}
-
-	public void setCustomer_Name(String customer_Name) {
-		Customer_Name = customer_Name;
-	}
-
-	public String isSex() {
-		return Sex;
-	}
-
-	public void setSex(String sex) {
-		Sex = sex;
-	}
-
-	public String getBirthday() {
-		return Birthday;
-	}
-
-	public void setBirthday(String birthday) {
-		Birthday = birthday;
-	}
-
-	public String getEmail() {
-		return Email;
-	}
-
-	public void setEmail(String email) {
-		Email = email;
-	}
-
-	public String getAddress() {
-		return Address;
-	}
-
-	public void setAddress(String address) {
-		Address = address;
-	}
-
-	public String getPoint() {
-		return Point;
-	}
-
-	public void setPoint(String point) {
-		Point = point;
-	}
-
-	@Override
-	public String toString() {
-		return Customer_Id + "\t" + Customer_Name + "\t" + Sex + "\t" + Birthday + "\t" + Email + "\t" + Address + "\t"
-				+ Point;
-	}
-
-}
-
-
-Bài 1:
-import java.util.Scanner;
-
-public class BaiTap1 {
-
-	public static void main(String[] args) {
-		Scanner input = new Scanner(System.in);
-		System.out.print("Số lượng phần tử của mảng: ");
-		int dem = 0;
-		int n = Integer.parseInt(input.nextLine().trim());
-		
-		if (n < 0) {
-			System.out.print("NOT FOUND");
-			return;
-		}
-		
-		String line = input.nextLine();
-		String[] element = line.split(" ");
-		
-		if (element.length != n) {
-			System.out.print("NOT FOUND");
-			return;
-		}
-		
-		int[] array = new int[element.length];
-
-		for (int i = 0; i < array.length; i++) {
-			array[i] = Integer.parseInt(element[i].trim());
-		}
-
-		/**
-		 * check the odd elements in the array if there is an odd element, it will
-		 * be displayed on the screen
-		 */
-		for (int i = 0; i < array.length; i++) {
-			if (array[i] % 2 != 0) {
-				System.out.print(array[i] + " ");
-				dem++;
-			}
-		}
-		/**
-		 * check user input value 0
-		 */
-		if (dem == 0) {
-			System.out.print("NOT FOUND");
-		}
-	}
-
-}
-
-
-
-bài 3: 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
-
-public class BaiTap3 {
-
-	public static void main(String[] args) {
-		Scanner input = new Scanner(System.in);
-		System.out.print("Nhập danh sách các nhân viên: ");
-		int n = input.nextInt();
-		NhanVien[] nhanvien = new NhanVien[n];
-		for (int i = 0; i < n; i++) {
-			System.out.print("Chọn loại nhân viên: (1. Nhân viên lập trình, 2 - Nhân viên kiểm chứng):");
-			int chon = input.nextInt();
-			if (chon == 1) {
-				nhanvien[i] = new CProgrammer();
-			} else if (chon == 2) {
-				nhanvien[i] = new CTester();
-			}else {
-				System.out.print("NOT FOUND");
-				return;
-			}
-			
-			nhanvien[i].Nhap();
-			nhanvien[i].TinhLuong();
-		}
-
-		System.out.print("\nThông tin của các nhân viên trong công ty: \n");
-		for (int i = 0; i < n; i++) {
-			System.out.println(nhanvien[i].toString());
-		}
-
-		nhanvien = sortLuong(nhanvien);
-		System.out.println("\nSắp xếp các nhân viên theo thứ tự lương giảm dần : ");
-		for (int i = 0; i < nhanvien.length; i++) {
-			System.out.println(nhanvien[i].toString());
-		}
-	}
-	
-	public static NhanVien[] sortLuong(NhanVien[] nhanvien) {
-		Arrays.sort(nhanvien, new Comparator<NhanVien>() {
-			@Override
-			public int compare(NhanVien o1, NhanVien o2) {
-				return Double.compare(o2.getLuong(), o1.getLuong());
-			}
-		});
-		return nhanvien;
-	}
-
-}
-
-CProgram:
-
-public class CProgrammer extends NhanVien {
-	private int Overtime;
-
-	public CProgrammer() {
-		super();
-	}
-
-	public CProgrammer(int overtime) {
-		super();
-		Overtime = overtime;
-	}
-
-	public int getOvertime() {
-		return Overtime;
-	}
-
-	public void setOvertime(int overtime) {
-		Overtime = overtime;
-	}
-
-	@Override
-	public void Nhap() {
-		super.Nhap();
-		System.out.print("Nhập tiền làm ngoài giờ: ");
-		Overtime = input.nextInt();
-	}
-
-	@Override
-	public int TinhLuong() {
-		this.Luong = this.LuongCoBan * this.HeSoLuong + this.Overtime;
-		return this.Luong;
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + "Tiền làm ngoài giờ: " + this.Overtime;
-	}
-}
-
-CTester:
-
-public class CTester extends NhanVien {
-	private int Error;
-
-	public CTester() {
-		super();
-	}
-
-	public CTester(int error) {
-		super();
-		Error = error;
-	}
-
-	public int getError() {
-		return Error;
-	}
-
-	public void setError(int error) {
-		Error = error;
-	}
-
-	@Override
-	public void Nhap() {
-		super.Nhap();
-		System.out.print("Số lỗi: ");
-		Error = input.nextInt();
-	}
-
-	@Override
-	public int TinhLuong() {
-		this.Luong = this.LuongCoBan * this.HeSoLuong + this.Error * 100000;
-		return this.Luong;
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + "Số lỗi đã tìm thấy: " + this.Error;
-	}
-}
-
-
-NhanVien:
-import java.util.Scanner;
-
-public class NhanVien {
-	public String m_ID, m_Name, m_Address;
-	public String m_Birthday;
-	public int m_WageCoefficient;
-	protected int Luong, LuongCoBan, HeSoLuong;
-
-	Scanner input = new Scanner(System.in);
-
-	public NhanVien() {
-		super();
-	}
-
-	public NhanVien(String m_ID, String m_Name, String m_Address, String m_Birthday, int m_WageCoefficient,
-			int luong, int luongCoBan, int heSoLuong, Scanner input) {
-		super();
-		this.m_ID = m_ID;
-		this.m_Name = m_Name;
-		this.m_Address = m_Address;
-		this.m_Birthday = m_Birthday;
-		this.m_WageCoefficient = m_WageCoefficient;
-		Luong = luong;
-		LuongCoBan = luongCoBan;
-		HeSoLuong = heSoLuong;
-		this.input = input;
-	}
-
-	public String getM_ID() {
-		return m_ID;
-	}
-
-	public void setM_ID(String m_ID) {
-		this.m_ID = m_ID;
-	}
-
-	public String getM_Name() {
-		return m_Name;
-	}
-
-	public void setM_Name(String m_Name) {
-		this.m_Name = m_Name;
-	}
-
-	public String getM_Address() {
-		return m_Address;
-	}
-
-	public void setM_Address(String m_Address) {
-		this.m_Address = m_Address;
-	}
-
-	public String getM_Birthday() {
-		return m_Birthday;
-	}
-
-	public void setM_Birthday(String m_Birthday) {
-		this.m_Birthday = m_Birthday;
-	}
-
-	public int getM_WageCoefficient() {
-		return m_WageCoefficient;
-	}
-
-	public void setM_WageCoefficient(int m_WageCoefficient) {
-		this.m_WageCoefficient = m_WageCoefficient;
-	}
-
-	public int getLuong() {
-		return Luong;
-	}
-
-	public void setLuong(int luong) {
-		Luong = luong;
-	}
-
-	public int getLuongCoBan() {
-		return LuongCoBan;
-	}
-
-	public void setLuongCoBan(int luongCoBan) {
-		LuongCoBan = luongCoBan;
-	}
-
-	public int getHeSoLuong() {
-		return HeSoLuong;
-	}
-
-	public void setHeSoLuong(int heSoLuong) {
-		HeSoLuong = heSoLuong;
-	}
-
-	public Scanner getInput() {
-		return input;
-	}
-
-	public void setInput(Scanner input) {
-		this.input = input;
-	}
-
-	public void Nhap() {
-		System.out.print("Nhập mã nhân viên: ");
-		m_ID = input.nextLine();
-		System.out.print("Nhập tên nhân viên: ");
-		m_Name = input.nextLine();
-		System.out.print("Nhập ngày tháng năm sinh: ");
-		m_Birthday = input.nextLine();
-		System.out.print("Nhập địa chỉ:");
-		m_Address = input.nextLine();
-		System.out.print("Nhập Hệ số lương: ");
-		m_WageCoefficient = input.nextInt();
-		System.out.print("Nhập Lương cơ bản: ");
-		LuongCoBan = input.nextInt();
-	}
-
-	public int TinhLuong() {
-		return 0;
-	}
-
-	@Override
-	public String toString() {
-		return "Mã nhân viên: " + this.m_ID + " " + "Tên nhân viên: " + this.m_Name + " " + "Ngày tháng năm sinh: "
-				+ this.m_Birthday + " " + "Địa chỉ: " + this.m_Address + " " + "Hệ số lương: " + this.m_WageCoefficient
-				+ " " + "Lương Cơ bản" + this.LuongCoBan;
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-for (Customer customer : list1) {
-			if (n.equals(customer.getCustomer_Id())) {
-			System.out.print("System.out.print(customer);");
-				System.out.print(customer);
-			}
-		}
-
-
-//Baif 1:
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
-
-public class BaiTap1 {
-
-	public static void main(String[] args) {
-		Scanner input = new Scanner(System.in);
-		System.out.print("S1: ");
-		String s1 = input.nextLine();
-		if (s1.matches("-?\\d+(\\.\\d+)?") == true) {
-			System.out.print("NOT FOUNT");
-			return;
-		} else if (s1.matches("-?\\d+(\\.\\d+)?") == false) {
-			System.out.print("S2: ");
-			String s2 = input.nextLine();
-			if (s2.matches("-?\\d+(\\.\\d+)?") == true) {
-				System.out.print("NOT FOUNT");
-				return;
-			} else if (s2.matches("-?\\d+(\\.\\d+)?") == false)
-
-				System.out.print("S1 Hội S2 là:");
-			Hoi(s2, s1);
-			String s3 = s1 + " " + s2;
-			String s4 = s3.replaceAll(" ", "");
-			String[] array = s4.split("");
-
-			Map<String, Integer> map = new HashMap<>();
-			for (String c : array) {
-				String key = c.toLowerCase();
-				if (!map.containsKey(key)) {
-					map.put(key, 1);
-				} else {
-					int count = map.get(key) + 1;
-					map.put(key, count);
-				}
-			}
-
-			Set<String> printed = new HashSet<>();
-			for (char c : s4.toCharArray()) {
-				String key = String.valueOf(c).toLowerCase();
-				if (printed.contains(key)) {
-					continue;
-				}
-				int count = map.get(key);
-				String upper = key.toUpperCase();
-				String lower = key.toLowerCase();
-
-				if (s4.contains(upper) && s4.contains(lower)) {
-					System.out.printf("%s(%s): %d\n", lower, upper, count);
-				} else if (s4.contains(upper)) {
-					System.out.printf("%s: %d\n", upper, count);
-				} else {
-					System.out.printf("%s: %d\n", lower, count);
-				}
-				printed.add(key);
-			}
-
-		}
-	}
-
-	public static void Hoi(String s1, String s2) {
-		String[] arr1 = s1.split(" ");
-		String[] arr2 = s2.split(" ");
-
-		for (String str1 : arr1) {
-			for (String str2 : arr2) {
-				if (str1.equalsIgnoreCase(str2)) {
-					System.out.println(str1);
-				}
-			}
-		}
-	}
-}
-
-
-Baif 2: 
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.logging.Logger;
-
-public class BaiTap2 {
-
-	public void writeToFile(List<Customer> list) {
-		try {
-			FileWriter fw = new FileWriter("data.txt");// nếu có đối số true thì xóa hết dữ liệu cũ đi
-			// Add dữ liệu mới vào.
-			BufferedWriter bw = new BufferedWriter(fw);
-			for (Customer o : list) {
-				bw.write(o.toString());
-				bw.newLine();
-			}
-			bw.close();
-			fw.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public List<Customer> readFromFile() {
-		List<Customer> list = new ArrayList<>();
-		try {
-			FileReader fr = new FileReader("data.txt");
-			BufferedReader br = new BufferedReader(fr);
-			String line = "";
-			while (true) {
-				line = br.readLine();
-				if (line == null) {
-					break;
-				}
-				String[] txt = line.split(",");
-				String Customer_Id = txt[0];
-				String Customer_Name = txt[1];
-				String Sex = txt[2];
-				String Birthday = txt[3];
-				String Email = txt[4];
-				String Address = txt[5];
-				///int points = 0;
-				
-				String Point = txt[6];
-//				if (Integer.parseInt(Point)> 0 || Integer.parseInt(Point) <= 100) {
-//					Point = "Silver";
-//				}else if (Integer.parseInt(Point)> 100 || Integer.parseInt(Point) <= 1000) {					
-//					Point = "Gold";
-//				}else if (Integer.parseInt(Point)> 1000){
-//					Point = "Diamond";
-//				}
-				
-				list.add(new Customer(Customer_Id, Customer_Name, Sex, Birthday, Email, Address, Point));
-//				System.out.println(line);
-			}
-
-//			while ((line = br.readLine()) != null) {
-//				System.out.println(line);
-//				Scanner input = new Scanner(System.in);
-//				System.out.println("Nhập số phần tử: ");
-//				boolean n = input.nextBoolean();
-//				boolean s1 = line.contains("10001");
-//				// s2 = line.contains("10002");
-//				boolean s3 = line.contains("10003");
-//				boolean s4 = line.contains("10004");
-//				
-//				if (n == s1) {
-//					System.out.println("Dòng đầu tiên: "+ line);
-//				}else if (n == line.contains("10002")){
-//					System.out.println("Dòng thứ 2: "+ line);
-//				}else if (n == line.contains("10003")) {
-//					System.out.println("Dòng thứ 3: "+ line);
-//				}else if (n == line.contains("10004")) {
-//					System.out.println("Dòng thứ 4: "+ line);
-//				}
-//			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public static void main(String[] args) {
-
-		BaiTap2 bt = new BaiTap2();
-		List<Customer> list1 = bt.readFromFile();
-		for (Customer o : list1) {
-			System.out.println(o);
-		}
-
-		Scanner input = new Scanner(System.in);
-		System.out.print("Nhập mã khách hàng: ");
-		Integer n = input.nextInt();
-		while (n < 10001 || n > 10004) {
-			System.out.print("NOT FOUND");
-			System.out.print("\nNhập mã khách hàng: ");
-			n = input.nextInt();
-		}
-		while (n >= 10001 || n <= 10004) {
-			if (n == 10001) {
-				list1.get(1).Point = "Silver";
-				System.out.print(list1.get(1));
-				System.out.print("\nNhập mã khách hàng: ");
-				n = input.nextInt();
-			} else if (n == 10002) {
-				list1.get(2).Point = "Silver";
-				System.out.print(list1.get(2));
-				System.out.print("\nNhập mã khách hàng: ");
-				n = input.nextInt();
-			} else if (n == 10003) {
-				list1.get(3).Point = "Diamond";
-				System.out.print(list1.get(3));
-				System.out.print("\nNhập mã khách hàng: ");
-				n = input.nextInt();
-			} else if (n == 10004) {
-				list1.get(4).Point = "Gold";
-				System.out.print(list1.get(4));
-				System.out.print("\nNNhập mã khách hàng: ");
-				n = input.nextInt();
-			}
-		}
-
-	}
-
-}
-
-
-Baif 3: 
-
-
-
-
-
-
-
-
-
-
-Map<String, Integer> map = new HashMap<>();
-for (String c : array) {
-    String key = c.toLowerCase();
-    if (!map.containsKey(key)) {
-        map.put(key, 1);
-    } else {
-        int count = map.get(key) + 1;
-        map.put(key, count);
-    }
-}
-
-Set<String> printed = new HashSet<>();
-for (char c : s4.toCharArray()) {
-    String key = String.valueOf(c).toLowerCase();
-    if (printed.contains(key)) {
-        continue;
-    }
-    int count = map.get(key);
-    String upper = key.toUpperCase();
-    String lower = key.toLowerCase();
-
-    if (s4.contains(upper) && s4.contains(lower)) {
-        System.out.printf("%s(%s): %d\n", lower, upper, count);
-    } else if (s4.contains(upper)) {
-        System.out.printf("%s: %d\n", upper, count);
-    } else {
-        System.out.printf("%s: %d\n", lower, count);
-    }
-    printed.add(key);
-}
-
-
-
-Set<Character> printed = new HashSet<>();
-char[] charArray = s4.toCharArray();
-for (char c : charArray) {
-    String key = String.valueOf(c).toLowerCase();
-    int count = map.get(key);
-    String upper = key.toUpperCase();
-    String lower = key.toLowerCase();
-
-    if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
-        if (!printed.contains(c)) {
-            System.out.printf("%s(%s): %d\n", lower, upper, count);
-            printed.add(c);
-        }
-    } else if (s4.indexOf(upper) != -1) {
-        if (!printed.contains(c)) {
-            System.out.printf("%s: %d\n", upper, count);
-            printed.add(c);
-        }
-    } else if (s4.indexOf(lower) != -1) {
-        if (!printed.contains(c)) {
-            System.out.printf("%s: %d\n", lower, count);
-            printed.add(c);
-        }
-    }
-}
-
-
-
-Set<String> printed = new HashSet<>();
-char[] charArray = s4.toCharArray();
-for (char c : charArray) {
-    String key = String.valueOf(c).toLowerCase();
-    int count = map.get(key);
-    String upper = key.toUpperCase();
-    String lower = key.toLowerCase();
-    String display = c + "[" + upper + "]";
-    if (printed.contains(display)) {
-        continue;
-    }
-    if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
-        System.out.printf("%s(%s): %d\n", lower, upper, count);
-        printed.add(display);
-    } else if (s4.indexOf(upper) != -1) {
-        System.out.printf("%s: %d\n", upper, count);
-        printed.add(String.valueOf(upper));
-    } else if (s4.indexOf(lower) != -1) {
-        System.out.printf("%s: %d\n", lower, count);
-        printed.add(String.valueOf(lower));
-    }
-}
-
-
-Scanner input = new Scanner(System.in);
-		System.out.print("S1: ");
-		String s1 = "";
-		if (s1.matches("-?\\d+(\\.\\d+)?") == true) {
-			System.out.print("NOT FOUNT");
-			return;
-		} else if (s1.matches("-?\\d+(\\.\\d+)?") == false)
-			System.out.print("S2: ");
-		String s2 = input.nextLine();
-
-		if (s2.matches("-?\\d+(\\.\\d+)?") == true) {
-			System.out.print("NOT FOUNT");
-			return;
-		} else if (s2.matches("-?\\d+(\\.\\d+)?") == false)
-
-			System.out.print("S1 Hội S2 là:");
-		Hoi(s2, s1);
-		String s3 = s1 + " " + s2;
-		String s4 = s3.replaceAll(" ", "");
-		String[] array = s4.split("");
-
-		Map<String, Integer> map = new HashMap<>();
-		for (String c : array) {
-			String key = c.toLowerCase();
-			if (!map.containsKey(key)) {
-				map.put(key, 1);
-			} else {
-				int count = map.get(key) + 1;
-				map.put(key, count);
-			}
-		}
-
-		Set<Character> printed = new HashSet<>();
-		char[] charArray = s4.toCharArray();
-		for (char c : charArray) {
-			String key = String.valueOf(c).toLowerCase();
-			int count = map.get(key);
-			String upper = key.toUpperCase();
-			String lower = key.toLowerCase();
-
-			if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
-				if (!printed.contains(c)) {
-					System.out.printf("%s(%s): %d\n", lower, upper, count);
-					printed.add(c);
-				}
-			} else if (s4.indexOf(upper) != -1) {
-				if (!printed.contains(c)) {
-					System.out.printf("%s: %d\n", upper, count);
-					printed.add(c);
-				}
-			} else if (s4.indexOf(lower) != -1) {
-				if (!printed.contains(c)) {
-					System.out.printf("%s: %d\n", lower, count);
-					printed.add(c);
-				}
-			}
-		}
-
-
-Set<Character> printed = new HashSet<>();
-char[] charArray = s4.toCharArray();
-for (char c : charArray) {
-    String key = String.valueOf(c).toLowerCase();
-    int count = map.get(key);
-    String upper = key.toUpperCase();
-    String lower = key.toLowerCase();
-
-    if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
-        if (!printed.contains(c)) {
-            System.out.printf("%s(%s): %d\n", lower, upper, count);
-            printed.add(c);
-        }
-    } else if (s4.indexOf(upper) != -1) {
-        if (!printed.contains(c)) {
-            System.out.printf("%s: %d\n", upper, count);
-            printed.add(c);
-        }
-    } else if (s4.indexOf(lower) != -1) {
-        if (!printed.contains(c)) {
-            System.out.printf("%s: %d\n", lower, count);
-            printed.add(c);
-        }
-    }
-}
-
-
-char[] charArray = s4.toCharArray();
-for (char c : charArray) {
-    String key = String.valueOf(c).toLowerCase();
-    int count = map.get(key);
-    String upper = key.toUpperCase();
-    String lower = key.toLowerCase();
-
-    if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
-        System.out.printf("%s(%s): %d\n", lower, upper, count);
-    } else if (s4.indexOf(upper) != -1) {
-        System.out.printf("%s: %d\n", upper, count);
-    } else if (s4.indexOf(lower) != -1) {
-        System.out.printf("%s: %d\n", lower, count);
-    }
-}
-
-
-
-str.matches("-?\\d+(\\.\\d+)?");
-
-
-Gửi thêm đến Tới link test ISMS nhé
-https://wms.fujinet.vn:7443/trainingtesting/mod/quiz/view.php?id=153&forceview=1
-
-
-Join Zoom Meeting
-https://us06web.zoom.us/j/7013766793?pwd=QzBWVHZBR2crOEx1NzA3SmZTTWFhQT09
-
-Meeting ID: 701 376 6793
-Passcode: 045707
-Find your local number: https://us06web.zoom.us/u/kj5swUEYq
-
-
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
-import java.util.regex.Pattern;
-
-import org.apache.tomcat.util.file.Matcher;
-
-public class BaiTap1 {
-
-	public static void main(String[] args) {
-//		String s1 = "Hello World";
-//		String s2 = " woRld Cup";
-//		String s3 = s1 + s2;
-//		String s4 = s3.replaceAll("\\s+", "");
-//		String[] array = s4.split("");
-//		Map<String, Integer> map = new HashMap<>();
-//		for (String c : array) {
-//			String key = c.toLowerCase();
-//			if (!map.containsKey(key)) {
-//				map.put(key, 1);
-//			} else {
-//				int count = map.get(key) + 1;
-//				map.put(key, count);
-//			}
-//		}
-//		
-//		
-//		for (Map.Entry<String, Integer> entry : map.entrySet()) {
-//			String key = entry.getKey();
-//			int count = entry.getValue();
-//			String upper = key.toUpperCase();
-//			String lower = key.toLowerCase();
-//			if (s4.indexOf(upper) == 0) {
-//				
-//			}
-//			if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
-//				System.out.println(lower + "(" + upper + ") : " + count);
-//			}
-//			else if (s4.indexOf(upper) != -1) {
-//				System.out.println(upper + " : " + count);
-//			} else if (s4.indexOf(lower) != -1) {
-//				System.out.println(lower + " : " + count);
-//			}
-//		}
-		
-		
-	}
-}
-
-
-
-
-// Bài 1: 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-
-public class BaiTap1 {
-
-	public static void main(String[] args) {
-		Scanner input = new Scanner(System.in);
-		System.out.print("S1: ");
-		String s1 = input.nextLine();
-
-		System.out.print("S2: ");
-		String s2 = input.nextLine();
-		System.out.print("S1 Hội S2 là:");
-		Hoi(s1, s2);
-		String s3 = s1 + " " + s2;
-		// sử dụng phương thức replaceAll() để xóa khoảng trắng
-		String s4 = s3.replaceAll(" ", "");
-		String[] array = s4.split("");
-		Map<String, Integer> map = new HashMap<>();
-		for (String c : array) {
-			String key = c.toLowerCase();
-			if (!map.containsKey(key)) {
-				map.put(key, 1);
-			}else {
-				int count = map.get(key) + 1;
-				map.put(key, count);
-			}
-		}
-		
-		for (Map.Entry<String, Integer> entry : map.entrySet()) {
-			String key = entry.getKey();
-			int count = entry.getValue();
-			String upper = key.toUpperCase();
-			String lower = key.toLowerCase();
-			
-			if (s4.indexOf(upper) != -1 && s4.indexOf(lower) != -1) {
-				System.out.println(lower + "(" + upper + "):" + count);
-			}else if (s4.indexOf(upper) != -1) {
-				System.out.println(upper + ":" + count);
-			}else if (s4.indexOf(lower) != -1) {
-				System.out.println(lower + ":" + count);
-			}
-		}
-		
-	}
-
-	public static void CountCharacter(String str) {
-		int[] counter = new int[256];
-
-		int line = str.length();
-		for (int i = 0; i < line; i++) {
-			counter[str.charAt(i)]++;
-		}
-		char array[] = new char[str.length()];
-		for (int i = 0; i < line; i++) {
-			array[i] = str.charAt(i);
-			int flag = 0;
-			for (int j = 0; j <= i; j++) {
-				if (str.charAt(i) == array[j]) {
-					flag++;
-				}
-			}
-
-			if (flag == 1) {
-				System.out.print(str.charAt(i) + ":" + counter[str.charAt(i)] + "\n");
-			}
-		}
-	}
-
-	public static void Hoi(String s1, String s2) {
-		String[] arr1 = s1.split(" ");
-		String[] arr2 = s2.split(" ");
-		
-		for (String str1 : arr1) {
-			for (String str2 : arr2) {
-				if (str1.equalsIgnoreCase(str2)) {
-					System.out.print(str1);
-				}
-			}
-		}
-	} 
-}
-
-
-///Bài 2: file custom: 
-public class Customer {
-	public String Customer_Id;
-	public String Customer_Name;
-	public String Sex;
-	public String Birthday;
-	public String Email;
-	public String Address;
-	public String Point;
-	public Customer() {
-
-	}
-
-	public Customer(String customer_Id, String customer_Name, String sex, String birthday, String email, String address,
-			String point) {
-		super();
-		Customer_Id = customer_Id;
-		Customer_Name = customer_Name;
-		Sex = sex;
-		Birthday = birthday;
-		Email = email;
-		Address = address;
-		Point = point;
-	}
-
-	public String getCustomer_Id() {
-		return Customer_Id;
-	}
-
-	public void setCustomer_Id(String customer_Id) {
-		Customer_Id = customer_Id;
-	}
-
-	public String getCustomer_Name() {
-		return Customer_Name;
-	}
-
-	public void setCustomer_Name(String customer_Name) {
-		Customer_Name = customer_Name;
-	}
-
-	public String isSex() {
-		return Sex;
-	}
-
-	public void setSex(String sex) {
-		Sex = sex;
-	}
-
-	public String getBirthday() {
-		return Birthday;
-	}
-
-	public void setBirthday(String birthday) {
-		Birthday = birthday;
-	}
-
-	public String getEmail() {
-		return Email;
-	}
-
-	public void setEmail(String email) {
-		Email = email;
-	}
-
-	public String getAddress() {
-		return Address;
-	}
-
-	public void setAddress(String address) {
-		Address = address;
-	}
-
-	public String getPoint() {
-		return Point;
-	}
-
-	public void setPoint(String point) {
-		Point = point;
-	}
-
-	@Override
-	public String toString() {
-		return Customer_Id + "\t" + Customer_Name + "\t" + Sex + "\t" + Birthday + "\t" + Email + "\t" + Address + "\t"
-				+ Point;
-	}
-
-}
-
-
-
-file main: 
-
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.logging.Logger;
-
-public class BaiTap2 {
-
-	public void writeToFile(List<Customer> list) {
-		try {
-			FileWriter fw = new FileWriter("data.txt");// nếu có đối số true thì xóa hết dữ liệu cũ đi
-			// Add dữ liệu mới vào.
-			BufferedWriter bw = new BufferedWriter(fw);
-			for (Customer o : list) {
-				bw.write(o.toString());
-				bw.newLine();
-			}
-
-			bw.close();
-			fw.close();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-	}
-
-	public List<Customer> readFromFile() {
-		List<Customer> list = new ArrayList<>();
-		try {
-			FileReader fr = new FileReader("data.txt");
-			BufferedReader br = new BufferedReader(fr);
-			String line = "";
-			while (true) {
-				line = br.readLine();
-				if (line == null) {
-					break;
-				}
-				String[] txt = line.split("\\s+");
-				String Customer_Id = txt[0];
-				String Customer_Name = txt[1];
-				String Sex = txt[2];
-				String Birthday = txt[3];
-				String Email = txt[4];
-				String Address = txt[5];
-				String Point = txt[6];
-
-				list.add(new Customer(Customer_Id, Customer_Name, Sex, Birthday, Email, Address, Point));
-//				System.out.println(line);
-			}
-
-//			while ((line = br.readLine()) != null) {
-//				System.out.println(line);
-//				Scanner input = new Scanner(System.in);
-//				System.out.println("Nhập số phần tử: ");
-//				boolean n = input.nextBoolean();
-//				boolean s1 = line.contains("10001");
-//				// s2 = line.contains("10002");
-//				boolean s3 = line.contains("10003");
-//				boolean s4 = line.contains("10004");
-//				
-//				if (n == s1) {
-//					System.out.println("Dòng đầu tiên: "+ line);
-//				}else if (n == line.contains("10002")){
-//					System.out.println("Dòng thứ 2: "+ line);
-//				}else if (n == line.contains("10003")) {
-//					System.out.println("Dòng thứ 3: "+ line);
-//				}else if (n == line.contains("10004")) {
-//					System.out.println("Dòng thứ 4: "+ line);
-//				}
-//			}
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		return list;
-	}
-
-	public static void main(String[] args) {
-		/**
-		 * Bài tập 2: Nhập giá trị từ bàn phím rồi ghi vào file Xong đọc file ghi ra
-		 * file theo nội dung yêu cầu.
-		 */
-
-//		Customer customer = new Customer("CustomerId", "CustomerName", "Sex", "Birthday", "Email", "Address", "Point");
-//		Customer customer1 = new Customer("10001", "弥ノ地", "Female", "2000/01/12", "aaa@example.com", "大阪府", "20");
-//		Customer customer2 = new Customer("10002", "謝花", "Female", "1998/12/06", "bbb@example.com", "東京都", "100");
-//		Customer customer3 = new Customer("10003", "髪時", "Male", "1999/07/28", "ccc@example.com", "広島県", "1100");
-//		Customer customer4 = new Customer("10004", "地之己", "Male", "2001/06/30", "ddd@example.com", "長野県", "120");
-//
-//		List<Customer> list = new ArrayList<>();
-//		list.add(customer);
-//		list.add(customer1);
-//		list.add(customer2);
-//		list.add(customer3);
-//		list.add(customer4);
-
-		BaiTap2 bt = new BaiTap2();
-		List<Customer> list1 = bt.readFromFile();
-		for (Customer o : list1) {
-			System.out.println(o);
-		}
-
-		Scanner input = new Scanner(System.in);
-		System.out.print("Nhập số phần tử n: ");
-		Integer n = input.nextInt();
-		while (n < 10001 || n > 10004) {
-			System.out.print("NOT FOUND");
-			System.out.print("\nNhập số phần tử n: ");
-			n = input.nextInt();
-		}
-		while (n >= 10001 || n <= 10004) {
-			if (n == 10001) {
-				System.out.print(list1.get(1));
-				System.out.print("\nNhập số phần tử n: ");
-				n = input.nextInt();
-			} else if (n == 10002) {
-				System.out.print(list1.get(2));
-				System.out.print("\nNhập số phần tử n: ");
-				n = input.nextInt();
-			} else if (n == 10003) {
-				System.out.print(list1.get(3));
-				System.out.print("\nNhập số phần tử n: ");
-				n = input.nextInt();
-			} else if (n == 10004) {
-				System.out.print(list1.get(4));
-				System.out.print("\nNhập số phần tử n: ");
-				n = input.nextInt();
-			}
-		}
-
-	}
-
-}
-
-
-// bài 3: 
-Nhân viên: 
-import java.util.Scanner;
-
-public class NhanVien {
-	public String m_ID, m_Name, m_Address;
-	public String m_Birthday;
-	public double m_WageCoefficient;
-	protected int Luong, LuongCoBan, HeSoLuong;
-
-	Scanner input = new Scanner(System.in);
-
-	public NhanVien() {
-		super();
-	}
-
-	public NhanVien(String m_ID, String m_Name, String m_Address, String m_Birthday, double m_WageCoefficient, int luong,
-			int luongCoBan, int heSoLuong, Scanner input) {
-		super();
-		this.m_ID = m_ID;
-		this.m_Name = m_Name;
-		this.m_Address = m_Address;
-		this.m_Birthday = m_Birthday;
-		this.m_WageCoefficient = m_WageCoefficient;
-		Luong = luong;
-		LuongCoBan = luongCoBan;
-		HeSoLuong = heSoLuong;
-		this.input = input;
-	}
-
-	public String getM_ID() {
-		return m_ID;
-	}
-
-	public void setM_ID(String m_ID) {
-		this.m_ID = m_ID;
-	}
-
-	public String getM_Name() {
-		return m_Name;
-	}
-
-	public void setM_Name(String m_Name) {
-		this.m_Name = m_Name;
-	}
-
-	public String getM_Address() {
-		return m_Address;
-	}
-
-	public void setM_Address(String m_Address) {
-		this.m_Address = m_Address;
-	}
-
-	public String getM_Birthday() {
-		return m_Birthday;
-	}
-
-	public void setM_Birthday(String m_Birthday) {
-		this.m_Birthday = m_Birthday;
-	}
-
-	public double getM_WageCoefficient() {
-		return m_WageCoefficient;
-	}
-
-	public void setM_WageCoefficient(double m_WageCoefficient) {
-		this.m_WageCoefficient = m_WageCoefficient;
-	}
-
-	public int getLuong() {
-		return Luong;
-	}
-
-	public void setLuong(int luong) {
-		Luong = luong;
-	}
-
-	public int getLuongCoBan() {
-		return LuongCoBan;
-	}
-
-	public void setLuongCoBan(int luongCoBan) {
-		LuongCoBan = luongCoBan;
-	}
-
-	public int getHeSoLuong() {
-		return HeSoLuong;
-	}
-
-	public void setHeSoLuong(int heSoLuong) {
-		HeSoLuong = heSoLuong;
-	}
-
-	public Scanner getInput() {
-		return input;
-	}
-
-	public void setInput(Scanner input) {
-		this.input = input;
-	}
-	
-	
-
-	public void Nhap() {
-		System.out.print("Nhập mã nhân viên: ");
-		m_ID = input.nextLine();
-		System.out.print("Nhập tên nhân viên: ");
-		m_Name = input.nextLine();
-		System.out.print("Nhập ngày tháng năm sinh: ");
-		m_Birthday = input.nextLine();
-		System.out.print("Nhập địa chỉ:");
-		m_Address = input.nextLine();
-		System.out.print("Hệ số lương: ");
-		m_WageCoefficient = input.nextDouble();
-	}
-
-	public int TinhLuong() {
-		return 0;
-	}
-
-	@Override
-	public String toString() {
-		return "mã nhân viên: " + this.m_ID +" "+ "Tên nhân viên: " + this.m_Name +" "+ "Ngày tháng năm sinh: " + m_Birthday
-				+" "+ "Địa chỉ: " + m_Address +" "+ "Hệ số lương: " + m_WageCoefficient +" "+ "Lương Cơ bản" + LuongCoBan
-				+" "+ " Hệ số lương: " + HeSoLuong;
-	}
-}
-
-//C_Testter: 
-
-public class C_Tester extends NhanVien {
-	private int Error;
-
-	public C_Tester() {
-		super();
-	}
-
-	public C_Tester(int error) {
-		super();
-		Error = error;
-	}
-
-	public int getError() {
-		return Error;
-	}
-
-	public void setError(int error) {
-		Error = error;
-	}
-
-	@Override
-	public void Nhap() {
-		super.Nhap();
-		System.out.print("Số lỗi: ");
-		Error = input.nextInt();
-		super.Nhap();
-
-	}
-
-	@Override
-	public int TinhLuong() {
-		this.Luong = this.LuongCoBan + this.HeSoLuong + this.Error * 100000;
-		return super.TinhLuong();
-	}
-
-	@Override
-	public String toString() {
-		return super.toString() + "Số lỗi đã tìm thấy: " + this.Error;
-	}
-
-}
-
-
-//CProgram:
-
-public class CProgrammer extends NhanVien {
-	private double Overtime;
-
-	public CProgrammer() {
-		super();
-	}
-	
-	public CProgrammer(double overtime) {
-		super();
-		Overtime = overtime;
-	}
-
-	public double getOvertime() {
-		return Overtime;
-	}
-
-	public void setOvertime(double overtime) {
-		Overtime = overtime;
-	}
-	
-	
-	@Override
-	public void Nhap() {
-		// TODO Auto-generated method stub
-		super.Nhap();
-		System.out.print("Nhập tiền làm ngoài giờ: ");
-		Overtime = input.nextDouble();
-	}
-	
-	
-	@Override
-	public int TinhLuong() {
-		this.Luong = (int) (this.LuongCoBan * this.Overtime);
-		return this.Luong;
-	}
-	
-	@Override
-	public String toString() {
-		return super.toString() + "Tiền làm ngoài giờ: " + this.Overtime;
-	}
-}
-
-
-file bài 3 main: 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
-
-public class BaiTap3 {
-
-	public static void main(String[] args) {
-		Scanner input = new Scanner(System.in);
-		System.out.print("Nhập danh sách các nhân viên: ");
-		int n = input.nextInt();
-		NhanVien[] nhanvien = new NhanVien[n];
-
-		System.out.print("Nhập thông tin cho nhân viên: ");
-		for (int i = 0; i < n; i++) {
-			System.out.print("Nhập thông tin sinh viên thứ " + (i + 1) + ":");
-			System.out.print("Chọn loại nhân viên: (1. Nhân viên lập trình, 2 - Nhân viên kiểm chứng:)");
-			int chon = input.nextInt();
-			if (chon == 1) {
-				nhanvien[i] = new CProgram();
-			} else if (chon == 2) {
-				nhanvien[i] = new C_Testter();
-			}
-			nhanvien[i].Nhap();
-			nhanvien[i].TinhLuong();
-		}
-
-		System.out.print("Thông tin của các nhân viên trong công ty: \n");
-		for (int i = 0; i < n; i++) {
-			System.out.println(nhanvien[i].toString());
-		}
-
-		nhanvien = sortLuong(nhanvien);
-		System.out.println("Sắp xếp các nhân viên theo hệ số lương giầm dần: ");
-		for (int i = 0; i < nhanvien.length; i++) {
-			System.out.println(nhanvien[i].toString());
-		}
-
-	}
-
-	public static NhanVien[] sortLuong(NhanVien[] nhanvien) {
-		Arrays.sort(nhanvien, new Comparator<NhanVien>() {
-			@Override
-			public int compare(NhanVien o1, NhanVien o2) {
-				return Double.compare(o2.getHeSoLuong(), o1.getHeSoLuong());
-			}
-		});
-		return nhanvien;
-		
-		
-		
-//		for (int j = i + 1; j < nhanvien.length; j++) {
-//			NhanVien temp;
-//			if (nhanvien[i].getHeSoLuong() < nhanvien[j].getHeSoLuong()) {
-//				temp = nhanvien[i];
-//				nhanvien[i] = nhanvien[j];
-//				nhanvien[j] = temp;
-//			}
-//		}
-	}
-
-}
-
-Nhân viên: 
-import java.util.Scanner;
-
-public class NhanVien {
-	public String m_ID, m_Name, m_Address;
-	public String m_Birthday;
-	public double m_WageCoefficient;
-	protected int Luong, LuongCoBan, HeSoLuong;
-
-	Scanner input = new Scanner(System.in);
-
-	public NhanVien() {
-		super();
-	}
-
-	public NhanVien(String m_ID, String m_Name, String m_Address, String m_Birthday, double m_WageCoefficient, int luong,
-			int luongCoBan, int heSoLuong, Scanner input) {
-		super();
-		this.m_ID = m_ID;
-		this.m_Name = m_Name;
-		this.m_Address = m_Address;
-		this.m_Birthday = m_Birthday;
-		this.m_WageCoefficient = m_WageCoefficient;
-		Luong = luong;
-		LuongCoBan = luongCoBan;
-		HeSoLuong = heSoLuong;
-		this.input = input;
-	}
-
-	public String getM_ID() {
-		return m_ID;
-	}
-
-	public void setM_ID(String m_ID) {
-		this.m_ID = m_ID;
-	}
-
-	public String getM_Name() {
-		return m_Name;
-	}
-
-	public void setM_Name(String m_Name) {
-		this.m_Name = m_Name;
-	}
-
-	public String getM_Address() {
-		return m_Address;
-	}
-
-	public void setM_Address(String m_Address) {
-		this.m_Address = m_Address;
-	}
-
-	public String getM_Birthday() {
-		return m_Birthday;
-	}
-
-	public void setM_Birthday(String m_Birthday) {
-		this.m_Birthday = m_Birthday;
-	}
-
-	public double getM_WageCoefficient() {
-		return m_WageCoefficient;
-	}
-
-	public void setM_WageCoefficient(double m_WageCoefficient) {
-		this.m_WageCoefficient = m_WageCoefficient;
-	}
-
-	public int getLuong() {
-		return Luong;
-	}
-
-	public void setLuong(int luong) {
-		Luong = luong;
-	}
-
-	public int getLuongCoBan() {
-		return LuongCoBan;
-	}
-
-	public void setLuongCoBan(int luongCoBan) {
-		LuongCoBan = luongCoBan;
-	}
-
-	public int getHeSoLuong() {
-		return HeSoLuong;
-	}
-
-	public void setHeSoLuong(int heSoLuong) {
-		HeSoLuong = heSoLuong;
-	}
-
-	public Scanner getInput() {
-		return input;
-	}
-
-	public void setInput(Scanner input) {
-		this.input = input;
-	}
-	
-	
-
-	public void Nhap() {
-		System.out.print("Nhập mã nhân viên: ");
-		m_ID = input.nextLine();
-		System.out.print("Nhập tên nhân viên: ");
-		m_Name = input.nextLine();
-		System.out.print("Nhập ngày tháng năm sinh: ");
-		m_Birthday = input.nextLine();
-		System.out.print("Nhập địa chỉ:");
-		m_Address = input.nextLine();
-		System.out.print("Hệ số lương: ");
-		m_WageCoefficient = input.nextDouble();
-		System.out.print("Lương cơ bản: ");
-		LuongCoBan = input.nextInt();
-		
-	}
-
-	public int TinhLuong() {
-		return 0;
-	}
-
-	@Override
-	public String toString() {
-		return "mã nhân viên: " + this.m_ID +" "+ "Tên nhân viên: " + this.m_Name +" "+ "Ngày tháng năm sinh: " +this.m_Birthday
-				+" "+ "Địa chỉ: " +this.m_Address +" "+ "Hệ số lương: " + this.m_WageCoefficient +" "+ "Lương Cơ bản" + this.LuongCoBan;
-	}
-}
