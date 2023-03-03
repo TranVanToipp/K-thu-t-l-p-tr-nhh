@@ -1,3 +1,48 @@
+public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo) {
+    List<T002Dto> listSearch = new ArrayList<T002Dto>();
+    Connection conn = null;
+    try {
+        String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS \r\n"
+        		+ "FROM MSTCUSTOMER\r\n"
+        		+ "WHERE (CUSTOMER_NAME LIKE ? OR ? IS NULL) \r\n"
+        		+ "  AND (SEX = ? OR ? = '' OR ? IS NULL) \r\n"
+        		+ "  AND (BIRTHDAY >= ? OR ? IS NULL)\r\n"
+        		+ "  AND (BIRTHDAY <= ? OR ? IS NULL)\r\n"
+        		+ "ORDER BY CUSTOMER_ID;\r\n";
+        new DbConnection();
+		conn = DbConnection.getConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setString(1, "%" + name + "%");
+        ps.setString(2, "%" + name + "%");
+        ps.setString(3, sex);
+        ps.setString(4, sex);
+        ps.setString(5, sex);
+        ps.setString(6, birthdayFrom);
+        ps.setString(7, birthdayFrom);
+        ps.setString(8, birthdayTo);
+        ps.setString(9, birthdayTo);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) {
+            T002Dto dataT002Search = new T002Dto();
+            dataT002Search.setCUSTOMER_ID(rs.getString(1));
+            dataT002Search.setCUSTOMER_NAME(rs.getString(2));
+            dataT002Search.setSEX(rs.getString(3));
+            dataT002Search.setBIRTHDAY(rs.getString(4));
+            dataT002Search.setADDRESS(rs.getString(5));
+            listSearch.add(dataT002Search);
+        }
+        conn.close();
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return listSearch;
+}
+
+
+
+
+
+
 Exception processing async thread queue
 Exception processing async thread queue
 -1
