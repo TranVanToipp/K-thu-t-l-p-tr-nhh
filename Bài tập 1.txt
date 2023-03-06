@@ -1,3 +1,19 @@
+<%
+HttpSession session = request.getSession(false);
+if (session != null && session.getAttribute("name") != null) {
+%>
+
+   <div class="search-container__logo">
+      <div>Welcome <%= session.getAttribute("name") %></div>
+   </div>
+<%
+} 
+%>
+
+
+
+
+
 /**
  * @(#)T001.java 01-00 2021/07/16
  *
