@@ -1,3 +1,21 @@
+<c:set var="displayList" value="${not empty listDataSearch ? listDataSearch : ListA}" />
+<c:forEach items="${displayList}" var="dept">
+    <tr>
+        <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+        <td><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class="searchtable-id">${dept.CUSTOMER_ID}</a></td>
+        <td class="searchtable-name">${dept.CUSTOMER_NAME}</td>
+        <td class="searchtable-sex">${dept.SEX}</td>
+        <td class="searchtable-birthday">${dept.BIRTHDAY}</td>
+        <td class="searchtable-address">${dept.ADDRESS}</td>
+    </tr>
+</c:forEach>
+
+
+
+
+
+
+
 <%
 HttpSession session = request.getSession();
 session.setAttribute("psnCd", result.getPSN_CD());
