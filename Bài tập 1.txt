@@ -1,4 +1,13 @@
 <%
+HttpSession session = request.getSession();
+session.setAttribute("psnCd", result.getPSN_CD());
+session.setAttribute("name", getSession.getUSERNAME());
+%>
+
+
+
+
+<%
 HttpSession session = request.getSession(false);
 if (session != null && session.getAttribute("name") != null) {
 %>
