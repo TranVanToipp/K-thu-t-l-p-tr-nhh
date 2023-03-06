@@ -1,3 +1,56 @@
+protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    req.setCharacterEncoding("UTF-8");
+
+    String user = req.getParameter("userName");
+    String pass = req.getParameter("password");
+
+    // Kiểm tra input trước khi tiếp tục xử lý đăng nhập
+    if (!checkInput(user, pass)) {
+        String message = "Invalid input.";
+        req.setAttribute("message", message);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/T001.jsp");
+        dispatcher.forward(req, resp);
+        return;
+    }
+
+    try {
+        T001Dao loginDao = new T001Dao();
+        T001Dto result = loginDao.checkLogin(user, pass);
+        T001Dto getSession = loginDao.getSession(user);
+
+        // Xử lý đăng nhập
+        if (result != null) {
+            HttpSession session = req.getSession(); 
+            session.setAttribute("psnCd", result.getPSN_CD());
+            session.setAttribute("name", getSession.getUSERNAME());  
+            resp.sendRedirect("/CustomerSystem/T002");
+        } else {
+            String message = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
+            req.setAttribute("message", message);
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/T001.jsp");
+            dispatcher.forward(req, resp);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+private boolean checkInput(String user, String pass) {
+    if (user == null || user.trim().isEmpty()) {
+        return false;
+    }
+    if (pass == null || pass.trim().isEmpty()) {
+        return false;
+    }
+    return true;
+}
+
+
+
+
+
+
+
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		try {
