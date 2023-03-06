@@ -1,3 +1,82 @@
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		try {
+			String name = request.getParameter("txtCustomerName");
+			String sex = request.getParameter("browser");
+			String birthdayFrom = request.getParameter("txtBirthdayFromName");
+			String birthdayTo = request.getParameter("txtBirthdayToName");
+			T002Dao daoSearch = new T002Dao();
+			if (name == null || name.trim().isEmpty()) {
+			    name = null;
+			}
+			if (sex == null || sex.trim().isEmpty()) {
+			    sex = null;
+			}
+			if (birthdayFrom == null || birthdayFrom.trim().isEmpty()) {
+			    birthdayFrom = null;
+			}
+			if (birthdayTo == null || birthdayTo.trim().isEmpty()) {
+			    birthdayTo = null;
+			}
+			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+			
+			request.setAttribute("listDataSearch", resultSearch);
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+			rd.forward(request, response);
+			//Lấy data các checkbox được checked
+			String[] ids = request.getParameterValues("selectedValues");
+			if (ids != null && ids.length > 0) {
+			    String idList = String.join(",", ids);
+			   
+			    // Loại bỏ các dấu ngoặc kép trong chuỗi
+			    idList = idList.replace("[\"", "").replace("\"]", "");
+			    String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
+			    String[] result2 = result.split(",");
+			    if (result2.length == 16) {
+			    	String[] result3 = Arrays.copyOfRange(result2, 1, result2.length);
+		    		daoSearch.deleteData(result3);
+			    }else {
+			    	for (int i = 0;i< result2.length; i++) {
+				    	if (result2.length == 16) {
+				    		daoSearch.deleteData(result2);
+				    	}
+				    	daoSearch.deleteData(result2);
+				    }
+			    }
+			}	
+			
+			// Gán giá trị của resultSearch cho listPage nếu resultSearch không rỗng
+			if(resultSearch != null && !resultSearch.isEmpty()) {
+				request.setAttribute("ListA", resultSearch);
+			} else {
+				int index = Integer.parseInt(request.getParameter("index"));
+				request.setAttribute("tag", index);
+				T002Dao dao = new T002Dao();
+				List<T002Dto> list = dao.getData();
+				request.setAttribute("listData", list);
+				count = dao.getDataPage();
+				int endpage = count/15;
+				if (count % 15 != 0) {
+					endpage++;
+				}
+				List<T002Dto> listPage = dao.pagingData(index);
+				request.setAttribute("ListA", listPage);
+				request.setAttribute("endP", endpage);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
+
+
+
+
+
+
+
 <c:choose>
     <c:when test="${not empty listDataSearch}">
         <c:set var="displayData" value="${listDataSearch}" />
