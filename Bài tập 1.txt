@@ -1,3 +1,92 @@
+if (birthdayFrom != "") {
+	if (!isValidDate(birthdayFrom)) {
+		String messagebirthdayfrom = Constants.MESSAGE_ERROR_FROM;
+		String dataFrom = birthdayFrom;
+		request.setAttribute("dataFrom", dataFrom);
+		request.setAttribute("messageFrom", messagebirthdayfrom);
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+		rd.forward(request, response);
+		return;
+	}
+}
+
+if (birthdayTo != "") {
+	if (!isValidDate(birthdayTo)) {
+		String messagebirthTo = Constants.MESSAGE_ERROR_TO;
+		String dataTo = birthdayTo;
+		request.setAttribute("dataTo", dataTo);
+		request.setAttribute("messageTo", messagebirthTo);
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+		rd.forward(request, response);
+		return;
+	}
+}
+
+if (isValidDate(birthdayFrom) && isValidDate(birthdayTo)) {
+	String dayFrom = birthdayFrom.replaceAll("/", "");
+	String dayTo = birthdayTo.replaceAll("/", "");
+	if (Integer.parseInt(dayTo) < Integer.parseInt(dayFrom)) {
+		String messageFromTo = Constants.MESSAGE_ERROR_FROM_BIGGER_TO;
+		request.setAttribute("errorFromTo", messageFromTo);
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+		rd.forward(request, response);
+		return;
+	}
+}
+
+
+function validateForm() {
+		  var dataFrom = document.getElementById("dataFrom").value;
+		  var dataTo = document.getElementById("dataTo").value;
+		  var checkBirthdayFrom = document.getElementById("checkBirthdayFrom").value;
+		  var checkBirthdayTo = document.getElementById("checkBirthdayTo").value;
+		  var checkedNot = document.getElementById("checkedNot").value;
+		  var messageErrorTo = document.getElementById("messageErrorTo").value;
+		  var messageErrorFrom = document.getElementById("messageErrorFrom").value;
+		  var checkerrFromTo = document.getElementById("messageErrorFromBiggerTo").value;
+		 
+		  if (checkBirthdayFrom != null) {
+		    alert('<%= checkBirthdayFrom %>');
+		    document.querySelector(".txtCustomerValidateFROM").value = dataFrom;
+		    return;
+		  }
+		  if (checkBirthdayTo != null) {
+		    alert('<%= checkBirthdayTo %>');
+		    document.querySelector(".txtCustomerValidateTo").value = dataTo;
+		    return;
+		  }
+		  if (checkerrFromTo != null) {
+			  alert('<%= checkerrFromTo %>');
+			  return;
+		  }
+		 
+		  
+	}
+	
+	
+	
+<% 
+    Object dataFrom = request.getAttribute("dataFrom");
+    Object dataTo = request.getAttribute("dataTo");
+    Object checkBirthdayFrom = request.getAttribute("messageFrom");
+    Object checkBirthdayTo = request.getAttribute("messageTo");
+    Object checkerrFromTo = request.getAttribute("errorFromTo");
+    String checkedNot = Constants.CHECKED_NOT_ERROR;
+    String messageErrorTo = Constants.MESSAGE_ERROR_TO;
+    String messageErrorFrom = Constants.MESSAGE_ERROR_FROM;
+    
+%>
+<input type="hidden" id="dataFrom" value="<%= dataFrom %>">
+<input type="hidden" id="dataTo" value="<%= dataTo %>">
+<input type="hidden" id="checkBirthdayFrom" value="<%= checkBirthdayFrom %>">
+<input type="hidden" id="checkBirthdayTo" value="<%= checkBirthdayTo %>">
+<input type="hidden" id="checkedNot" value="<%= checkedNot %>">
+<input type="hidden" id="messageErrorTo" value="<%= messageErrorTo %>">
+<input type="hidden" id="messageErrorFrom" value="<%= messageErrorFrom %>">
+<input type="hidden" id="messageErrorFromBiggerTo" value="<%= checkerrFromTo %>">
+
+
+
 For input string: "(currentPage - 1) * recordPerPage"
 
 <c:set var="startIndex" value="${Integer.parseInt((currentPage - 1) * recordPerPage)}"/>
