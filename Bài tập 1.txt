@@ -1,3 +1,84 @@
+public void pagingSearchList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Lấy các tham số truyền vào từ request
+    String searchValue = request.getParameter("searchValue");
+    int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+    int elementsPerPage = 15; // Số lượng phần tử trên 1 trang
+    
+    // Tìm kiếm dữ liệu và lưu vào List
+    List<T002Dto> searchList = dao.searchData(searchValue);
+    
+    // Tính tổng số trang dựa trên số lượng phần tử trên 1 trang và tổng số phần tử của List
+    int totalElements = searchList.size();
+    int totalPages = (totalElements + elementsPerPage - 1) / elementsPerPage;
+    
+    // Sử dụng phương thức sublist để lấy List con chứa phần tử của trang hiện tại
+    int startIndex = (currentPage - 1) * elementsPerPage;
+    int endIndex = Math.min(startIndex + elementsPerPage, totalElements);
+    List<T002Dto> currentPageList = searchList.subList(startIndex, endIndex);
+    
+    // Truyền thông tin phân trang và List con vào request để hiển thị lên file jsp
+    request.setAttribute("currentPage", currentPage);
+    request.setAttribute("totalPages", totalPages);
+    request.setAttribute("searchValue", searchValue);
+    request.setAttribute("searchList", currentPageList);
+    request.getRequestDispatcher("searchResult.jsp").forward(request, response);
+}
+
+
+<c:forEach var="item" items="${searchList}">
+    <tr>
+        <td>${item.CUSTOMER_ID}</td>
+        <td>${item.CUSTOMER_NAME}</td>
+        <td>${item.SEX}</td>
+        <td>${item.BIRTHDAY}</td>
+        <td>${item.ADDRESS}</td>
+    </tr>
+</c:forEach>
+
+<ul class="pagination">
+    <li class="page-item ${currentPage == 1 ? 'disabled' : ''}">
+        <a class="page-link" href="?currentPage=${currentPage-1}&amp;searchValue=${searchValue}">Previous</a>
+    </li>
+    <c:forEach begin="1" end="${totalPages}" var="pageNumber">
+        <li class="page-item ${pageNumber == currentPage ? 'active' : ''}">
+            <a class="page-link" href="?currentPage=${pageNumber}&
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%
+// Lấy giá trị trang hiện tại từ request
+int page = Integer.parseInt(request.getParameter("page"));
+
+// Tính toán chỉ số của phần tử đầu tiên trên trang hiện tại
+int startIndex = (page - 1) * 15;
+
+// Lấy danh sách các phần tử trên trang hiện tại từ request
+List<T002Dto> currentPageList = (List<T002Dto>) request.getAttribute("currentPageList");
+
+// Tính toán tổng số trang
+int totalPages = (int) Math.ceil((double) currentPageList.size() / 15);
+
+// Lặp qua các phần tử trên trang hiện tại và hiển thị chúng
+for (int i = startIndex; i < Math.min(startIndex + 15, currentPageList.size()); i++) {
+    T002Dto data = currentPageList.get(i);
+    // Hiển thị thông tin phần tử ở đây
+}
+
+// Hiển thị các liên kết phân trang
+for (int i = 1; i <= totalPages; i++) {
+    if (i == page) {
+        out.print(i + " ");
+    } else {
+        out.print("<a href=\"search.jsp?page=" + i + "\">" + i + "</a> ");
+    }
+}
+%>
+
+
+
+
+
 // Tính toán số trang và lấy danh sách kết quả tìm kiếm cho trang hiện tại
 			int count = resultSearch.size();
 			int endpage = (int) Math.ceil(count / 15.0);
