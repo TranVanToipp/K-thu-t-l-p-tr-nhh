@@ -1,3 +1,34 @@
+private boolean isValidDate(String txtDate) {
+    if (txtDate == null || txtDate.trim().isEmpty()) {
+        return false;
+    }
+    String rxDatePattern = "^(\\d{4})(\\/|-)(\\d{1,2})(\\/|-)(\\d{1,2})$";
+    Pattern pattern = Pattern.compile(rxDatePattern);
+    Matcher matcher = pattern.matcher(txtDate);
+    if (!matcher.matches()) {
+        return false;
+    }
+    int dtMonth = Integer.parseInt(matcher.group(3));
+    int dtDay = Integer.parseInt(matcher.group(5));
+    int dtYear = Integer.parseInt(matcher.group(1));
+    if (dtMonth < 1 || dtMonth > 12) {
+        return false;
+    } else if (dtDay < 1 || dtDay > 31) {
+        return false;
+    } else if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11) && dtDay == 31) {
+        return false;
+    } else if (dtMonth == 2) {
+        boolean isLeap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+        if (dtDay > 29 || (dtDay == 29 && !isLeap)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+
+
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		try {
