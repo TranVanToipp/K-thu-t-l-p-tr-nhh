@@ -1,5 +1,6 @@
 For input string: "(currentPage - 1) * recordPerPage"
 
+<c:set var="startIndex" value="${Integer.parseInt((currentPage - 1) * recordPerPage)}"/>
 
 
 
