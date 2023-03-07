@@ -1,3 +1,26 @@
+// Get the search results with pagination
+String pageStr = request.getParameter("page");
+int page = (pageStr != null) ? Integer.parseInt(pageStr) : 1;
+int recordsPerPage = 15;
+int start = (page - 1) * recordsPerPage;
+
+List<T002Dto> resultSearch = daoSearch.getDataSearchWithPagination(name, sex, birthdayFrom, birthdayTo, start, recordsPerPage);
+request.setAttribute("listDataSearch", resultSearch);
+
+// Get the total number of search results and calculate the total number of pages
+int noOfRecords = daoSearch.getNoOfRecords(name, sex, birthdayFrom, birthdayTo);
+int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+request.setAttribute("noOfPages", noOfPages);
+request.setAttribute("currentPage", page);
+
+RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+rd.forward(request, response);
+
+
+
+
+
+
 
 int totalRecords = resultSearch.size();
 int recordsPerPage = 15;
