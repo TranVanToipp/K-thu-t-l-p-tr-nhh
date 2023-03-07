@@ -1,3 +1,76 @@
+protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		req.setCharacterEncoding("UTF-8");
+		try {
+			String user = req.getParameter("userName");
+			String pass = req.getParameter("password");
+			T001Dao loginDao = new T001Dao();
+			T001Dto result = loginDao.checkLogin(user, pass);
+			T001Dto getSession = loginDao.getSession(user);
+			/**
+			 * N蘯ｿu ﾄ惰ハg nh蘯ｭp thﾃ�nh cﾃｴng, chuy盻ハ hﾆｰ盻嬾g t盻嬖 trang T002_Search
+			 * Ngoﾃ�i ra: Lﾆｰu thﾃｴng bﾃ｡o l盻擁 vﾃ� chuy盻ハ hﾆｰ盻嬾g trang T001_Login
+			 * thﾃｴng bﾃ｡o l盻擁.
+			 */
+			// Kiểm tra input trước khi tiếp tục xử lý đăng nhập
+		    if (!checkInput(user, null)) {
+		        String messageUser = Constants.USER_NOT_ERROR;
+		        req.setAttribute("messageerroruser", messageUser);
+		        RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/T001.jsp");
+		        dispatcher.forward(req, resp);
+		        return;
+		    }else if (!checkInput(null, pass)) {
+		    	 String messagePass = Constants.PASSWORD_NOT_ERROR;
+		    	 req.setAttribute("messageerrorPass", messagePass);
+		    	 RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/T001.jsp");
+		    }
+			if (result != null) {
+				HttpSession session=req.getSession(); 
+				session.setAttribute("psnCd", result.getPSN_CD());
+		        session.setAttribute("name",getSession.getUSERNAME());  
+		        resp.sendRedirect("/CustomerSystem/T002");
+			} else {
+				String message = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
+				req.setAttribute("message", message);
+				RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/jsp/T001.jsp");
+				dispatcher.forward(req, resp);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private boolean checkInput(String user, String password) {
+		if (user == null || user.trim().isEmpty()) {
+	        return false;
+	    }
+	    if (password == null || password.trim().isEmpty()) {
+	        return false;
+	    }
+		return true;
+	}
+	
+	
+	
+	
+	function checkInput () {
+		var user = document.getElementById("txtUserID").value;
+		var pass = document.getElementById("txtPassword").value;
+		if (user == "") {
+			document.getElementById("lblErrorMessage").innerHTML = '<%=errorMessageUser%>';
+			return false;
+		}
+		if (pass == "") {
+			document.getElementById("lblErrorMessage").innerHTML = '<%=errorMessagePassword%>';
+			return false;
+		}
+		return true;
+		
+	}
+	
+	
+
+
+
 public void pagingSearchList(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     // Lấy các tham số truyền vào từ request
     String searchValue = request.getParameter("searchValue");
