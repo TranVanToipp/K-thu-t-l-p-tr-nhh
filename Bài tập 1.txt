@@ -1,3 +1,30 @@
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    //...
+    List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+    request.setAttribute("listDataSearch", resultSearch);
+
+    // calculate pagination for search results
+    int count = daoSearch.getCountDataSearch(name, sex, birthdayFrom, birthdayTo);
+    int endpage = count / 15;
+    if (count % 15 != 0) {
+        endpage++;
+    }
+    int indexPage = 1; // reset to first page
+    List<T002Dto> listPage = daoSearch.pagingDataSearch(indexPage, name, sex, birthdayFrom, birthdayTo);
+    request.setAttribute("ListA", listPage);
+    request.setAttribute("endP", endpage);
+    
+    //...
+}
+
+
+
+
+
+
+
+
+
 protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     req.setCharacterEncoding("UTF-8");
 
