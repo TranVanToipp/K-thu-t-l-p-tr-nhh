@@ -1,3 +1,44 @@
+<c:choose>
+<c:when test="${not empty listDataSearch}">
+<c:set var="pageSize" value="15" />
+<c:set var="totalItems" value="${fn:length(listDataSearch)}" />
+<c:set var="totalPages" value="${(totalItems + pageSize - 1) div pageSize}" />
+<c:set var="currentPage" value="${not empty param.page ? param.page : 1}" />
+
+<c:forEach begin="${(currentPage - 1) * pageSize}" end="${min(currentPage * pageSize - 1, totalItems - 1)}" var="dept">
+  <tr>
+    <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}" /></td>
+    <td><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class="searchtable-id">${dept.CUSTOMER_ID}</a></td>
+    <td class="searchtable-name">${dept.CUSTOMER_NAME}</td>
+    <td class="searchtable-sex">${dept.SEX}</td>
+    <td class="searchtable-birthday">${dept.BIRTHDAY}</td>
+    <td class="searchtable-address">${dept.ADDRESS}</td>
+  </tr>
+</c:forEach>
+
+<c:if test="${totalPages > 1}">
+  <div class="pagination">
+    <c:forEach begin="1" end="${totalPages}" var="i">
+      <c:choose>
+        <c:when test="${i == currentPage}">
+          <span class="current-page">${i}</span>
+        </c:when>
+        <c:otherwise>
+          <a href="?page=${i}" class="page-link">${i}</a>
+        </c:otherwise>
+      </c:choose>
+    </c:forEach>
+  </div>
+</c:if>
+</c:when>
+<c:otherwise>
+<p>No search results found.</p>
+</c:otherwise>
+</c:choose>
+
+
+
+
 <div class="pagination">
   <c:if test="${currentPage > 1}">
     <a href="${pageContext.request.contextPath}/T002?page=${currentPage - 1}">&laquo; Previous</a>
