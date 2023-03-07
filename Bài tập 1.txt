@@ -1,3 +1,8 @@
+For input string: "(currentPage - 1) * recordPerPage"
+
+
+
+
 <c:set var="currentPage" value="${not empty param.page ? param.page : 1}"/>
 <c:set var="recordPerPage" value="10"/>
 <c:set var="startIndex" value="(currentPage - 1) * recordPerPage"/>
