@@ -1,3 +1,29 @@
+<div class="pagination">
+  <c:if test="${currentPage > 1}">
+    <a href="${pageContext.request.contextPath}/T002?page=${currentPage - 1}">&laquo; Previous</a>
+  </c:if>
+  
+  <c:forEach var="i" begin="1" end="${noOfPages}">
+    <c:choose>
+      <c:when test="${i == currentPage}">
+        <span class="current">${i}</span>
+      </c:when>
+      <c:otherwise>
+        <a href="${pageContext.request.contextPath}/T002?page=${i}">${i}</a>
+      </c:otherwise>
+    </c:choose>
+  </c:forEach>
+  
+  <c:if test="${currentPage < noOfPages}">
+    <a href="${pageContext.request.contextPath}/T002?page=${currentPage + 1}">Next &raquo;</a>
+  </c:if>
+</div>
+d
+
+
+
+
+
 <c:when test="${not empty listDataSearch}">
   <c:forEach items="${listDataSearch}" var="dept" begin="${start + 1}" end="${start + recordsPerPage}">
     <tr>
