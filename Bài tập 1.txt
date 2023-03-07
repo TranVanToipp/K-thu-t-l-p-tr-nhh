@@ -1,3 +1,14 @@
+// Tính toán số trang và lấy danh sách kết quả tìm kiếm cho trang hiện tại
+			int count = resultSearch.size();
+			int endpage = (int) Math.ceil(count / 15.0);
+			String indexPage = request.getParameter("index");
+			int index = indexPage == null ? 1 : Integer.parseInt(indexPage);
+			List<T002Dto> listPage = daoSearch.pagingData(index, resultSearch);
+			request.setAttribute("ListA", listPage);
+			request.setAttribute("endP", endpage);
+
+
+
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     //...
     List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
