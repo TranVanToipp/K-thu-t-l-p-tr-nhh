@@ -1,3 +1,53 @@
+<%
+    Object dataFrom = request.getAttribute("dataFrom");
+    Object dataTo = request.getAttribute("dataTo");
+    Object checkBirthdayFrom = request.getAttribute("messageFrom");
+    Object checkBirthdayTo = request.getAttribute("messageTo");
+    String checkedNot = Constants.CHECKED_NOT_ERROR;
+    String messageErrorTo = Constants.MESSAGE_ERROR_TO;
+    String messageErrorFrom = Constants.MESSAGE_ERROR_FROM;
+    String messageErrorFromBiggerTo = Constants.MESSAGE_ERROR_FROM_BIGGER_TO;
+    
+    if (dataFrom == null) {
+        dataFrom = "";
+    }
+    if (dataTo == null) {
+        dataTo = "";
+    }
+    if (checkBirthdayFrom == null) {
+        checkBirthdayFrom = "";
+    }
+    if (checkBirthdayTo == null) {
+        checkBirthdayTo = "";
+    }
+%>
+
+<input type="hidden" id="dataFrom" value="<%= dataFrom %>">
+<input type="hidden" id="dataTo" value="<%= dataTo %>">
+<input type="hidden" id="checkBirthdayFrom" value="<%= checkBirthdayFrom %>">
+<input type="hidden" id="checkBirthdayTo" value="<%= checkBirthdayTo %>">
+<input type="hidden" id="checkedNot" value="<%= checkedNot %>">
+<input type="hidden" id="messageErrorTo" value="<%= messageErrorTo %>">
+<input type="hidden" id="messageErrorFrom" value="<%= messageErrorFrom %>">
+<input type="hidden" id="messageErrorFromBiggerTo" value="<%= messageErrorFromBiggerTo %>">
+
+
+function validateForm() {
+  var dataFrom = document.getElementById("dataFrom").value;
+  var dataTo = document.getElementById("dataTo").value;
+  var checkBirthdayFrom = document.getElementById("checkBirthdayFrom").value;
+  var checkBirthdayTo = document.getElementById("checkBirthdayTo").value;
+  var checkedNot = document.getElementById("checkedNot").value;
+  var messageErrorTo = document.getElementById("messageErrorTo").value;
+  var messageErrorFrom = document.getElementById("messageErrorFrom").value;
+  var messageErrorFromBiggerTo = document.getElementById("messageErrorFromBiggerTo").value;
+
+  // Do something with the variables
+}
+
+
+
+
 function validateForm() {
   var dataFrom = '<%= dataFrom %>';
   var dataTo = '<%= dataTo %>';
