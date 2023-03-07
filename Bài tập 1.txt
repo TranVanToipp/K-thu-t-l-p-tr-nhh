@@ -1,3 +1,28 @@
+function validateForm() {
+		  var dateStringFrom = document.querySelector(".txtCustomerValidateFROM").value;
+		  const dateStringTo = document.querySelector(".txtCustomerValidateTO").value;
+		  var dataInputFrom = dateStringFrom;
+		  if (dateStringFrom != "" || dateStringTo != "") {
+		  if(!isValidDate(dateStringFrom)) {
+				alert('<%=messageErrorFrom%>');
+				return;
+		  	}
+		  if (!isValidDate(dateStringTo)) {
+			  var dataInputTo = dateStringTo;
+			  alert('<%=messageErrorTo%>');
+			  document.querySelector(".txtCustomerValidateTO").value = dataInputTo;
+			  return;
+		  }
+	  	 var dateFromUpdate = dateStringFrom.split("/").join("");
+		 var dateToUpdate =  dateStringTo.split("/").join("");
+		 if (dateFromUpdate > dateToUpdate) {
+			alert('<%=messageErrorFromBiggerTo%>');
+			return;
+		 }
+	}	  
+
+
+
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		try {
