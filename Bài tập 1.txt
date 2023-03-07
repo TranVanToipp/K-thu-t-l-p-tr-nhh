@@ -6,6 +6,150 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			String sex = request.getParameter("browser");
 			String birthdayFrom = request.getParameter("txtBirthdayFromName");
 			String birthdayTo = request.getParameter("txtBirthdayToName");
+			
+				if (birthdayFrom != "") {
+					if (!isValidDate(birthdayFrom)) {
+						String messagebirthdayfrom = Constants.MESSAGE_ERROR_FROM;
+						String dataFrom = birthdayFrom;
+						request.setAttribute("dataFrom", dataFrom);
+						request.setAttribute("messageFrom", messagebirthdayfrom);
+						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+						rd.forward(request, response);
+					}
+				}
+					
+				if (birthdayTo != "") {
+					if (!isValidDate(birthdayTo)) {
+						String messagebirthTo = Constants.MESSAGE_ERROR_TO;
+						String dataTo = birthdayTo;
+						request.setAttribute("dataTo", dataTo);
+						request.setAttribute("messageTo", messagebirthTo);
+						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+						rd.forward(request, response);
+					}
+				}
+				
+				
+				if (isValidDate(birthdayFrom) && isValidDate(birthdayTo)) {
+					String dayFrom = birthdayFrom.replaceAll("/", "");
+					String dayTo = birthdayTo.replaceAll("/", "");
+					if (Integer.parseInt(dayTo) < Integer.parseInt(dayFrom)) {
+						String messageFromTo = Constants.MESSAGE_ERROR_FROM_BIGGER_TO;
+						request.setAttribute("errorFromTo", messageFromTo);
+						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+						rd.forward(request, response);
+					}
+				}
+			
+				
+		
+			
+			T002Dao daoSearch = new T002Dao();
+//			if (name == null || name.trim().isEmpty()) {
+//			    name = null;
+//			}
+//			if (sex == null || sex.trim().isEmpty()) {
+//			    sex = null;
+//			}
+//			if (birthdayFrom == null || birthdayFrom.trim().isEmpty()) {
+//			    birthdayFrom = null;
+//			}
+//			if (birthdayTo == null || birthdayTo.trim().isEmpty()) {
+//			    birthdayTo = null;
+//			}
+			
+			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+			request.setAttribute("listDataSearch", resultSearch);
+			
+			
+			//List<T002Dto> searchList = dao.searchData(searchValue);
+		    
+		    
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+			rd.forward(request, response);
+			//Lấy data các checkbox được checked
+			String[] ids = request.getParameterValues("selectedValues");
+			if (ids != null && ids.length > 0) {
+			    String idList = String.join(",", ids);
+			   
+			    // Loại bỏ các dấu ngoặc kép trong chuỗi
+			    idList = idList.replace("[\"", "").replace("\"]", "");
+			    String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
+			    String[] result2 = result.split(",");
+			    if (result2.length == 16) {
+			    	String[] result3 = Arrays.copyOfRange(result2, 1, result2.length);
+		    		daoSearch.deleteData(result3);
+			    }else {
+			    	for (int i = 0;i< result2.length; i++) {
+				    	if (result2.length == 16) {
+				    		daoSearch.deleteData(result2);
+				    	}
+				    	daoSearch.deleteData(result2);
+				    }
+			    }
+			}	
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		<% 
+    Object dataFrom = request.getAttribute("dataFrom");
+    Object dataTo = request.getAttribute("dataTo");
+    Object checkBirthdayFrom = request.getAttribute("messageFrom");
+    Object checkBirthdayTo = request.getAttribute("messageTo");
+    Object checkerrFromTo = request.getAttribute("errorFromTo");
+    String checkedNot = Constants.CHECKED_NOT_ERROR;
+    String messageErrorTo = Constants.MESSAGE_ERROR_TO;
+    String messageErrorFrom = Constants.MESSAGE_ERROR_FROM;
+    
+    if (dataFrom == null) {
+        dataFrom = "";
+    }
+    if (dataTo == null) {
+        dataTo = "";
+    }
+    if (checkBirthdayFrom == null) {
+        checkBirthdayFrom = "";
+    }
+    
+    if (checkBirthdayTo == null) {
+        checkBirthdayTo = "";
+    }
+    if (checkerrFromTo == null) {
+    	checkerrFromTo = "";
+    }
+%>
+<input type="hidden" id="dataFrom" value="<%= dataFrom %>">
+<input type="hidden" id="dataTo" value="<%= dataTo %>">
+<input type="hidden" id="checkBirthdayFrom" value="<%= checkBirthdayFrom %>">
+<input type="hidden" id="checkBirthdayTo" value="<%= checkBirthdayTo %>">
+<input type="hidden" id="checkedNot" value="<%= checkedNot %>">
+<input type="hidden" id="messageErrorTo" value="<%= messageErrorTo %>">
+<input type="hidden" id="messageErrorFrom" value="<%= messageErrorFrom %>">
+<input type="hidden" id="messageErrorFromBiggerTo" value="<%= checkerrFromTo %>">
+
+
+
+
+
+
+
+
+
+
+
+
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		try {
+			String name = request.getParameter("txtCustomerName");
+			String sex = request.getParameter("browser");
+			String birthdayFrom = request.getParameter("txtBirthdayFromName");
+			String birthdayTo = request.getParameter("txtBirthdayToName");
 			if (birthdayFrom != "" || birthdayTo != "") {
 				if (isValidDate(birthdayFrom)) {
 					String messagebirthdayfrom = Constants.MESSAGE_ERROR_FROM;
