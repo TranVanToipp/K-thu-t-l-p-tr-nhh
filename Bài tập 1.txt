@@ -1,3 +1,40 @@
+<c:when test="${not empty listDataSearch}">
+<c:forEach items="${listDataSearch}" var="dept">
+    <tr>
+	<td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+	<td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+	<td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+	<td class = "searchtable-sex">${dept.SEX}</td>
+	<td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+	<td class = "searchtable-address">${dept.ADDRESS}</td>
+    </tr>
+</c:forEach>
+</c:when>
+
+
+
+
+String pageStr = request.getParameter("page");
+int page = (pageStr != null) ? Integer.parseInt(pageStr) : 1;
+int recordsPerPage = 15;
+int start = (page - 1) * recordsPerPage;
+
+List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+request.setAttribute("listDataSearch", resultSearch);
+
+// Get the total number of search results and calculate the total number of pages
+int noOfRecords = resultSearch.size();
+int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+request.setAttribute("noOfPages", noOfPages);
+request.setAttribute("currentPage", page);
+
+RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+rd.forward(request, response);
+
+
+
+
+
 // Get the search results with pagination
 String pageStr = request.getParameter("page");
 int page = (pageStr != null) ? Integer.parseInt(pageStr) : 1;
