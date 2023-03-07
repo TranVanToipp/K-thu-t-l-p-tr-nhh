@@ -1,4 +1,36 @@
 
+int totalRecords = resultSearch.size();
+int recordsPerPage = 15;
+int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+
+int currentPage = request.getParameter("page") == null ? 1 : Integer.parseInt(request.getParameter("page"));
+
+int startRecord = (currentPage - 1) * recordsPerPage;
+int endRecord = Math.min(startRecord + recordsPerPage, totalRecords);
+
+List<T002Dto> paginatedList = resultSearch.subList(startRecord, endRecord);
+
+Page page = new Page(currentPage, totalPages, paginatedList);
+
+request.setAttribute("page", page);
+
+
+
+Ở đây, currentPage là trang hiện tại (mặc định là 1 nếu không có tham số page được truyền vào), startRecord và endRecord là chỉ số bắt đầu và kết thúc của dữ liệu phân trang trên trang hiện tại. paginatedList là danh sách bản ghi được phân trang.
+
+Sau đó, bạn có thể sử dụng thẻ c:forEach của JSTL để hiển thị danh sách bản ghi trên trang JSP:
+
+<c:forEach var="data" items="${page.data}">
+    <tr>
+        <td>${data.customer_id}</td>
+        <td>${data.customer_name}</td>
+        <td>${data.sex}</td>
+        <td>${data.birthday}</td>
+    </tr>
+</c:forEach>
+
+
+
 protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		try {
