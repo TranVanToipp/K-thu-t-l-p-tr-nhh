@@ -1,3 +1,56 @@
+<c:set var="currentPage" value="${not empty param.page ? param.page : 1}"/>
+<c:set var="recordPerPage" value="10"/>
+<c:set var="startIndex" value="(currentPage - 1) * recordPerPage"/>
+<c:set var="totalRecords" value="${fn:length(listDataSearch)}"/>
+<c:set var="totalPages" value="${totalRecords % recordPerPage == 0 ? totalRecords / recordPerPage : (totalRecords / recordPerPage) + 1}"/>
+
+<c:choose>
+    <c:when test="${not empty listDataSearch}">
+        <c:forEach items="${listDataSearch}" var="dept" begin="${startIndex + 1}" end="${startIndex + recordPerPage}">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+        <tr>
+            <td colspan="6" style="text-align:center">
+                <c:if test="${currentPage > 1}">
+                    <a href="?page=${currentPage - 1}">Trang trước</a>
+                </c:if>
+                <c:forEach var="i" begin="1" end="${totalPages}">
+                    <c:choose>
+                        <c:when test="${i == currentPage}">
+                            <b>${i}</b>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="?page=${i}">${i}</a>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+                <c:if test="${currentPage < totalPages}">
+                    <a href="?page=${currentPage + 1}">Trang sau</a>
+                </c:if>
+            </td>
+        </tr>
+    </c:when>
+    <c:otherwise>
+        <tr>
+            <td colspan="6" style="text-align:center">
+                Không có kết quả nào.
+            </td>
+        </tr>
+    </c:otherwise>
+</c:choose>
+
+
+
+
+
+
 <c:choose>
     <c:when test="${not empty listDataSearch}">
         <c:forEach items="${listDataSearch}" var="dept">
