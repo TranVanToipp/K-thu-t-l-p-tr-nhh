@@ -1,4 +1,50 @@
 function validateForm() {
+  var dataFrom = '<%= dataFrom %>';
+  var dataTo = '<%= dataTo %>';
+  var checkBirthdayFrom = '<%= checkBirthdayFrom %>';
+  var checkBirthdayTo = '<%= checkBirthdayTo %>';
+
+  if (checkBirthdayFrom != null && checkBirthdayFrom !== "") {
+    alert('<%= checkBirthdayFrom %>');
+    return;
+  }
+  if (checkBirthdayTo != null && checkBirthdayTo !== "") {
+    alert('<%= checkBirthdayTo %>');
+    return;
+  }
+}
+
+
+<% 
+    Object dataFrom = request.getAttribute("dataFrom");
+    Object dataTo = request.getAttribute("dataTo");
+    Object checkBirthdayFrom = request.getAttribute("messageFrom");
+    Object checkBirthdayTo = request.getAttribute("messageTo");
+    String checkedNot = Constants.CHECKED_NOT_ERROR;
+    String messageErrorTo = Constants.MESSAGE_ERROR_TO;
+    String messageErrorFrom = Constants.MESSAGE_ERROR_FROM;
+    String messageErrorFromBiggerTo = Constants.MESSAGE_ERROR_FROM_BIGGER_TO;
+    
+    if (dataFrom == null) {
+        dataFrom = "";
+    }
+    if (dataTo == null) {
+        dataTo = "";
+    }
+    if (checkBirthdayFrom == null) {
+        checkBirthdayFrom = "";
+    }
+    if (checkBirthdayTo == null) {
+        checkBirthdayTo = "";
+    }
+%>
+
+
+
+
+
+
+function validateForm() {
 		var dataFrom = '<%=checkBirthdayFrom%>';
 		var dataTo = '<%=checkBirthdayFrom%>';
 	  if(dataFrom != null && dataFrom != "") {
