@@ -1,4 +1,61 @@
 <c:choose>
+    <c:when test="${not empty listDataSearch}">
+        <c:forEach items="${listDataSearch}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:when>
+    <c:when test="${not empty ListA}">
+        <c:forEach items="${ListA}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:when>
+    <c:otherwise>
+        <c:forEach items="${ListA}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:otherwise>
+	</c:choose>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<c:choose>
     
 		<c:when test="${not empty listDataSearch}">
 		<c:set var="pageSize" value="15" />
