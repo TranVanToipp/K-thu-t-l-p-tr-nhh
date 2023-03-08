@@ -1,3 +1,79 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<html>
+<head>
+	<title>Pagination Example</title>
+</head>
+<body>
+	<h1>Search Results</h1>
+	
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Sex</th>
+				<th>Birthday</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="item" items="${requestScope.listDataSearch}">
+				<tr>
+					<td>${item.name}</td>
+					<td>${item.sex}</td>
+					<td>${item.birthday}</td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+	
+	<p>Showing page ${requestScope.currentPage} of ${requestScope.totalPages}</p>
+	<p>
+		<c:choose>
+			<c:when test="${requestScope.currentPage > 1}">
+				<a href="?page=${requestScope.currentPage - 1}">Previous</a>
+			</c:when>
+			<c:otherwise>
+				<span>Previous</span>
+			</c:otherwise>
+		</c:choose>
+		
+		<c:forEach var="pageNum" begin="1" end="${requestScope.totalPages}">
+			<c:choose>
+				<c:when test="${pageNum == requestScope.currentPage}">
+					<span>${pageNum}</span>
+				</c:when>
+				<c:otherwise>
+					<a href="?page=${pageNum}">${pageNum}</a>
+				</c:otherwise>
+			</c:choose>
+		</c:forEach>
+		
+		<c:choose>
+			<c:when test="${requestScope.currentPage < requestScope.totalPages}">
+				<a href="?page=${requestScope.currentPage + 1}">Next</a>
+			</c:when>
+			<c:otherwise>
+				<span>Next</span>
+			</c:otherwise>
+		</c:choose>
+	</p>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 package fjs.cs.action;
 
 import java.io.IOException;
