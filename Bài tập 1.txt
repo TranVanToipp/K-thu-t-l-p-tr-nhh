@@ -1,3 +1,35 @@
+
+<input type="hidden" id="dataFrom" value="<%= dataFrom %>">
+<input type="hidden" id="dataTo" value="<%= dataTo %>">
+<input type="hidden" id="checkBirthdayFrom" value="<%= checkBirthdayFrom %>">
+<input type="hidden" id="checkBirthdayTo" value="<%= checkBirthdayTo %>">
+<input type="hidden" id="checkedNot" value="<%= checkedNot %>">
+<input type="hidden" id="messageErrorTo" value="<%= messageErrorTo %>">
+<input type="hidden" id="messageErrorFrom" value="<%= messageErrorFrom %>">
+<input type="hidden" id="messageErrorFromBiggerTo" value="<%= checkerrFromTo %>">
+<script>
+	var dataFrom = document.getElementById("dataFrom").value;
+	var dataTo = document.getElementById("dataTo").value;
+	const checkBirthdayFrom = document.getElementById("checkBirthdayFrom").value;
+	var checkBirthdayTo = document.getElementById("checkBirthdayTo").value;
+	var checkedNot = document.getElementById("checkedNot").value;
+	var messageErrorTo = document.getElementById("messageErrorTo").value;
+	var messageErrorFrom = document.getElementById("messageErrorFrom").value;
+	var checkerrFromTo = document.getElementById("messageErrorFromBiggerTo").value;
+	
+	window.onload = function() {
+		if (checkBirthdayFrom !== null) {
+			alert(document.getElementById("checkBirthdayFrom").value);
+		}
+	};
+
+
+
+
+
+
+
+
 window.onload = function() {
   // Xử lý sau khi trang đã tải xong
   console.log('Trang đã tải lại thành công!');
