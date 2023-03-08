@@ -1,4 +1,6 @@
 List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+List<T002Dto> resultSearch = (List<T002Dto>) request.getAttribute("resultSearch");
+// sử dụng list resultSearch ở đây
 
 
 
