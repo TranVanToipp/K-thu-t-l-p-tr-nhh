@@ -1,3 +1,10 @@
+window.onload = function() {
+  // Xử lý sau khi trang đã tải xong
+  console.log('Trang đã tải lại thành công!');
+};
+
+
+
 
 <p>
 	<c:choose>
