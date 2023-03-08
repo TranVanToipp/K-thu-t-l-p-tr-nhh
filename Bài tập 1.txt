@@ -1,3 +1,28 @@
+<c:forEach var="pageNum" begin="1" end="${requestScope.totalPages}" varStatus="loop">
+  <c:choose>
+    <c:when test="${pageNum == requestScope.currentPage}">
+      <span>${pageNum}</span>
+    </c:when>
+    <c:otherwise>
+      <form method="POST" action="/CustomerSystem/T002">
+        <input type="hidden" name="pagepage" value="${pageNum}" />
+        <button type="submit">${pageNum}</button>
+      </form>
+    </c:otherwise>
+  </c:choose>
+</c:forEach>
+
+
+String page = request.getParameter("pagepage");
+if (page == null) {
+    page = "1";
+}
+int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
+int startIndex = (Integer.parseInt(page) - 1) * recordsPerPage;
+
+
+
+
 
 String page = request.getParameter("pagepage");
 			if (page == null) {
