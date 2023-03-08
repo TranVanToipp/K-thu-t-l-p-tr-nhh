@@ -1,3 +1,31 @@
+T002Dao daoSearch = new T002Dao();
+			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+			
+//			HttpSession session = request.getSession();
+//			int page = Integer.parseInt((String) session.getAttribute("indexsession"));
+			int page = 1; // trang hiện tại
+			int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
+			int startIndex = (page - 1) * recordsPerPage; // vị trí bắt đầu của trang hiện tại
+			int endIndex = startIndex + recordsPerPage; // vị trí kết thúc của trang hiện tại
+			int totalRecords = resultSearch.size(); // tổng số phần tử của danh sách
+			int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage); // tổng số trang
+			List<T002Dto> resultPaginated = resultSearch.subList(startIndex, Math.min(endIndex, totalRecords));
+			request.setAttribute("listDataSearch", resultPaginated);
+			request.setAttribute("currentPage", page);
+			request.setAttribute("recordsPerPage", recordsPerPage);
+			request.setAttribute("totalRecords", totalRecords);
+			request.setAttribute("totalPages", totalPages);
+			
+			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+			rd.forward(request, response);
+
+
+
+
+
+
+
+
 List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
 
 if (!resultSearch.isEmpty()) {
