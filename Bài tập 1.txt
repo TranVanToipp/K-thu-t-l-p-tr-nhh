@@ -1,3 +1,7 @@
+List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+
+
+
 public class MyServlet extends HttpServlet {
   
   private List<String> dataSearch; // Thuộc tính để lưu trữ giá trị của dataSearch
