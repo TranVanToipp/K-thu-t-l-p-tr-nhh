@@ -1,3 +1,108 @@
+String page = request.getParameter("pagepage");
+			if (page == null) {
+				page = "1";
+			}
+			//int page = 1; // trang hiện tại
+			int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
+			int startIndex = (Integer.parseInt(page) - 1) * recordsPerPage; // vị trí bắt đầu của trang hiện tại
+			int endIndex = startIndex + recordsPerPage; // vị trí kết thúc của trang hiện tại
+			int totalRecords = resultSearch.size(); // tổng số phần tử của danh sách
+			int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage); // tổng số trang
+			List<T002Dto> resultPaginated = resultSearch.subList(startIndex, Math.min(endIndex, totalRecords));
+			request.setAttribute("listDataSearch", resultPaginated);
+			request.setAttribute("currentPage", page);
+			request.setAttribute("recordsPerPage", recordsPerPage);
+			request.setAttribute("totalRecords", totalRecords);
+			request.setAttribute("totalPages", totalPages);
+
+
+
+
+
+
+<%
+				if (request.getAttribute("ListA") == null) {
+			%>
+					<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+					<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+			<%
+				}
+			%>
+			<%
+				if (request.getAttribute("ListA") != null) {
+			%>
+				
+				<c:if test="${tag == 1}">				
+					<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+					<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+				</c:if>
+				<c:if test="${tag > 1 }">	
+					<button id = "btnFirst"><a href="/CustomerSystem/T002?index=<%=1 %>"><<</a></button>			
+					<button id = "btnPrevious"><a href="/CustomerSystem/T002?index=${tag-1}"><</a></button>
+				</c:if>
+			<%
+				}
+			%>
+			
+			
+			<lable class = "search-container__btnContext--textstart search-container__text_text">Previous</lable>
+		</div>
+		
+		<div class = "search-container__btnContext--end">
+			<lable class = "search-container__btnContext--textend search-container__text_text">Next</lable>
+			<%
+				if (request.getAttribute("ListA") == null) {
+			%>
+				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+			<%
+				}
+			%>
+			
+			<%
+				if (request.getAttribute("ListA") != null) {
+				int endP = (Integer) request.getAttribute("endP"); 
+			%>
+			<c:if test="${tag >= endP}">			
+				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+			</c:if>
+			<c:if test="${tag < endP}">			
+				<button id = "btnNext" ><a href="/CustomerSystem/T002?index=${tag+1}">></a></button>
+				<button id="btnPrevious"><a href="/CustomerSystem/T002?index=<%= endP %>">>></a></button>
+			</c:if>		
+			<%
+				}
+			%>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <c:forEach var="pageNum" begin="1" end="${requestScope.totalPages}" varStatus="loop">
   <c:choose>
     <c:when test="${pageNum == requestScope.currentPage}">
