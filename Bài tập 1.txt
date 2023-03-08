@@ -1,3 +1,45 @@
+
+<p>
+	<c:choose>
+		<c:when test="${requestScope.currentPage > 1}">
+			<a href="?page=1">&lt;&lt;</a>
+			<a href="?page=${requestScope.currentPage - 1}">&lt;</a>
+		</c:when>
+		<c:otherwise>
+			<span>&lt;&lt;</span>
+			<span>&lt;</span>
+		</c:otherwise>
+	</c:choose>
+	
+	<c:forEach var="pageNum" begin="1" end="${requestScope.totalPages}">
+		<c:choose>
+			<c:when test="${pageNum == requestScope.currentPage}">
+				<span>${pageNum}</span>
+			</c:when>
+			<c:otherwise>
+				<a href="?page=${pageNum}">${pageNum}</a>
+			</c:otherwise>
+		</c:choose>
+	</c:forEach>
+	
+	<c:choose>
+		<c:when test="${requestScope.currentPage < requestScope.totalPages}">
+			<a href="?page=${requestScope.currentPage + 1}">&gt;</a>
+			<a href="?page=${requestScope.totalPages}">&gt;&gt;</a>
+		</c:when>
+		<c:otherwise>
+			<span>&gt;</span>
+			<span>&gt;&gt;</span>
+		</c:otherwise>
+	</c:choose>
+</p>
+
+
+
+
+
+
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
