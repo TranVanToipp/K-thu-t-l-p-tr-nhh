@@ -1,3 +1,23 @@
+public class MyServlet extends HttpServlet {
+  
+  private List<String> dataSearch; // Thuộc tính để lưu trữ giá trị của dataSearch
+  
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Lấy giá trị của dataSearch từ request POST
+    String[] searchData = request.getParameterValues("dataSearch");
+    dataSearch = Arrays.asList(searchData); // Lưu giá trị của dataSearch vào thuộc tính của ServletContext
+  }
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Truy cập vào thuộc tính của ServletContext để lấy giá trị của dataSearch
+    List<String> search = (List<String>) getServletContext().getAttribute("dataSearch");
+    // Tiếp tục xử lý với giá trị của search
+  }
+  
+}
+
+
+
 window.addEventListener("load", function() {
   if (checkBirthdayFrom !== null) {
     alert(document.getElementById("checkBirthdayFrom").value);
