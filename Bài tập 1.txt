@@ -1,3 +1,81 @@
+
+String page = request.getParameter("pagepage");
+			if (page == null) {
+				page = "1";
+			}
+			//int page = 1; // trang hiện tại
+			int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
+			int startIndex = (Integer.parseInt(page) - 1) * recordsPerPage
+
+
+
+
+<c:choose>
+		<c:when test="${requestScope.currentPage > 1}">
+			<a href="?page=1">&lt;&lt;</a>
+			<a href="?page=${requestScope.currentPage - 1}">&lt;</a>
+		</c:when>
+		<c:otherwise>
+			<span>&lt;&lt;</span>
+			<span>&lt;</span>
+		</c:otherwise>
+	</c:choose>
+	
+	<c:forEach var="pageNum" begin="1" end="${requestScope.totalPages}">
+		<c:choose>
+			<c:when test="${pageNum == requestScope.currentPage}">
+				<span>${pageNum}</span>
+			</c:when>
+			<c:otherwise>
+				<form action ="/CustomerSystem/T002" method = "POST">
+					<input hidden id = "elementByIdPage" value = "${pageNum}" name = "pagepage"/>
+					<button type="submit"><a href="/CustomerSystem/T002?page=${pageNum}">${pageNum}</a></button>
+				</form>
+			</c:otherwise>
+		</c:choose>
+	</c:forEach>
+	
+	<c:choose>
+		<c:when test="${requestScope.currentPage < requestScope.totalPages}">
+			<a href="?page=${requestScope.currentPage + 1}">&gt;</a>
+			<a href="?page=${requestScope.totalPages}">&gt;&gt;</a>
+		</c:when>
+		<c:otherwise>
+			<span>&gt;</span>
+			<span>&gt;&gt;</span>
+		</c:otherwise>
+	</c:choose>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 T002Dao daoSearch = new T002Dao();
 			List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
 			
