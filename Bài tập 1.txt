@@ -1,38 +1,24 @@
-	<c:if test="${requestScope.listDataSearch != null}">
-    <c:choose>
-        <c:when test="${requestScope.currentPage == 1}">
-            <button id="btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
-            <button id="btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
-        </c:when>
-        <c:when test="${requestScope.currentPage < requestScope.totalPages}">
-             <button id="btnFirst" type="submit" onclick="sendPostRequest(1)"><<</button>
-            <button id="btnPrevious" type="submit">${requestScope.currentPage - 1}<</button>
-        </c:when>
-    </c:choose>
-    <c:choose>
-        <c:when test="${requestScope.currentPage == requestScope.totalPages}">
-            <button id="btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
-            <button id="btnLast" disabled style="pointer-events: none;"><a href="#">>></a></button>
-        </c:when>
-        <c:otherwise>
-            <button id="btnNextbtnNext" type="submit"> ${requestScope.currentPage + 1}></button>
-            <input name="pagepage" hidden value="${requestScope.currentPage + 1}"/>
-            <button id="btnLastbtnLast" type="submit">${requestScope.totalPages}>></button>
-        </c:otherwise>
-    </c:choose>
-</c:if>	
-
-
-<script>
-  function sendPostRequest(page) {
-    // Lấy đối tượng input có tên là "pagepage"
-    var pageInput = document.getElementsByName("pagepage")[0];
-
-    // Gán giá trị của page vào giá trị của input
-    pageInput.value = page;
-  }
-</script>
-
-
-
-<button id="btnNext" type="submit" onclick="sendPostRequest(${requestScope.currentPage + 1})"> ${requestScope.currentPage + 1}></button>
+<%
+				if (request.getAttribute("listDataSearch") != null) {
+				
+			%>
+			<c:if test="${requestScope.currentPage >= requestScope.totalPages}">			
+				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+			</c:if>
+			<c:if test="${requestScope.currentPage < requestScope.totalPages}">			
+				<button id="btnNext" type="submit" onclick="sendPostRequest(${requestScope.currentPage + 1})">></button>
+            	<button id="btnLast" type="submit" onclick="sendPostRequest(${requestScope.totalPages})">>></button>
+            	<input name="pagepage" hidden value=""/>
+			</c:if>		
+			<%
+				}
+			%>
+			<%} %>
+		<script>
+		  function sendPostRequest(page) {
+		    var pageInput = document.getElementsByName("pagepage");
+		    pageInput.value = page;
+		  }
+		</script>
+		
