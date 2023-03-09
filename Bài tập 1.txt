@@ -1,24 +1,7 @@
-<%
-				if (request.getAttribute("listDataSearch") != null) {
-				
-			%>
-			<c:if test="${requestScope.currentPage >= requestScope.totalPages}">			
-				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
-				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
-			</c:if>
-			<c:if test="${requestScope.currentPage < requestScope.totalPages}">			
-				<button id="btnNext" type="submit" onclick="sendPostRequest(${requestScope.currentPage + 1})">></button>
-            	<button id="btnLast" type="submit" onclick="sendPostRequest(${requestScope.totalPages})">>></button>
-            	<input name="pagepage" hidden value=""/>
-			</c:if>		
-			<%
-				}
-			%>
-			<%} %>
-		<script>
-		  function sendPostRequest(page) {
-		    var pageInput = document.getElementsByName("pagepage");
-		    pageInput.value = page;
-		  }
-		</script>
-		
+<script>
+  function sendPostRequest(page) {
+    var pageInput = document.getElementsByName("pagepage")[0];
+    pageInput.value = page;
+    document.forms[0].submit();
+  }
+</script>
