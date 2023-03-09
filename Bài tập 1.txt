@@ -164,6 +164,8 @@ public class T002 extends HttpServlet {
 				}
 			}
 			
+			
+			
 			T002Dao daoSearch = new T002Dao();
 			String[] ids = request.getParameterValues("selectedValues");
 			if (ids != null && ids.length > 0) {
@@ -213,9 +215,7 @@ public class T002 extends HttpServlet {
 			}
 			
 			if (page== null) {
-				if (page == null) {
-					page = "1";
-				}
+				page = "1";
 				List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
 				int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
 				int startIndex = (Integer.parseInt(page)- 1) * recordsPerPage; // vị trí bắt đầu của trang hiện tại
@@ -274,8 +274,6 @@ public class T002 extends HttpServlet {
 	    return true;
 	}
 }
-
-
 
 
 
@@ -452,7 +450,7 @@ public class T002 extends HttpServlet {
 				<c:if test="${requestScope.currentPage > 1 }">	
 					<button id="btnFirst" type="submit" onclick="sendPostRequest(1)"><<</button>
            			<button id="btnPrevious" type="submit" onclick="sendPostRequest(${requestScope.currentPage - 1})"><</button>
-           			
+           			<input name="pagepage" hidden value=""/>
 				</c:if>
 			<%
 				}
@@ -493,6 +491,7 @@ public class T002 extends HttpServlet {
 			<%} %>
 		<script>
 		  function sendPostRequest(page) {
+			
 		    var pageInput = document.getElementsByName("pagepage")[0];
 		    pageInput.value = page;
 		    
