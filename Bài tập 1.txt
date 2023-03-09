@@ -1,3 +1,148 @@
+T002Dao daoSearch = new T002Dao();
+			
+			if (name == null && sex == null && birthdayFrom == null && birthdayTo == null) {
+				HttpSession session = request.getSession();
+				//String name1 =(String) session.getAttribute("sex");
+				String sex1 =(String) session.getAttribute("sex");
+				String birthdayFrom1 =(String) session.getAttribute("birthdayFrom");
+				String birthdayTo1 =(String) session.getAttribute("birthdayTo");
+				List<T002Dto> resultSearch1 = daoSearch.getDataSearch(name, sex1, birthdayFrom1, birthdayTo1);
+				
+				String page = request.getParameter("pagepage");
+				if (page == null) {
+					page = "1";
+				}
+//				int page = 2; // trang hiện tại
+				int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
+				int startIndex = (Integer.parseInt(page)- 1) * recordsPerPage; // vị trí bắt đầu của trang hiện tại
+				int endIndex = startIndex + recordsPerPage; // vị trí kết thúc của trang hiện tại
+				int totalRecords = resultSearch1.size(); // tổng số phần tử của danh sách
+				int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage); // tổng số trang
+				List<T002Dto> resultPaginated = resultSearch1.subList(startIndex, Math.min(endIndex, totalRecords));
+				request.setAttribute("listDataSearch1", resultPaginated);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("recordsPerPage", recordsPerPage);
+				request.setAttribute("totalRecords", totalRecords);
+				request.setAttribute("totalPages", totalPages);
+//				//HttpSession session = request.getSession();
+//				session.setAttribute("sex", sex);
+//				session.setAttribute("birthdayFrom", birthdayFrom);
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+				rd.forward(request, response);
+				
+			}
+			
+			String page = request.getParameter("pagepage");
+			if (page== null) {
+				if (page == null) {
+					page = "1";
+				}
+				List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+//				int page = 2; // trang hiện tại
+				int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
+				int startIndex = (Integer.parseInt(page)- 1) * recordsPerPage; // vị trí bắt đầu của trang hiện tại
+				int endIndex = startIndex + recordsPerPage; // vị trí kết thúc của trang hiện tại
+				int totalRecords = resultSearch.size(); // tổng số phần tử của danh sách
+				int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage); // tổng số trang
+				List<T002Dto> resultPaginated = resultSearch.subList(startIndex, Math.min(endIndex, totalRecords));
+				request.setAttribute("listDataSearch", resultPaginated);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("recordsPerPage", recordsPerPage);
+				request.setAttribute("totalRecords", totalRecords);
+				request.setAttribute("totalPages", totalPages);
+				HttpSession session = request.getSession();
+				session.setAttribute("sex", sex);
+				session.setAttribute("birthdayFrom", birthdayFrom);
+				session.setAttribute("birthdayTo", birthdayTo);
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+				rd.forward(request, response);
+				
+			}
+
+
+
+
+
+
+
+
+<c:choose>
+    <c:when test="${not empty listDataSearch}">
+    	
+        <c:forEach items="${listDataSearch}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:when>
+    
+    <c:when test="${not empty listDataSearch1}">
+    	
+        <c:forEach items="${listDataSearch1}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:when>
+    
+    <c:when test="${not empty ListA}">
+        <c:forEach items="${ListA}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:when>
+    <c:otherwise>
+        <c:forEach items="${ListA}" var="dept">
+            <tr>
+                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
+                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
+                <td class = "searchtable-sex">${dept.SEX}</td>
+                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
+                <td class = "searchtable-address">${dept.ADDRESS}</td>
+            </tr>
+        </c:forEach>
+    </c:otherwise>
+    
+</c:choose>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <c:if test="${requestScope.listDataSearch != null}">
     <c:choose>
         <c:when test="${requestScope.currentPage == 1}">
