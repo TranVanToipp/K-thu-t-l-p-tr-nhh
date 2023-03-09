@@ -21,3 +21,18 @@
         </c:otherwise>
     </c:choose>
 </c:if>	
+
+
+<script>
+  function sendPostRequest(page) {
+    // Lấy đối tượng input có tên là "pagepage"
+    var pageInput = document.getElementsByName("pagepage")[0];
+
+    // Gán giá trị của page vào giá trị của input
+    pageInput.value = page;
+  }
+</script>
+
+
+
+<button id="btnNext" type="submit" onclick="sendPostRequest(${requestScope.currentPage + 1})"> ${requestScope.currentPage + 1}></button>
