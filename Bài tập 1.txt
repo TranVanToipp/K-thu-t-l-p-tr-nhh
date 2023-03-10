@@ -22,7 +22,7 @@ console.log(formatted_date); // output: '1971/07/11'
 
 
 
-
+parseFloat
 
 
 
