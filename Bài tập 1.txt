@@ -32,3 +32,12 @@ let formatted_date = date.getFullYear() + "/" +
                      (date.getMonth() + 1).toString().padStart(2, '0') + "/" + 
                      date.getDate().toString().padStart(2, '0');
 console.log(formatted_date); // output: '1971/07/11'
+
+
+
+
+
+Infinity
+
+
+document.querySelector(".txtCustomerValidateFROM").value = <%=request.getAttribute("dataFrom")%>
