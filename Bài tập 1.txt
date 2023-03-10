@@ -1,43 +1,121 @@
-Tương tự như Python và Java, để định dạng số 25.597402597402596 thành chuỗi ngày tháng năm theo định dạng "1971/07/11" trong JavaScript, bạn có thể sử dụng các bước sau đây:
-
-Chuyển đổi số 25.597402597402596 thành đối tượng Date trong JavaScript bằng cách sử dụng hàm Date() và phương thức setTime().
-javascript
-Copy code
-let number = 25.597402597402596;
-let date = new Date();
-date.setTime(number * 24 * 60 * 60 * 1000);
-Sau đó, chuyển đổi đối tượng Date thành chuỗi với định dạng yêu cầu bằng phương thức toISOString() của đối tượng Date.
-javascript
-Copy code
-let formatted_date = date.toISOString().slice(0, 10).replace(/-/g, '/');
-Vậy, để định dạng số 25.597402597402596 thành chuỗi ngày tháng năm theo định dạng "1971/07/11", bạn có thể sử dụng đoạn mã sau:
-
-javascript
-Copy code
-let number = 25.597402597402596;
-let date = new Date();
-date.setTime(number * 24 * 60 * 60 * 1000);
-let formatted_date = date.toISOString().slice(0, 10).replace(/-/g, '/');
-console.log(formatted_date); // output: '1971/07/11'
-
-
-
-parseFloat
-
-
-
-let number = 25.597402597402596;
-let date = new Date(number * 24 * 60 * 60 * 1000);
-let formatted_date = date.getFullYear() + "/" + 
-                     (date.getMonth() + 1).toString().padStart(2, '0') + "/" + 
-                     date.getDate().toString().padStart(2, '0');
-console.log(formatted_date); // output: '1971/07/11'
-
-
-
-
-
-Infinity
-
-
-document.querySelector(".txtCustomerValidateFROM").value = <%=request.getAttribute("dataFrom")%>
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		try {
+			String name = request.getParameter("txtCustomerName");
+			String sex = request.getParameter("browser");
+			String birthdayFrom = request.getParameter("txtBirthdayFromName");
+			String birthdayTo = request.getParameter("txtBirthdayToName");
+			
+				
+			if (birthdayFrom != "" && birthdayFrom != null) {
+				if (!isValidDate(birthdayFrom)) {
+					String messagebirthdayfrom = Constants.MESSAGE_ERROR_FROM;
+					String dataFrom = birthdayFrom;
+					request.setAttribute("dataFrom", dataFrom);
+					request.setAttribute("messageFrom", messagebirthdayfrom);
+					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+					rd.forward(request, response);
+					return;
+				}
+			}
+				
+			if (birthdayTo != "" && birthdayTo != null) {
+				if (!isValidDate(birthdayTo)) {
+					String messagebirthTo = Constants.MESSAGE_ERROR_TO;
+					String dataTo = birthdayTo;
+					request.setAttribute("dataTo", dataTo);
+					request.setAttribute("messageTo", messagebirthTo);
+					RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+					rd.forward(request, response);
+					return;
+				}
+			}
+			
+			if (birthdayFrom != "" && birthdayTo != "" && birthdayFrom != null && birthdayTo != null) {
+				
+				request.setAttribute("birthDayFromFrom", birthdayFrom);
+				request.setAttribute("birthDayToTo", birthdayTo);
+				if (isValidDate(birthdayFrom) && isValidDate(birthdayTo)) {
+					String dayFrom = birthdayFrom.replaceAll("/", "");
+					String dayTo = birthdayTo.replaceAll("/", "");
+					
+					if (Integer.parseInt(dayTo) < Integer.parseInt(dayFrom)) {
+						String messageFromTo = Constants.MESSAGE_ERROR_FROM_BIGGER_TO;
+						request.setAttribute("errorFromTo", messageFromTo);
+						RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+						rd.forward(request, response);
+						return;
+					}
+				}
+			}
+			
+			T002Dao daoSearch = new T002Dao();
+			String[] ids = request.getParameterValues("selectedValues");
+			if (ids != null && ids.length > 0) {
+			    String idList = String.join(",", ids);
+			    idList = idList.replace("[\"", "").replace("\"]", "");
+			    String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
+			    String[] result2 = result.split(",");
+			    if (result2.length == 16) {
+			    	String[] result3 = Arrays.copyOfRange(result2, 1, result2.length);
+		    		daoSearch.deleteData(result3);
+			    }else {
+			    	for (int i = 0;i< result2.length; i++) {
+				    	if (result2.length == 16) {
+				    		daoSearch.deleteData(result2);
+				    	}
+				    	daoSearch.deleteData(result2);
+				    }
+			    }
+			}
+			String page = request.getParameter("pagepage");
+			if (page != null && page != "") {
+				HttpSession session = request.getSession();
+				String sex1 =(String) session.getAttribute("sex");
+				String birthdayFrom1 =(String) session.getAttribute("birthdayFrom");
+				String birthdayTo1 =(String) session.getAttribute("birthdayTo");
+				List<T002Dto> resultSearch1 = daoSearch.getDataSearch(name, sex1, birthdayFrom1, birthdayTo1);
+				
+				int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
+				int startIndex = (Integer.parseInt(page)- 1) * recordsPerPage; // vị trí bắt đầu của trang hiện tại
+				int endIndex = startIndex + recordsPerPage; // vị trí kết thúc của trang hiện tại
+				int totalRecords = resultSearch1.size(); // tổng số phần tử của danh sách
+				int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage); // tổng số trang
+				List<T002Dto> resultPaginated = resultSearch1.subList(startIndex, Math.min(endIndex, totalRecords));
+				request.setAttribute("listDataSearch", resultPaginated);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("recordsPerPage", recordsPerPage);
+				request.setAttribute("totalRecords", totalRecords);
+				request.setAttribute("totalPages", totalPages);
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+				rd.forward(request, response);
+				return;
+			}
+			
+			if (page== null || page == "") {
+				page = "1";
+				List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+				int recordsPerPage = 15; 
+				int startIndex = (Integer.parseInt(page)- 1) * recordsPerPage; 
+				int endIndex = startIndex + recordsPerPage; 
+				int totalRecords = resultSearch.size(); 
+				int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage); 
+				List<T002Dto> resultPaginated = resultSearch.subList(startIndex, Math.min(endIndex, totalRecords));
+				request.setAttribute("listDataSearch", resultPaginated);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("recordsPerPage", recordsPerPage);
+				request.setAttribute("totalRecords", totalRecords);
+				request.setAttribute("totalPages", totalPages);
+				HttpSession session = request.getSession();
+				session.setAttribute("sex", sex);
+				session.setAttribute("birthdayFrom", birthdayFrom);
+				session.setAttribute("birthdayTo", birthdayTo);
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+				rd.forward(request, response);
+				return;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
