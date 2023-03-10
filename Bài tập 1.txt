@@ -230,3 +230,69 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html");
+		try {
+			String name = request.getParameter("txtCustomerName");
+			String sex = request.getParameter("browser");
+			String birthdayFrom = request.getParameter("txtBirthdayFromName");
+			String birthdayTo = request.getParameter("txtBirthdayToName");
+			
+				
+			validateDates(request, response, birthdayFrom, birthdayTo);
+			deleteData(request, response);
+			T002Dao daoSearch = new T002Dao();
+			String page = request.getParameter("pagepage");
+			if (page != null && page != "") {
+				HttpSession session = request.getSession();
+				String sex1 =(String) session.getAttribute("sex");
+				String birthdayFrom1 =(String) session.getAttribute("birthdayFrom");
+				String birthdayTo1 =(String) session.getAttribute("birthdayTo");
+				List<T002Dto> resultSearch1 = daoSearch.getDataSearch(name, sex1, birthdayFrom1, birthdayTo1);
+				
+				int recordsPerPage = 15; // số phần tử hiển thị trên mỗi trang
+				int startIndex = (Integer.parseInt(page)- 1) * recordsPerPage; // vị trí bắt đầu của trang hiện tại
+				int endIndex = startIndex + recordsPerPage; // vị trí kết thúc của trang hiện tại
+				int totalRecords = resultSearch1.size(); // tổng số phần tử của danh sách
+				int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage); // tổng số trang
+				List<T002Dto> resultPaginated = resultSearch1.subList(startIndex, Math.min(endIndex, totalRecords));
+				request.setAttribute("listDataSearch", resultPaginated);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("recordsPerPage", recordsPerPage);
+				request.setAttribute("totalRecords", totalRecords);
+				request.setAttribute("totalPages", totalPages);
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+				rd.forward(request, response);
+				return;
+			}
+			
+			if (page== null || page == "") {
+				page = "1";
+				List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+				int recordsPerPage = 15; 
+				int startIndex = (Integer.parseInt(page)- 1) * recordsPerPage; 
+				int endIndex = startIndex + recordsPerPage; 
+				int totalRecords = resultSearch.size(); 
+				int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage); 
+				List<T002Dto> resultPaginated = resultSearch.subList(startIndex, Math.min(endIndex, totalRecords));
+				request.setAttribute("listDataSearch", resultPaginated);
+				request.setAttribute("currentPage", page);
+				request.setAttribute("recordsPerPage", recordsPerPage);
+				request.setAttribute("totalRecords", totalRecords);
+				request.setAttribute("totalPages", totalPages);
+				HttpSession session = request.getSession();
+				session.setAttribute("sex", sex);
+				session.setAttribute("birthdayFrom", birthdayFrom);
+				session.setAttribute("birthdayTo", birthdayTo);
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+				rd.forward(request, response);
+				return;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
