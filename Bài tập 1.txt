@@ -19,3 +19,16 @@ let date = new Date();
 date.setTime(number * 24 * 60 * 60 * 1000);
 let formatted_date = date.toISOString().slice(0, 10).replace(/-/g, '/');
 console.log(formatted_date); // output: '1971/07/11'
+
+
+
+
+
+
+
+let number = 25.597402597402596;
+let date = new Date(number * 24 * 60 * 60 * 1000);
+let formatted_date = date.getFullYear() + "/" + 
+                     (date.getMonth() + 1).toString().padStart(2, '0') + "/" + 
+                     date.getDate().toString().padStart(2, '0');
+console.log(formatted_date); // output: '1971/07/11'
