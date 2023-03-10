@@ -1,15 +1,18 @@
-private boolean checkEmail(String txtEmail) {
-		String gmailRegex = "/^[a-zA-Z0-9._%+-]+@gmail\\.com$/";
-		Pattern pattern = Pattern.compile(gmailRegex);
-	    Matcher matcher = pattern.matcher(txtEmail);
-		  // Kiểm tra định dạng email
-	    if (!matcher.matches()) {
-	        return false;
-	    }
-		return true;
-	}d
+private boolean checkGmailEmail(String txtEmail) {
+    String gmailRegex = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
+    Pattern pattern = Pattern.compile(gmailRegex);
+    Matcher matcher = pattern.matcher(txtEmail);
+    return matcher.matches();
+}
 
 
+String email = "example@gmail.com";
+boolean isValid = checkGmailEmail(email);
+if (isValid) {
+    System.out.println("Địa chỉ email hợp lệ");
+} else {
+    System.out.println("Địa chỉ email không hợp lệ");
+}
 
 
 
