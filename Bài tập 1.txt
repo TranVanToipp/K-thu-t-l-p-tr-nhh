@@ -1,3 +1,79 @@
+protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    response.setContentType("text/html");
+    try {
+        String name = request.getParameter("txtCustomerName");
+        String sex = request.getParameter("browser");
+        String birthdayFrom = request.getParameter("txtBirthdayFromName");
+        String birthdayTo = request.getParameter("txtBirthdayToName");
+
+        validateDates(request, response, birthdayFrom, birthdayTo);
+        deleteData(request, response);
+        String page = request.getParameter("pagepage");
+        HttpSession session = request.getSession();
+
+        if (page != null && !page.isEmpty()) {
+            String sex1 = (String) session.getAttribute("sex");
+            String birthdayFrom1 = (String) session.getAttribute("birthdayFrom");
+            String birthdayTo1 = (String) session.getAttribute("birthdayTo");
+            processSearch(request, response, name, sex1, birthdayFrom1, birthdayTo1, page);
+        } else {
+            page = "1";
+            processSearch(request, response, name, sex, birthdayFrom, birthdayTo, page);
+            session.setAttribute("sex", sex);
+            session.setAttribute("birthdayFrom", birthdayFrom);
+            session.setAttribute("birthdayTo", birthdayTo);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+private void processSearch(HttpServletRequest request, HttpServletResponse response, String name, String sex, String birthdayFrom, String birthdayTo, String page) throws ServletException, IOException {
+    T002Dao daoSearch = new T002Dao();
+    List<T002Dto> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+    int recordsPerPage = 15;
+    int startIndex = (Integer.parseInt(page) - 1) * recordsPerPage;
+    int endIndex = startIndex + recordsPerPage;
+    int totalRecords = resultSearch.size();
+    int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+    List<T002Dto> resultPaginated = resultSearch.subList(startIndex, Math.min(endIndex, totalRecords));
+    request.setAttribute("listDataSearch", resultPaginated);
+    request.setAttribute("currentPage", page);
+    request.setAttribute("recordsPerPage", recordsPerPage);
+    request.setAttribute("totalRecords", totalRecords);
+    request.setAttribute("totalPages", totalPages);
+    RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/T002.jsp");
+    rd.forward(request, response);
+}
+
+private void validateDates(HttpServletRequest request, HttpServletResponse response, String birthdayFrom, String birthdayTo) throws ServletException, IOException {
+    // Your validation code here
+}
+
+private void deleteData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    // Your delete code here
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
