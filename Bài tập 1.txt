@@ -1,3 +1,32 @@
+private boolean checkEmail(String txtEmail) {
+		String gmailRegex = "/^[a-zA-Z0-9._%+-]+@gmail\\.com$/";
+		Pattern pattern = Pattern.compile(gmailRegex);
+	    Matcher matcher = pattern.matcher(txtEmail);
+		  // Kiểm tra định dạng email
+	    if (!matcher.matches()) {
+	        return false;
+	    }
+		return true;
+	}d
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 25.597402597402596
 
