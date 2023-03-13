@@ -1,3 +1,9 @@
+ var urlParams = new URLSearchParams(window.location.search);
+  var indexParam = urlParams.get('index');
+  window.history.pushState({}, "", window.location.pathname + "?index=" + indexParam);
+
+
+
 http://localhost:8080/CustomerSystem/T002?index=2
 
 
