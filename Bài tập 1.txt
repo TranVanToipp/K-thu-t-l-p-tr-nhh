@@ -41,3 +41,7 @@ if (ids != null && ids.length > 0) {
 	            }
 	        }
 	    }
+
+
+String script = "<script>window.location.href = window.location.href;</script>";
+    response.getWriter().write(script);
