@@ -1,93 +1,21 @@
-Struts Action: 
-Gồm có các nội dung chính: 
-
-Các nội dung chính	Thông thường	Cách khắc phục
-1. Điều khiển luồng điều hướng của ứng dụng	1.	Trong jsp việc điều hướng của ứng dụng được thực hiện thông qua các thẻ chuyển hướng(forward và redirect). Tuy nhiên việc điều hướng như vậy sẽ phải kết hợp với mã HTML, CSS viết cùng trong 1 file dẫn đến việc khó bảo trì và phát triển ứng dụng 	1.	Sử dụng Struts Action giúp cho việc phân tách các tầng của ứng dụng trở nên dễ dàng hơn
-2. Xử lí các yêu cầu từ client	1.	Nhận thông tin từ người dùng (form data) và thực hiện các thao tác trên cơ sở dữ liệu và sau đó trả về kết quả cho người dùng
-2.	Với dùng Jsp khi người dùng gửi yêu cầu đến server, Jsp sẽ thực hiện toàn bộ mã HTML, CSS và java trong file sẽ trả kết quả cho người dùng 	1.	Sử dụng Struts Action: 
-Khi người dùng gửi yêu cầu đến server, Struts action sẽ nhận các tham số từ yêu cầu và tiến hành xử lí trong lớp Action. Lớp action sẽ đọc và ghi dữ liệu vào database, xử lí các luồng điều hướng và trả về kết quả cho người dùng thông qua một file jsp hoặc 1 thành phần giao diện (Component) khác.
-
-	Struts Bean: 
-	Khái niệm: Được sử dụng để đóng gói dữ liệu và chuyển tải dữ liệu giữa các thành phần trong ứng dụng web struts.
-	Tính năng: 
-	Dùng để lưu trữ dữ liệu nhập vào từ form, truy vấn cơ sở dữ liệu, thực hiện tính toán và xử lí dữ liệu 
-	Dùng để truyền dữ liệu giữa các lớp trong ứng dụng Struts, đảm bảo tính kết nối giữa các thành phần của ứng dụng 
-	Struts Bean thường được sử dụng với jsp để để hiển thị ra màn hình cho người dùng, khi 1 request được gửi từ client đến server, Struts bean được nhận dữ liệu và tiến hành xử lí dữ liệu, sau đó chuyển dữ liệu đó đến jsp để hiển thị cho người dùng 
-	Trong Struts, Struts bean được quản lí 1 lớp được gọi là ActionForm có các tính năng để định nghĩa trường dữ liệu. Đồng thời cũng được cung cấp các tính năng quản lí phiên làm việc, đảm bảo tính nhất quán giữa dữ liệu và phiên làm việc của người dùng.
-	Struts Form: 
-	Khái niệm: Sử dụng để định nghĩa các đối tượng dữ liệu của ứng dụng web struts 
-	Tính năng: 
-1.	Định nghĩa dữ liệu: Struts form được sử dụng để định nghĩa các đối tượng dữ liệu trong ứng dụng. Ví dụ: Nếu bạn cần nhập thông tin của người dùng, bạn có thể sử dụng struts form để định nghĩa các trường cần thiết cho thông tin này.
-2.	Nhận dữ liệu từ client: Cung cấp các tính năng nhận dữ liệu được gửi từ client. Nó có thể xử lí các dữ liệu được gửi qua phương thức POST và GET
-3.	Xác thực dữ liệu: Xác thực dữ liệu được gửi từ client. Nó kiểm tra các trường được nhập dữ liệu theo các quy tắc xác định trước để đảm bảo rằng dữ liệu nhập vào đáp ứng các yêu cầu của ứng dụng.
-4.	Quản lí phiên làm việc: Cho phép lưu trữ thông tin liên quan đến phiên làm việc của ứng dụng, như thông tin đăng nhập hoặc lịch sử truy cập của người dùng.
-5.	Đảm bảo tính toàn vẹn của dữ liệu: Nó kiểm tra tính toàn vẹn của dữ liệu được gửi qua mạng trước khi xử lí dữ liệu nó. Nếu có lỗi hoặc dữ liệu không hợp lệ, Struts Form sẽ gửi thông báo lỗi đến người dùng họ có thể sửa lỗi.
-	Struts form: Cung cấp các tính năng để xử lí và quản lí dữ liệu của ứng dụng web struts.
-
-	Struts Messages: 
-	Khái niệm: Cung cấp cho các lập trình viên cơ chế để quản lí các thông báo và thông tin trả về cho người dùng trong quá trình xử lí các yêu cầu từ phía người dùng
-	Các loại Struts Messages bao gồm: 
-	Action messages: Được sử dụng để trả về các thông báo về kết quả của các hoạt động được thực hiện trên dữ liệu được gửi từ người dùng tới server.
-	Action Errors: Được sử dụng để trả về các thông báo lỗi của các hoạt động được thực hiện trên dữ liệu được gửi từ người dùng tới server.
-	Field Errors: Được sử dụng để trả về các thông báo lỗi về các trường dữ liệu nhập vào từ người dùng 
-	Note: Action errors và Field errors: Bạn hãy xem ví dụ bên dưới
-	Nếu 1 người dùng nhập một trường dữ liệu sai định dạng vào 1 biểu mẫu trường hợp này sẽ được xử lí như 1 Field error
-	Nếu trong quá trình xử lí yêu cầu server không thể kết nối cơ sở dữ liệu, thông báo lỗi sẽ được xử lí như 1 Action error.
-
-	Struts Advanced – Action: 
-	Khái niệm: Là 1 thành phần quan trọng để xử lí các yêu cầu từ phía người dùng và thực hiện các thao tác trên dữ liệu. Tuy nhiên, để sử dụng tối đa khả năng của Action, cần phải hiểu rõ các khái niệm và kĩ thuật nâng cao trong việc sử dụng Action
-	Các khái niệm và kĩ thuật nâng cao của Action trong framework struts bao gồm: 
-1.	Điều hướng nâng cao: Cho phép chuyển hướng đến các trang web khác một cách dễ dàng và linh hoạt hơn. Trong đó, ActionForward được sử dụng để chuyển hướng đến một trang web khác trong ứng dụng, trong khi ActionRedirect được sử dụng để chuyển hướng đến một trang web bên ngoài ứng dụng
-2.	Thực hiện cùng một action với nhiều yêu cầu: Cho phép sử dụng cùng một Action để xử lí nhiều yêu cầu khác nhau từ phía người dùng. Điều này được thực hiện thông qua sử dụng các tham số và các phương thức khác nhau trong Action
-3.	Sử dụng các phương thức khác trong Action: Cho phép sử dụng các phương thức khác nhau trong action để xử lí các yêu cầu khác nhau từ phía người dùng. Các phương thức này bao gồm phương thức execute(), phương thức doStartTag(), phương thức doEndTag(), phương thức perform() và phương thức reset().
-4.	Xử lí các lỗi trong Action: Cho phép xử lí các lỗi xảy ra trong Action thông qua sử dụng các đối tượng ActionError và ActionMessage. Các lỗi này có thể là các lỗi xác thực, lỗi truy cập hoặc các lỗi khác liên quan đến xử lí dữ liệu.
-5.	Sử dụng các phương thức hỗ trợ trong Action: Cho phép sử dụng các phương thức hỗ trợ trong Action để thực hiện các tác vụ phức tạp bao gồm phương thức getErrors(), phương thức getMessages(), phương thức getRequest(), phương thức getSession(), phương thức getServletContext(), phương thức getUserPrincipal(), phương thức log() và phương thức setErrors().
-	Việc nắm vững các khái niệm và kĩ thuật nâng cao trong việc sử dụng Action sẽ giúp cho việc phát triển các ứng dụng web với framework Struts trở nên dễ dàng và hiệu quả hơn.
-	Struts – Exceptions: 
-	Là các trường hợp lỗi xảy ra trong quá trình xử lí yêu cầu từ phía người dùng. Các ngoại lệ này có thể xử lí bằng cách sử dụng các lớp ngoại lệ (Exception handling classes) trong Struts.
-	Dưới đây là 1 số ngoại lệ thường được gặp trong Struts:
-1.	StrutsException: Đây là lớp cơ bản của các ngoại lệ trong Struts. Các ngoại lệ khác được kế thừa từ lớp này
-2.	ActionException: Ngoại lệ này được ném ra khi có lỗi xảy ra trong quá trình xử lí yêu cầu từ phía người dùng, hoặc có vấn đề trong quá trình truy xuất dữ liệu
-3.	InvalidCancelException: Ngoại lệ này được ném ra khi người dùng yêu cầu hủy bỏ một hoạt động nhưng không thể thực hiện được.
-4.	InvalidTokenException: Ngoại lệ này được ném ra khi token xác thực không hợp lệ hoặc đã hết hạn.
-5.	UnmatchedActionMappingException: Ngoại lệ này được ném ra khi không tìm thấy Action mapping tương ứng với yêu cầu từ phía người dùng
-	Các lớp xử lí ngoại lệ trong Struts bao gồm: 
-
-1.	ActionError: Đây là lớp để xử lí các lỗi toàn cục, có thể xảy ra trong suốt quả trình xử lí yêu cầu từ phía người dùng.
-2.	ActionMessage: Đây là lớp để xử lí các thông báo tùy chỉnh cho người dùng
-3.	ActionForward: Đây là lớp để xác định địa chỉ của trang web mà người dùng sẽ được chuyển hướng đến khi có ngoại lệ xảy ra 
-4.	ActionRedirect: Đây là lớp để xác định URL của trang web mà người dùng sẽ được chuyển hướng đến khi có ngoại lệ xảy ra
-	Note: Cả 2 lớp ActionForward và ActionRedirect đều được sử dụng để chuyển hướng người dùng từ 1 trang web đến 1 trang web khác. Tuy nhiên chúng có 1 số đặc điểm khác biệt như sau: 
-1.	ActionForward: Nó có thể được chuyển hướng người  dùng đến một trang JSP hoặc 1 servlet khác cùng 1 ứng dụng web
-o	Các thuộc tính của ActionForward bao gồm: 
--	Path: Đây là đường dẫn của trang web mà người dùng sẽ được chuyển hướng đến
--	Redirect: Đây là thuộc tính tùy chọn. Nếu đặt là false thì chuyển hướng sẽ được thực hiện trên cùng 1 request và dữ liệu của request sẽ được giữ nguyên. Nếu được đặt là true, thì chuyển hướng sẽ được thực hiện trên cùng 1 request khác và dữ liệu của request sẽ bị mất
-2.	ActionRedirect: Được sử dụng để chuyển hướng người dùng đến 1 trang web khác nằm ngoài ứng dụng web hiện tại. Nó có thể được sử dụng để chuyển hướng người dùng đến 1 trang web khác nằm trên cùng 1 máy chủ hoặc trên một máy chủ khác.
-o	Các thuộc tính của ActionRedirect bao gồm:
--	Path: Đây là đường dẫn tới trang web mà người dùng sẽ được chuyển hướng đến
--	ContextRelative: Đây là thuộc tính tùy chọn nếu được đặt là true thì đường dẫn sẽ được tính từ thư mục gốc của ứng dụng web. Nếu không đặt thì đường dẫn thì đường dẫn tính từ thư mục hiện tại 
--	Module: Đây là thuộc tính tùy chọn. Nếu được đặt thì, thì nó sẽ chỉ định tên của module mà trang web đính thuộc về.
--	Prefix: Đây là thuộc tính tùy chọn. Nếu được đặt, thì nó sẽ được thêm 1 tiền tố vào đường dẫn của trang web đích.
-
-	Struts- Manual-Validation:
-	Khái niệm: Là 1 cách để kiểm tra dữ liệu nhập vào từ người dùng bằng các sử dụng mã java. Điều này cho phép các nhà phát triển có thể tùy chỉnh các thông báo lỗi để hiển thị cho người dùng một cách tốt nhất. 
-	Các bước để thực hiện Manual – Validation trong Struts như sau: 
-1.	Tạo 1 lớp ActionForm để lưu trữ dữ liệu nhập từ người dùng
-2.	Trong lớp Action, sử dụng phương thức validate() để kiểm tra dữ liệu ActionForm
-3.	Sử dụng các lớp Validate để thực hiện kiểm tra dữ liệu. Validate là một bộ phận trong Struts Framework được sử dụng để kiểm tra các trường dữ liệu và trả về các thông báo lỗi tương ứng nếu có lỗi.
-4.	Nếu có lỗi, sử dụng phương thức addFieldError() để thêm thông báo lỗi vào đối tượng ActionErrors.
-	Struts – Automatic – Validation:
-	Khái niệm:Là 1 tính năng cho phép kiểm tra dữ liệu nhập vào từ người dùng một cách tự động mà không cần phải viết mã kiểm tra thủ công. Việc kiểm tra dữ liệu tự động giúp cho các lập trình viên tiết kiệm được thời gian và nâng cao trình độ chính xác của kiểm tra dữ liệu
-	Các bước thực hiện Automatic Validation trong Struts như sau: 
-1.	Tạo 1 lớp ActionForm để lưu trữ dữ liệu nhập từ người dùng
-2.	Trong file struts – config.xml định nghĩa các quy tắc kiểm tra dữ liệu bằng cách sử dụng thẻ <form-validation>
-3.	Trong định nghĩa của từng trường dữ liệu, sử dụng các thuộc tính để xác định kiểu kiểm tra và thông báo lỗi tương ứng.
-4.	Nếu có lỗi, Struts sẽ tự động kiểm tra các thông báo lỗi trên trang web 
-	Struts – Tiles:
-	Khái niệm: Cho phép tái sử dụng các thành phần giao diện người dùng (UI) trên nhiều trang web. Tiles cho phép các lập trình viên chia nhỏ các thành phần giao diện thành các file riêng biệt và sử dụng chúng trong nhiều trang web khác nhau
-	Các thành phần UI (như header, footer, menu v.v) được định nghĩa trong các file jsp riêng biệt, gọi là tiles definitions. Trong file cấu hình struts-config.xml, chúng ta định nghĩa các tiles definitions và sử dụng chúng trong các trang jsp thông qua các thẻ tiles
-	Manning – Struts.in.Action
-
-
-
-
+function deleteRows() {
+	var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+	var selectedValues = [];
+	for (var i = 0; i < checkboxes.length; i++) {
+	  selectedValues.push(checkboxes[i].value);
+	}
+	if (selectedValues == "") {
+		alert('<%=messageCheckNot%>');
+		return;
+	}else {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+		  if (this.readyState == 4 && this.status == 200) {
+		    console.log(this.responseText);
+		  }
+		};
+		xhttp.open("POST", "/CustomerSystem/T002", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("selectedValues=" + JSON.stringify(selectedValues));
+	}
+} 
