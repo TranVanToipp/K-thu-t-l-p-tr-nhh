@@ -8,3 +8,14 @@
 			</select>
 		</div>
 		<%} %>d
+
+
+
+<div class="search-container__handalSearch--margin handalSearch-customerSex">
+  <div class="handalSearch-customercommon handalSearch-customerSex__text search-container__text_text">Sex</div>
+  <select name="browser" id="cboSex">
+    <option value=""></option>
+    <option value="0" <% if(request.getAttribute("sex")!=null && request.getAttribute("sex").equals("0")){ %>selected<% } %>>Male</option>
+    <option value="1" <% if(request.getAttribute("sex")!=null && request.getAttribute("sex").equals("1")){ %>selected<% } %>>Female</option>
+  </select>
+</div>
