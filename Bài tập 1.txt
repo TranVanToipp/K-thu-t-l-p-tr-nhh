@@ -1,21 +1,10 @@
-function deleteRows() {
-	var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-	var selectedValues = [];
-	for (var i = 0; i < checkboxes.length; i++) {
-	  selectedValues.push(checkboxes[i].value);
-	}
-	if (selectedValues == "") {
-		alert('<%=messageCheckNot%>');
-		return;
-	}else {
-		var xhttp = new XMLHttpRequest();
-		xhttp.onreadystatechange = function() {
-		  if (this.readyState == 4 && this.status == 200) {
-		    console.log(this.responseText);
-		  }
-		};
-		xhttp.open("POST", "/CustomerSystem/T002", true);
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("selectedValues=" + JSON.stringify(selectedValues));
-	}
-} 
+<%if (request.getAttribute("sex") != null) { %>
+			<div class = "search-container__handalSearch--margin handalSearch-customerSex">
+			<div class = "handalSearch-customercommon handalSearch-customerSex__text search-container__text_text">Sex</div>
+			<select name="browser" id = "cboSex">
+				<option value=""></option>
+		      	<option value="0">Male</option>
+		     	 <option value="1">Female</option>
+			</select>
+		</div>
+		<%} %>d
