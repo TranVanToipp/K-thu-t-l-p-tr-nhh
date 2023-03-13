@@ -1,3 +1,15 @@
+<% if (session.getAttribute("name") != null) {
+     String name = (String) session.getAttribute("name");
+     session.setAttribute("name1", name);
+%>
+     <div><%= " " + name %></div>
+<% } %>
+
+
+
+
+
+
 <%@ page import="javax.servlet.http.HttpServletResponse" %>
 <%
 HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
