@@ -1,3 +1,28 @@
+<% if (session.getAttribute("name") != null) {
+String name = (String) session.getAttribute("name");
+Cookie cookie = new Cookie("name", name);
+cookie.setMaxAge(60 * 60 * 24 * 30); // Thời gian sống của cookie, tính bằng giây
+response.addCookie(cookie); // Lưu cookie vào trình duyệt
+%>
+<div><%= " " + name %></div>
+<% } else {
+Cookie[] cookies = request.getCookies();
+if (cookies != null) {
+for (Cookie cookie : cookies) {
+if (cookie.getName().equals("name")) {
+String name = cookie.getValue();
+session.setAttribute("name", name);
+%>
+<div><%= " " + name %></div>
+<% }
+}
+}
+} %>
+
+
+
+
+
 <%if (request.getAttribute("sex") != null) { %>
 			<div class = "search-container__handalSearch--margin handalSearch-customerSex">
 			<div class = "handalSearch-customercommon handalSearch-customerSex__text search-container__text_text">Sex</div>
