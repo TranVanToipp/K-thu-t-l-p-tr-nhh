@@ -1,3 +1,8 @@
+<%@ page import="javax.servlet.http.HttpServletResponse" %>
+<%
+
+
+
 org.apache.jasper.JasperException: An exception occurred processing JSP page [/WEB-INF/jsp/T002.jsp] at line [33]
 
 30: 						String name = (String) session.getAttribute("name");
