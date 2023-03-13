@@ -52,3 +52,14 @@ String script = "<script>window.location.href = window.location.href;</script>";
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
     response.getWriter().write("{\"result\": \"success\"}");
+    
+    
+    
+    
+    
+    <%if (session.getAttribute("name") != null) {
+						Object session2 = session.getAttribute("name");
+						session.setAttribute("name1", session2);
+					%>
+							<div><%=" "+session.getAttribute("name") %></div>
+					<%} %>
