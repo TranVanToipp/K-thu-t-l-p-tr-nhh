@@ -1,17 +1,16 @@
 <%@ page import="javax.servlet.http.HttpServletResponse" %>
 <%
-
 HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-
-org.apache.jasper.JasperException: An exception occurred processing JSP page [/WEB-INF/jsp/T002.jsp] at line [33]
-
-30: 						String name = (String) session.getAttribute("name");
-31: 						Cookie cookie = new Cookie("name", name);
-32: 						cookie.setMaxAge(60 * 60 * 24 * 30); 
-33: 						response.addCookie(cookie);
-34: 					%>
-35: 					<div><%= " " + name %></div>
-36: 					<% } else {
+if (session.getAttribute("name") != null) {
+String name = (String) session.getAttribute("name");
+Cookie cookie = new Cookie("name", name);
+cookie.setMaxAge(60 * 60 * 24 * 30);
+response.addCookie(cookie);
+%>
+<div><%= " " + name %></div>
+<% } else { %>
+// Xử lý khi session không tồn tại
+<% } %>
 
 
 
