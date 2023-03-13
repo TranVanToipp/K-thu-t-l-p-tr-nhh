@@ -57,9 +57,9 @@ String script = "<script>window.location.href = window.location.href;</script>";
     
     
     
-    <%if (session.getAttribute("name") != null) {
-						Object session2 = session.getAttribute("name");
-						session.setAttribute("name1", session2);
-					%>
-							<div><%=" "+session.getAttribute("name") %></div>
-					<%} %>
+   <%if (session.getAttribute("name") != null) {
+String name = (String) session.getAttribute("name");
+session.setAttribute("name1", name);
+%>
+<div><%= " " + name %></div>
+<% } %>
