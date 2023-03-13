@@ -1,18 +1,16 @@
-String id = req.getParameter("userId");
+try {
+			String id = req.getParameter("userId");
 			String name = req.getParameter("txtCustomerName");
 			String sex = req.getParameter("cboSex");
 			String birthday = req.getParameter("txtCustomerBirthday");
 			String email = req.getParameter("txtCustomerEmail");
 			String address = req.getParameter("txaAddress");
 			
+			
 			if (!isValidDate(birthday)) {
 				String messageErrBirthDay = Constants.MESSAGE_ERROR_BIRTHDAY;
 				req.setAttribute("messageErrBirthDay", messageErrBirthDay);
-				req.setAttribute("nameUser", name);
-				req.setAttribute("sexUser", sex);
-				req.setAttribute("birtdayUser", birthday);
-				req.setAttribute("emailUser", email);
-				req.setAttribute("addressUser", address);
+				
 				RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/jsp/T003.jsp");
 				rd.forward(req, resp);
 				return;
@@ -22,11 +20,6 @@ String id = req.getParameter("userId");
 			if (!isValidEmail) {
 				String messageErrEmail = Constants.MESSAGE_ERROR_FORMAT_EMAIL;
 				req.setAttribute("messageErrEmail", messageErrEmail);
-				req.setAttribute("nameUser", name);
-				req.setAttribute("sexUser", sex);
-				req.setAttribute("birtdayUser", birthday);
-				req.setAttribute("emailUser", email);
-				req.setAttribute("addressUser", address);
 				RequestDispatcher rd = req.getRequestDispatcher("/WEB-INF/jsp/T003.jsp");
 				rd.forward(req, resp);
 				return;
