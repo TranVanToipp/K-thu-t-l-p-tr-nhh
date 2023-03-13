@@ -1,3 +1,11 @@
+cd
+
+
+
+
+
+
+
 /**
  * @(#)T002.java 16-00 2023/02/22
  *
@@ -21,7 +29,7 @@ import java.util.regex.Pattern;
 /**
  * T002
  * 
- * @version 1.00
+ * @version 1.00a
  * @since 1.00
  * @author toi_tv_ttv
  * 
