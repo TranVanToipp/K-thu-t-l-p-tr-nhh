@@ -1,7 +1,7 @@
 <%@ page import="javax.servlet.http.HttpServletResponse" %>
 <%
 
-
+HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
 
 org.apache.jasper.JasperException: An exception occurred processing JSP page [/WEB-INF/jsp/T002.jsp] at line [33]
 
