@@ -1,4 +1,13 @@
 if (result != null) {
+    localStorage.setItem("psnCd", result.getPSN_CD());
+    localStorage.setItem("namewellcom", getSession.getUSERNAME());  
+    resp.sendRedirect("/CustomerSystem/T002");
+}
+
+
+
+
+if (result != null) {
 				HttpSession session=req.getSession(true); 
 				session.setAttribute("psnCd", result.getPSN_CD());
 		        session.setAttribute("namewellcom",getSession.getUSERNAME());  
