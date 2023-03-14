@@ -1,3 +1,6 @@
+localStorage cannot be resolved
+
+
 Cookie[] cookies = request.getCookies();
 String name = null;
 if (cookies != null) {
