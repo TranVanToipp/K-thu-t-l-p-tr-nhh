@@ -1,19 +1,19 @@
-<% 
+<%
     Object listDataSearch = request.getAttribute("listDataSearch");
     Object ListA = request.getAttribute("ListA");
 %>
 
-<%-- Nếu listDataSearch hoặc ListA đều không có dữ liệu --%>
+<%-- Nếu không có dữ liệu ở cả hai list --%>
 <% if (listDataSearch == null && ListA == null) { %>
     <button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
 <% } %>
 
-<%-- Nếu ListA có dữ liệu --%>
+<%-- Nếu chỉ có ListA có dữ liệu --%>
 <% if (ListA != null && listDataSearch == null) { %>
     <button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
 <% } %>
 
-<%-- Nếu listDataSearch có dữ liệu --%>
+<%-- Nếu chỉ có listDataSearch có dữ liệu --%>
 <% if (listDataSearch != null) { %>
     <%-- Nếu ListA không có dữ liệu --%>
     <% if (ListA == null) { %>
@@ -24,6 +24,12 @@
         <button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
     <% } %>
 <% } %>
+
+<%-- Nếu chỉ có ListA có dữ liệu và không có listDataSearch --%>
+<% if (ListA != null && listDataSearch == null) { %>
+    <button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
+<% } %>
+
 
 
 
