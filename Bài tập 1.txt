@@ -1,14 +1,55 @@
-<%if (request.getAttribute("sexUserEdit") != null) { %>
-			<div class = "edit-container__content-Sex edit-container__btnContent-margin">
-				<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
-			  <select id="cboSex" id="cboSex">
-			    <option class = "cbooption" value=""></option>
-			    <option class = "cbooption" value="0" <% if(request.getAttribute("sexUserEdit")!=null && request.getAttribute("sexUserEdit").equals("0")){ %>selected<% } %>>Male</option>
-			    <option class = "cbooption" value="1" <% if(request.getAttribute("sexUserEdit")!=null && request.getAttribute("sexUserEdit").equals("1")){ %>selected<% } %>>Female</option>
-			  </select>
-			</div>
-		<%} %>
-
+public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo) {
+	    List<T002Dto> listSearch = new ArrayList<T002Dto>();
+	    Connection conn = null;
+	    try {
+	        String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS \r\n"
+	                + "FROM MSTCUSTOMER"
+	                + "WHERE 1=1";
+	        if (name != null && !name.isEmpty()) {
+	            query += "AND CUSTOMER_NAME LIKE ? ";
+	        }
+	        if (sex != null && !sex.isEmpty()) {
+	            query += "AND SEX = ? ";
+	        }
+	        if (birthdayFrom != null && !birthdayFrom.isEmpty()) {
+	            query += "AND BIRTHDAY >= ? ";
+	        }
+	        if (birthdayTo != null && !birthdayTo.isEmpty()) {
+	            query += "AND BIRTHDAY <= ? ";
+	        }
+	        query += "ORDER BY CUSTOMER_ID;\r\n";
+	       
+	        conn =  new DBConnection().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        int parameterIndex = 1;
+	        if (name != null && !name.isEmpty()) {
+	            ps.setString(parameterIndex++, "%" + name + "%");
+	        }
+	        if (sex != null && !sex.isEmpty()) {
+	            ps.setString(parameterIndex++, sex);
+	        }
+	        if (birthdayFrom != null && !birthdayFrom.isEmpty()) {
+	            ps.setString(parameterIndex++, birthdayFrom);
+	        }
+	        if (birthdayTo != null && !birthdayTo.isEmpty()) {
+	            ps.setString(parameterIndex++, birthdayTo);
+	        }
+	        ResultSet rs = ps.executeQuery();
+	        while(rs.next()) {
+	            T002Dto dataT002Search = new T002Dto();
+	            dataT002Search.setCUSTOMER_ID(rs.getString(1));
+	            dataT002Search.setCUSTOMER_NAME(rs.getString(2));
+	            dataT002Search.setSEX(rs.getString(3));
+	            dataT002Search.setBIRTHDAY(rs.getString(4));
+	            dataT002Search.setADDRESS(rs.getString(5));
+	            listSearch.add(dataT002Search);
+	        }
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return listSearch;
+	}
 
 
 
