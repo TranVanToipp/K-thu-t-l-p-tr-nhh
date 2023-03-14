@@ -1,28 +1,29 @@
 public List<T002Dto> pagingData(int index) throws SQLException {
-		List<T002Dto> list = new ArrayList<>();
-		Connection conn = null;
-		String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME,CASE WHEN SEX = 0 THEN 'Male' ELSE 'Female' END AS SEX,BIRTHDAY, ADDRESS FROM MSTCUSTOMER ORDER BY CUSTOMER_ID OFFSET ? ROWS FETCH NEXT 15 ROWS ONLY";
-		try {
-			conn = new DBConnection().getConnection();
-			PreparedStatement ps = conn.prepareStatement(query);
-			ps.setInt(1, (index-1)*15);
-			ResultSet rs = ps.executeQuery();
-			while(rs.next()) {
-				T002Dto datapagin = new T002Dto();
-				datapagin.setCUSTOMER_ID(rs.getString(1));
-				datapagin.setCUSTOMER_NAME(rs.getString(2));
-				datapagin.setSEX(rs.getString(3));
-				datapagin.setBIRTHDAY(rs.getString(4));
-				datapagin.setADDRESS(rs.getString(5));
-	            list.add(datapagin);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DBConnection.disconnectDB(conn);
-	    }
-		return list;
-	}d
+    List<T002Dto> list = new ArrayList<>();
+    Connection conn = null;
+    String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME,CASE WHEN SEX = 0 THEN 'Male' ELSE 'Female' END AS SEX,BIRTHDAY, ADDRESS FROM MSTCUSTOMER WHERE DELETE_YMD IS NULL ORDER BY CUSTOMER_ID OFFSET ? ROWS FETCH NEXT 15 ROWS ONLY";
+    try {
+        conn = new DBConnection().getConnection();
+        PreparedStatement ps = conn.prepareStatement(query);
+        ps.setInt(1, (index-1)*15);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()) {
+            T002Dto datapagin = new T002Dto();
+            datapagin.setCUSTOMER_ID(rs.getString(1));
+            datapagin.setCUSTOMER_NAME(rs.getString(2));
+            datapagin.setSEX(rs.getString(3));
+            datapagin.setBIRTHDAY(rs.getString(4));
+            datapagin.setADDRESS(rs.getString(5));
+            list.add(datapagin);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }finally {
+        DBConnection.disconnectDB(conn);
+    }
+    return list;
+}
+
 
 
 
