@@ -1,9 +1,19 @@
-if (result != null) {
-    Cookie cookie = new Cookie("namewellcom", result.getUSERNAME());
-    cookie.setMaxAge(3600); // Cookie expires in 1 hour
-    resp.addCookie(cookie);
-    resp.sendRedirect("/CustomerSystem/T002");
-}
+<%
+    Cookie[] cookies = request.getCookies();
+    String name = null;
+    if (cookies != null) {
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals("namewellcom")) {
+                name = cookie.getValue();
+                break;
+            }
+        }
+    }
+%>
+
+<% if (name != null) { %>
+    <div class="search-container__logo--wellcomname"><%= " " + name %></div>
+<% } %>
 
 
 
