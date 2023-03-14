@@ -1,3 +1,9 @@
+SELECT CUSTOMER_ID, CUSTOMER_NAME,CASE WHEN SEX = 0 THEN 'Male' ELSE 'Female' END AS SEX,BIRTHDAY, ADDRESS FROM MSTCUSTOMER WHERE DELETE_YMD IS NULL ORDER BY CUSTOMER_ID OFFSET 30 ROWS FETCH NEXT 15 ROWS ONLY
+
+
+
+
+
 function deleteRows() {
   var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
   var selectedValues = [];
