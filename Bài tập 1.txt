@@ -1,3 +1,15 @@
+if (result != null) {
+    Cookie cookie = new Cookie("namewellcom", result.getUSERNAME());
+    cookie.setMaxAge(3600); // Cookie expires in 1 hour
+    resp.addCookie(cookie);
+    resp.sendRedirect("/CustomerSystem/T002");
+}
+
+
+
+
+
+
 localStorage cannot be resolved
 
 
