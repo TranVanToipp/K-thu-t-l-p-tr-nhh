@@ -1,4 +1,14 @@
 if (result != null) {
+    Cookie cookie = new Cookie("namewellcom", getSession.getUSERNAME());
+    cookie.setMaxAge(3600); //số giây cookie tồn tại trên trình duyệt
+    resp.addCookie(cookie);
+    resp.sendRedirect("/CustomerSystem/T002");
+}
+
+
+
+
+if (result != null) {
     localStorage.setItem("psnCd", result.getPSN_CD());
     localStorage.setItem("namewellcom", getSession.getUSERNAME());  
     resp.sendRedirect("/CustomerSystem/T002");
