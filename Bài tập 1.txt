@@ -1,6 +1,17 @@
-String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS \r\n"
-        + "FROM MSTCUSTOMER "
-        + "WHERE DELETE_YMD IS NULL AND 1=1";
+if (result != null) {
+				HttpSession session=req.getSession(true); 
+				session.setAttribute("psnCd", result.getPSN_CD());
+		        session.setAttribute("namewellcom",getSession.getUSERNAME());  
+		        resp.sendRedirect("/CustomerSystem/T002");
+			}
+			
+			
+			
+			<% if (session.getAttribute("namewellcom") != null) {
+				     String name = (String) session.getAttribute("namewellcom");
+				%>
+				     <div class= "search-container__logo--wellcomname"><%= " " + name %></div>
+				<% } %>
 
 
 public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo) {
