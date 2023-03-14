@@ -1,3 +1,8 @@
++ "WHERE DELETE_YMD IS NULL "
+                + "AND 1=1 ";
+
+
+
 
 public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo) {
 	    List<T002Dto> listSearch = new ArrayList<T002Dto>();
