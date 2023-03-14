@@ -4,7 +4,7 @@ public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom,
 	    try {
 	        String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS \r\n"
 	                + "FROM MSTCUSTOMER"
-	                + "WHERE 1=1";
+	                + "WHERE DELETE_YMD IS NULL AND 1=1";
 	        if (name != null && !name.isEmpty()) {
 	            query += "AND CUSTOMER_NAME LIKE ? ";
 	        }
@@ -52,6 +52,7 @@ public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom,
 	}
 
 
+Incorrect syntax near the keyword 'IS'.
 
 
 + "WHERE DELETE_YMD IS NULL "
