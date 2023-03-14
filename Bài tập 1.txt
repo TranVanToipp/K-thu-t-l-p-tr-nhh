@@ -1,8 +1,13 @@
-response.setContentType("text/html");
-PrintWriter out = response.getWriter();
-out.println("<script>");
-out.println("location.reload();");
-out.println("</script>");
+<%if (request.getAttribute("sexUserEdit") != null) { %>
+			<div class = "edit-container__content-Sex edit-container__btnContent-margin">
+				<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
+			  <select id="cboSex" id="cboSex">
+			    <option class = "cbooption" value=""></option>
+			    <option class = "cbooption" value="0" <% if(request.getAttribute("sexUserEdit")!=null && request.getAttribute("sexUserEdit").equals("0")){ %>selected<% } %>>Male</option>
+			    <option class = "cbooption" value="1" <% if(request.getAttribute("sexUserEdit")!=null && request.getAttribute("sexUserEdit").equals("1")){ %>selected<% } %>>Female</option>
+			  </select>
+			</div>
+		<%} %>
 
 
 
