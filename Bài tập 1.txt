@@ -1,4 +1,5 @@
-var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+var uncheckedCheckboxes = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+
 
 
 
