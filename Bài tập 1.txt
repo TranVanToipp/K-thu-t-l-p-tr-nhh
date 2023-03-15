@@ -263,8 +263,18 @@
 
 
 
-<form action="/T001do" name="frmLogin" method="POST" >
+<form action="/InputSubmit" name="frmLogin" method="POST" >
 
+
+<action-mappings>
+            <!-- Default "Welcome" action -->
+            <!-- Forwards to Welcome.jsp -->
+        <action
+            path="/InputSubmit"
+            type="fjs.cs.coreservlets.T001">
+        </action>
+       
+       </action-mappings> 
 
 
 
