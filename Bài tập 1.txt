@@ -1,5 +1,37 @@
 
-Phiên bản máy chủ không được hỗ trợ. Máy chủ mục tiêu phải là SQL Server 2000 trở lên.
+public ActionForward execute(ActionMapping mapping, ActionForm form, 
+		HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			String user = request.getParameter("userName");
+			String pass = request.getParameter("password");
+			String message = "";
+			T001Dao loginDao = new T001Dao();
+			
+			T001Dto result = loginDao.checkLogin(user, pass);
+			
+			if (!checkInput(user, pass)) {
+				if (user == null || user.trim().isEmpty()) {
+		    		String messageUser = Constants.USER_NOT_ERROR;
+		    		
+		    	}
+				if (pass == null || pass.trim().isEmpty()) {
+					String messagePassword = Constants.PASSWORD_NOT_ERROR;
+					
+				}
+			}
+			if (result != null) {
+				return(mapping.findForward("success"));
+			}else {
+				String messageError = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
+				return(mapping.findForward("fail"));
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return(mapping.findForward("fail"));
+		
+	}d
 
 
 
