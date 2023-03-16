@@ -1,5 +1,118 @@
+<global-forwards>
+        <!-- Default forward to "Welcome" action -->
+        <!-- Demonstrates using index.jsp to forward -->
+         <forward
+        	name="success"
+        	path="/pages/T002.jsp"/>
+        	
+        <forward
+        	name="T001"
+        	path="/T001.do"/>
+        	
+       	<forward
+        	name="T003"
+        	path="/pages/T001.jsp"/>
+    </global-forwards>
+    
+    
+    
+    
+    
+    
+    <action-mappings>
+            <!-- Default "Welcome" action -->
+            <!-- Forwards to Welcome.jsp -->
+        <action
+            path="/T001"
+            type="fjs.cs.action.T001">
+    
+        </action>
+       
+      
+    <!-- sample input and input submit actions
 
+        <action
+            path="/Input"
+            type="org.apache.struts.actions.ForwardAction"
+            parameter="/pages/Input.jsp"/>
 
+        <action
+            path="/InputSubmit"
+            type="app.InputAction"
+            name="inputForm"
+            scope="request"
+            validate="true"
+            input="/pages/Input.jsp"/>
+
+            <action
+                path="/edit*"
+                type="app.Edit{1}Action"
+                name="inputForm"
+                scope="request"
+                validate="true"
+                input="/pages/Edit{1}.jsp"/>
+
+    end samples -->
+    </action-mappings>
+    
+    
+    
+    
+    <form action="/T001.do" name="frmLogin" method="POST" >
+					<div class="content-login__header">
+						<h3>LOGIN</h3>
+						<label id="lblErrorMessage">
+						</label>
+					</div>
+					<div class="content-login__container">
+
+						<div class="form-group">
+							<label for="fullname" class="form-label form-label__userID">User
+								Id: </label> <input id="txtUserID" name="userName" maxlength="8"
+								type="text" class="form-control">
+						</div>
+						<div class="form-group__password">
+							<label for="password" class="form-label">Password: </label> <input
+								id="txtPassword" name="password" type="password" maxlength="8"
+								class="form-control">
+						</div>
+						<div class="form-group__btn">
+							<button type="submit" id="btnLogin" class="form-submit">Login</button>
+							<button type="button" id="btnClear" class="form-submit">Clear</button>
+						</div>
+					</div>s
+				</form>
+				
+				
+				
+				
+				
+public class T001 extends Action {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, 
+		HttpServletRequest request, HttpServletResponse response) throws Exception {
+		try {
+			String user = request.getParameter("userName");
+			String pass = request.getParameter("password");
+//			String message = "";
+//			T001Dao loginDao = new T001Dao();
+//			T001Dto result = loginDao.checkLogin(user, pass);
+//			
+//			if (result != null) {
+//				message = "success";
+//				return(mapping.findForward("success"));
+//			}else {
+//				message = "error";
+//			}
+			if (Integer.parseInt(user) == 123){
+				return(mapping.findForward("success"));
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return(mapping.findForward("T003"));
+		
+	}d
 
 
 
