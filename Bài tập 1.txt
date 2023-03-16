@@ -1,3 +1,15 @@
+
+Phiên bản máy chủ không được hỗ trợ. Máy chủ mục tiêu phải là SQL Server 2000 trở lên.
+
+
+
+
+
+
+
+
+
+
 <global-forwards>
         <!-- Default forward to "Welcome" action -->
         <!-- Demonstrates using index.jsp to forward -->
