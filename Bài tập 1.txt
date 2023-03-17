@@ -1,3 +1,82 @@
+The Six Basic Steps in Using 
+Struts: Updates for Bean Use
+1. Modify struts-config.xml. 
+Use WEB-INF/struts-config.xml to: 
+– Map incoming .do addresses to Action classes 
+– Map return conditions to JSP pages 
+– Declare any form beans that are being used.
+– Restart server after modifying struts-config.xml. 
+2. Define a form bean.
+– This bean extends ActionForm and represents the data 
+submitted by the user. It is automatically populated 
+when the input form is submitted. More precisely:
+1. The reset method is called (useful for session-scoped beans)
+2. For each incoming request parameter, the corresponding setter 
+method is called
+3. The validate method is called (possibly preventing the Action)
+
+
+
+The Six Basic Steps in Using 
+Struts: Updates for Bean Use
+3. Create results beans.
+– These are normal beans of the sort used in MVC when 
+implemented directly with RequestDispatcher. That is, 
+they represent the results of the business logic and data 
+access code. These beans are stored in request, session, 
+or application scope with the setAttribute method of 
+HttpServletRequest, HttpSession, or ServletContext, 
+just as in normal non-Struts applications. 
+4. Define an Action class to handle requests.
+– Rather than calling request.getParameter explicitly as in 
+the previous example, the execute method casts the 
+ActionForm argument to the specific form bean class, 
+then uses getter methods to access the properties of the 
+object
+
+
+
+The Six Basic Steps in Using 
+Struts: Updates for Bean Use
+5. Create form that invokes blah.do.
+– For now, we will use static HTML 
+• Later, we will use the html:form tag to guarantee that the 
+textfield names correspond to the bean property names, and to 
+make it easy to fill in the form based on values in the app
+• Later, we will also use bean:message to output fixed strings 
+from a properties file
+6. Display results in JSP.
+– The JSP page uses the bean:write tag to output 
+properties of the form and result beans. 
+– It may also use the bean:message tag to output standard 
+messages and text labels that are defined in a properties 
+file (resource bundle). 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Step 6 (Display Results in JSP) 
 Alternatives for Beans
 • Use the JSP 2.0 expression language. 
