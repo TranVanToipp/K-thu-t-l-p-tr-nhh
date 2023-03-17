@@ -1,26 +1,21 @@
-public ActionForward execute(ActionMapping mapping,
-ActionForm form,
-... request, ... response)
-throws Exception {
-UserFormBean userBean = (UserFormBean)form;
-String email = userBean.getEmail();
-String password = userBean.getPassword();
-if ((email == null) ||
-(email.trim().length() < 3) ||
-(email.indexOf("@") == -1)) {
-request.setAttribute("suggestionBean",
-SuggestionUtils.getSuggestionBean());
-return(mapping.findForward("bad-address"));
-} else if ((password == null) ||
-(password.trim().length() < 6)) {
-request.setAttribute("suggestionBean",
-SuggestionUtils.getSuggestionBean());
-return(mapping.findForward("bad-password"));
-} else {
-return(mapping.findForward("success"));
-}
-}
-
+Step 6 (Display Results in JSP) 
+Alternatives for Beans
+• Use the JSP 2.0 expression language. 
+– This is perhaps the best option if the server supports JSP 2.0. In 
+these examples, we will assume that the application needs to run on 
+multiple servers, some of which support only JSP 1.2. 
+• Use the Struts bean:write tag. 
+– This is by far the most common approach when using Struts. Note 
+that, unlike c:out and the JSP 2.0 expression language, bean:write 
+automatically filters special HTML characters, replacing < with &lt; 
+and > with &gt;. You can disable this behavior by specifying
+<bean:write name="beanName" 
+property="beanProperty"
+filter="false">
+– So, in this example we use bean:write. Before we do so, however,
+we have to import the "bean" tag library as follows. 
+<%@ taglib uri="http://struts.apache.org/tags-bean" 
+prefix="bean" %>
 
 
 
