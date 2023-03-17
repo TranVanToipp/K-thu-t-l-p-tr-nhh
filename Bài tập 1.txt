@@ -24,6 +24,72 @@ prefix="bean" %>
 
 
 
+Step 6 (Display Results in JSP) 
+First Possible Page
+<!DOCTYPE ...>
+<HTML>
+<HEAD><TITLE>Illegal Email Address</TITLE></HEAD>
+<BODY BGCOLOR="#FDF5E6">
+<CENTER>
+<H1>Illegal Email Address</H1>
+<%@ taglib uri="http://struts.apache.org/tags-bean"
+prefix="bean" %>
+The address
+"<bean:write name="userFormBean" property="email"/>"
+is not of the form username@hostname (e.g.,
+<bean:write name="suggestionBean" property="email"/>).
+<P>
+Please <A HREF="register1.jsp">try again</A>.
+</CENTER>
+</BODY></HTML>
+
+
+
+
+
+Step 6 (Display Results in JSP) 
+Second Possible Page
+<!DOCTYPE ...>
+<HTML>
+<HEAD><TITLE>Illegal Password</TITLE></HEAD>
+<BODY BGCOLOR="#FDF5E6">
+<CENTER>
+<H1>Illegal Password</H1>
+<%@ taglib uri="http://struts.apache.org/tags-bean"
+prefix="bean" %>
+The password
+"<bean:write name="userFormBean" property="password"/>"
+is too short; it must contain at least six characters.
+Here is a possible password:
+<bean:write name="suggestionBean" property="password"/>.
+<P>
+Please <A HREF="register1.jsp">try again</A>.
+</CENTER>
+</BODY></HTML>
+
+
+
+
+
+Step 6 (Display Results in JSP) 
+Third Possible Page
+<!DOCTYPE ...>
+<HTML>
+<HEAD><TITLE>Success</TITLE></HEAD>
+<BODY BGCOLOR="#FDF5E6">
+<CENTER>
+<H1>You have registered successfully.</H1>
+<%@ taglib uri="http://struts.apache.org/tags-bean" 
+prefix="bean" %>
+<UL>
+<LI>Email Address: 
+<bean:write name="userFormBean" property="email"/>
+<LI>Password: 
+<bean:write name="userFormBean" property="password"/>
+</UL>
+Congratulations
+</CENTER>
+</BODY></HTML>
 
 
 <global-forwards>
