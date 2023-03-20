@@ -1,3 +1,15 @@
+<html:form action="/myaction">
+    <html:errors property="name" />
+    <html:errors property="email" />
+    <input type="text" name="name" />
+    <input type="text" name="email" />
+    <input type="submit" value="Submit" />
+</html:form>
+
+
+
+
+
 
 @Override
 	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
