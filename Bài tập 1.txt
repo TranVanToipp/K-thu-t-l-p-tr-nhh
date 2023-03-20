@@ -1,6 +1,13 @@
-<lable><bean:message key="LoginBean.loginnullerror.required"/></lable>
-							<lable><bean:message key="LoginBean.username.required"/></lable>
-							<lable><bean:message key="LoginBean.paddword.required"/></lable>
+<bean:message key="LoginBean.username.required" var="usernameError"/>
+<c:if test="${not empty usernameError}">
+    <div id="username_error">${usernameError}</div>
+</c:if>
+
+<bean:message key="LoginBean.paddword.required" var="passwordError"/>
+<c:if test="${not empty passwordError}">
+    <div id="password_error">${passwordError}</div>
+</c:if>
+
 							
 							
 							
