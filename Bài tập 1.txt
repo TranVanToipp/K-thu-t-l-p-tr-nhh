@@ -1,6 +1,27 @@
 <lable><bean:message key="LoginBean.loginnullerror.required"/></lable>
 							<lable><bean:message key="LoginBean.username.required"/></lable>
 							<lable><bean:message key="LoginBean.paddword.required"/></lable>
+							
+							
+							
+							
+							
+							public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+		ActionErrors error = new ActionErrors();
+		if (getUSERID() == null && getUSERID() == null) {
+			return error;
+		}
+		if (getUSERID() == null || getUSERID().trim().isEmpty() && !getPASSWORD().isEmpty()) {
+			error.add("username", new ActionMessage("LoginBean.username.required"));
+			return error;
+		}
+		if (getPASSWORD() == null || getUSERID().trim().isEmpty() && getUSERID().isEmpty()) {
+			error.add("paddword", new ActionMessage("LoginBean.paddword.required"));
+			return error;
+		}
+		return error;
+		
+	}
 
 
 
