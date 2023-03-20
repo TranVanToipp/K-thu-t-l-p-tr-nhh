@@ -1,29 +1,15 @@
-LoginBean loginBean = (LoginBean)form;
-String user = loginBean.getUSERID();
-String pass = loginBean.getPASSWORD();
-T001Dao loginDao = new T001Dao();
-LoginBean result = loginDao.checkLogin(user, pass);
-
-// Kiểm tra xem biến 'isSubmitted' đã được thiết lập hay chưa
-boolean isSubmitted = request.getParameter("isSubmitted") != null && Boolean.parseBoolean(request.getParameter("isSubmitted"));
-
-if (!isSubmitted && result != null) {
-// Nếu form chưa được submit và đăng nhập thành công, đặt biến 'isSubmitted' thành true và chuyển hướng đến trang thành công
-request.setAttribute("isSubmitted", true);
-return(mapping.findForward("success"));
-} else if (isSubmitted && result == null) {
-// Nếu form đã được submit và thông tin đăng nhập không chính xác, hiển thị thông báo lỗi
-String messageError = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
-request.setAttribute("messageErrorLogin", messageError);
-return(mapping.findForward("fail"));
-} else if (isSubmitted && result != null) {
-// Nếu form đã được submit và đăng nhập thành công, đặt biến 'isSubmitted' thành true và chuyển hướng đến trang thành công
-request.setAttribute("isSubmitted", true);
-return(mapping.findForward("success"));
-} else {
-// Trường hợp khác, hiển thị trang đăng nhập
-return(mapping.findForward("login"));
-}
+LoginBean loginBean = (LoginBean) form;
+			String user = loginBean.getUSERID();
+			String pass = loginBean.getPASSWORD();
+			T001Dao loginDao = new T001Dao();
+			LoginBean result = loginDao.checkLogin(user, pass);
+			if (result != null) {
+				return (mapping.findForward("success"));
+			} else {
+				String messageError = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
+				request.setAttribute("messageErrorLogin", messageError);
+				return (mapping.findForward("fail"));
+			}
 
 
 
