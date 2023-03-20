@@ -1,10 +1,5 @@
-<html:form action="/myaction">
-    <html:errors property="name" />
-    <html:errors property="email" />
-    <input type="text" name="name" />
-    <input type="text" name="email" />
-    <input type="submit" value="Submit" />
-</html:form>
+重大: Servlet.service() for servlet [action] in context with path [/Struts-blank] threw exception [/pages/T001.jsp (line: [28], column: [4]) TLDによると、タグ [form] の属性 [name] は無効です] with root cause
+org.apache.jasper.JasperException: /pages/T001.jsp (line: [28], column: [4]) TLDによると、タグ [form] の属性 [name] は無効です
 
 
 
