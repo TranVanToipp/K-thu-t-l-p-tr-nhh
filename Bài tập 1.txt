@@ -1,17 +1,24 @@
 LoginBean loginBean = (LoginBean)form;
-			
-			
-			String user = loginBean.getUSERID();
-			String pass = loginBean.getPASSWORD();
-			T001Dao loginDao = new T001Dao();
-			LoginBean result = loginDao.checkLogin(user, pass);
-			if (result != null) {
-				return(mapping.findForward("success"));
-			}else {
-				String messageError = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
-				request.setAttribute("messageErrorLogin", messageError);
-				return(mapping.findForward("fail"));
-			}
+String user = loginBean.getUSERID();
+String pass = loginBean.getPASSWORD();
+T001Dao loginDao = new T001Dao();
+LoginBean result = loginDao.checkLogin(user, pass);
+
+// Kiểm tra xem biến 'isLoggedIn' đã được thiết lập trong session hay chưa
+HttpSession session = request.getSession();
+boolean isLoggedIn = session.getAttribute("isLoggedIn") != null && (Boolean) session.getAttribute("isLoggedIn");
+
+if (result != null) {
+// Nếu đã đăng nhập thành công và chưa được đăng nhập trước đó, chuyển hướng đến trang thành công
+if (!isLoggedIn) {
+session.setAttribute("isLoggedIn", true);
+return(mapping.findForward("success"));
+}
+} else {
+String messageError = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
+request.setAttribute("messageErrorLogin", messageError);
+return(mapping.findForward("fail"));
+}
 
 
 
