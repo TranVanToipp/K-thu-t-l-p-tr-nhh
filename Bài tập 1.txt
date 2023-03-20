@@ -3,6 +3,12 @@ org.apache.jasper.JasperException: /pages/T001.jsp (line: [32], column: [7]) TLD
 
 
 
+<fmt:message key="LoginBean.username.required" var="usernameError" />
+<c:if test="${not empty usernameError}">
+    <div id="username_error">${usernameError}</div>
+</c:if>
+
+
 
 <bean:message key="LoginBean.username.required" var="usernameError"/>
 <c:if test="${not empty usernameError}">
