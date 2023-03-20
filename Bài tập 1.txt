@@ -1,42 +1,6 @@
-public ActionForward execute(ActionMapping mapping, ActionForm form, 
-		HttpServletRequest request, HttpServletResponse response) throws Exception {
-		try {
-			LoginBean loginBean = (LoginBean)form;
-			String user = loginBean.getUSERID();
-			String pass = loginBean.getPASSWORD();
-			T001Dao loginDao = new T001Dao();
-			
-			T001Dto result = loginDao.checkLogin(user, pass);
-			
-			if (!checkInput(user, pass)) {
-				if (user == null && pass == null) {
-					return(mapping.findForward("fail"));
-				}
-				if (user == null || user.trim().isEmpty()) {
-		    		String messageUser = Constants.USER_NOT_ERROR;
-		    		request.setAttribute("messageNotUser", messageUser);
-		    		return(mapping.findForward("fail"));
-		    	}
-				if (pass == null || pass.trim().isEmpty()) {
-					String messagePassword = Constants.PASSWORD_NOT_ERROR;
-					request.setAttribute("messageNotPass", messagePassword);
-					return(mapping.findForward("fail"));
-				}
-			}
-			if (result != null) {
-				return(mapping.findForward("success"));
-			}else {
-				String messageError = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
-				request.setAttribute("messageErrorLogin", messageError);
-				return(mapping.findForward("fail"));
-			}
-			
-		}catch(Exception e) {
-			e.printStackTrace();
-		}
-		return(mapping.findForward("fail"));
-		
-	}
+<lable><bean:message key="LoginBean.loginnullerror.required"/></lable>
+							<lable><bean:message key="LoginBean.username.required"/></lable>
+							<lable><bean:message key="LoginBean.paddword.required"/></lable>
 
 
 
