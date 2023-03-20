@@ -1,3 +1,20 @@
+<%@ taglib prefix="html" uri="http://struts.apache.org/tags-html" %>
+<%@ taglib prefix="bean" uri="http://struts.apache.org/tags-bean" %>
+<%@ taglib prefix="logic" uri="http://struts.apache.org/tags-logic" %>
+
+<html:form action="/login">
+    <html:errors />
+    <html:text property="userID" />
+    <html:errors property="username" />
+    <html:password property="password" />
+    <html:errors property="password" />
+    <html:submit />
+</html:form>
+
+
+
+
+
 public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
     ActionErrors error = new ActionErrors();
     String userID = request.getParameter("userID"); // lấy giá trị của ô input có tên là "userID"
