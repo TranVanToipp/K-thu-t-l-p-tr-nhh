@@ -1,5 +1,67 @@
-重大: Servlet.service() for servlet [action] in context with path [/Struts-blank] threw exception [/pages/T001.jsp (line: [28], column: [4]) TLDによると、タグ [form] の属性 [name] は無効です] with root cause
-org.apache.jasper.JasperException: /pages/T001.jsp (line: [28], column: [4]) TLDによると、タグ [form] の属性 [name] は無効です
+<%@ taglib uri="/tags/struts-bean" prefix="bean" %>
+<%@ taglib uri="/tags/struts-html" prefix="html" %>
+<%@ taglib uri="/tags/struts-logic" prefix="logic" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<style type="text/css">
+  <%@include file="/WEB-INF/css/T001.css"%>
+</style>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/common.css"%>
+</style>
+<title><bean:message key="login.title"/></title>
+</head>
+<body>
+	<div id="main">
+		<div class="header">
+			<h3 class="header-text"><bean:message key="header.customerstruts"/></h3>
+			<div class="header-br"></div>
+		</div>
+		<div class="content">
+			<div class="content-text"><bean:message key="header2.cusomerstruts"/></div>
+		
+			<div class="content-login">
+				<form action="./T001.do" name="frmLogin" method="POST" >
+					<div class="content-login__header">
+						<h3><bean:message key="login.screen"/></h3>
+						<label id="lblErrorMessage">
+							<html:errors/>
+						</label>
+					</div>
+					<div class="content-login__container">
+						<div class="form-group">
+							<label for="fullname" class="form-label form-label__userID"><bean:message key="username.text"/></label>
+							 <input id="txtUserID" name="USERID" maxlength="8"
+								type="text" class="form-control">
+						</div>
+						<div class="form-group__password">
+							<label for="password" class="form-label"><bean:message key="password.text"/> </label> <input
+								id="txtPassword" name="PASSWORD" type="password" maxlength="8"
+								class="form-control">
+						</div>
+						<div class="form-group__btn">
+							<button type="submit" id="btnLogin" class="form-submit"><bean:message key="login.button.Login"/></button>
+							<button type="button" id="btnClear" class="form-submit"><bean:message key="login.button.clear"/></button>
+						</div>
+					</div>
+				</form>
+			</div>
+		
+		</div>
+		<footer class="footer">
+			<div class="header-br"></div>
+			<div class="footer-text__copyright"><bean:message key="login.footer"/></div>
+		</footer>
+	</div>
+</body>
+<script>
+	<%@include file="/WEB-INF/js/T001.js"%>
+</script>
+</html>
 
 
 
