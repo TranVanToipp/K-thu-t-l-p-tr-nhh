@@ -1,5 +1,11 @@
- Servlet.service() for servlet [action] in context with path [/Struts-blank] threw exception [/pages/T001.jsp (line: [32], column: [7]) TLDによると、タグ [message] の属性 [var] は無効です] with root cause
-org.apache.jasper.JasperException: /pages/T001.jsp (line: [32], column: [7]) TLDによると、タグ [message] の属性 [var] は無効です
+<c:if test="${not empty errors}">
+    <div class="error-message">
+        <c:forEach items="${errors}" var="error">
+            <p><c:out value="${error}"/></p>
+        </c:forEach>
+    </div>
+</c:if>
+
 
 
 
