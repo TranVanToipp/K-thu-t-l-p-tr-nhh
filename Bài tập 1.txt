@@ -1,10 +1,20 @@
-<c:if test="${not empty errors}">
-    <div class="error-message">
-        <c:forEach items="${errors}" var="error">
-            <p><c:out value="${error}"/></p>
-        </c:forEach>
-    </div>
-</c:if>
+public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+    ActionErrors error = new ActionErrors();
+    String userID = request.getParameter("userID"); // lấy giá trị của ô input có tên là "userID"
+    String password = request.getParameter("password"); // lấy giá trị của ô input có tên là "password"
+    if (userID == null && password == null) {
+        return error;
+    }
+    if (userID == null || userID.trim().isEmpty() && !password.isEmpty()) {
+        error.add("username", new ActionMessage("LoginBean.username.required"));
+        return error;
+    }
+    if (password == null || userID.trim().isEmpty() && userID.isEmpty()) {
+        error.add("password", new ActionMessage("LoginBean.password.required"));
+        return error;
+    }
+    return error;
+}
 
 
 
