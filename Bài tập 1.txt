@@ -1,3 +1,31 @@
+public class T001 extends Action {
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		try {
+			LoginBean loginBean = (LoginBean) form;
+			String user = loginBean.getUSERID();
+			String pass = loginBean.getPASSWORD();
+			T001Dao loginDao = new T001Dao();
+			LoginBean result = loginDao.checkLogin(user, pass);
+			if (result != null) {
+				return (mapping.findForward("success"));
+			}else {
+				String messageError = Constants.MESSAGE_ERROR_USER_NOT_EXIST;
+				request.setAttribute("messageErrorLogin", messageError);
+				return (mapping.findForward("fail"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return (mapping.findForward("fail"));
+
+	}
+}
+
+
+
+
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE struts-config PUBLIC 
 "-//Apache Software Foundation//DTD Struts Configuration 1.3//EN" 
