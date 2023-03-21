@@ -1,5 +1,1607 @@
 
+Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Jakarta Struts:
+Automatically 
+Validating Input
+Struts 1.2 Version
+Core Servlets & JSP book: www.coreservlets.com
+More Servlets & JSP book: www.moreservlets.com
+Servlet/JSP/Struts/JSF Training: courses.coreservlets.com
+Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+For live Struts training, please see 
+JSP/servlet/Struts/JSF training courses at 
+http://courses.coreservlets.com/.
+Taught by the author of Core Servlets and JSP, More 
+Servlets and JSP, and this tutorial. Available at public 
+venues, or customized versions can be held on-site at 
+your organization.5 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Overview
+• Distinguishing manual validation from 
+automatic validation
+• Distinguishing client-side validation from 
+server-side validation
+• Using automatic validation
+– Declare application-wide properties file
+– Add messages to properties file
+– Turn on the automatic validator
+– Put validation rules in validation.xml
+– Put <html:errors/> in input page
+– Enable JavaScript validation
+6 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Options for Form Field 
+Validation
+• Do validation in the Action
+– Most powerful; has access to business logic, DB, etc.
+– May require repetition in multiple Actions
+– Must manually map conditions back to input page
+– Must write validation rules yourself
+• Do validation in the form bean
+– In individual setter methods
+• Not really validation, but can be used to modify values
+– Using the validate method
+• Not quite as powerful
+• Does not require repetition in multiple Actions
+• Will automatically redisplay input page
+• Still requires you to write validation rules yourself
+• Use automatic validator
+– Handles many common cases; includes JavaScript
+– You can combine approaches in the same application7 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Manual Validation
+(See Previous Section for Details and Examples)
+• Option 1: Put validation code in the Action
+– Return custom conditions from Action
+– Map certain conditions back to the input form
+– Embed the messages in the form bean
+• Option 2: Put validation code in bean
+– Insert <html:errors/> in input form
+– Use validate method in ActionForm class
+public ActionErrors validate(ActionMapping mapping, 
+HttpServletRequest request) { 
+ActionErrors errors = new ActionErrors(); 
+if (somethingWrongWith(someField)){ 
+errors.add("someField", 
+new ActionMessage("errors.someField")); 
+} 
+return errors; 
+} 
+8 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Manual vs. Automatic 
+Validation
+• Manual validation
+– Most flexible
+– Has full access to bean and to business logic and database
+– Repeats same logic many times
+– Runs only on server if you use existing framework
+• Client-side validation requires writing lots of JavaScript
+– Tedious
+– Embedded in Java code
+• Which violates Struts strategy of having as much as possible in editable XML files
+• Automatic validation
+– Consolidates validation code
+– Lets you use standard validation rules
+– Runs on server; can optionally also run on client
+– Described by XML files9 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Client-Side vs. Server-Side 
+Validation
+• Client-side validation
+– JavaScript code verifies format of fields
+– Dialog box warns users of illegal values
+– Submission blocked if invalid
+– Pro:
+• Fast
+– Cons:
+• Can be deliberately or accidentally bypassed
+• Cannot do validation that requires much application logic
+• Server-side validation
+– Java code on server verifies format of fields
+– Form is redisplayed (with warnings) if illegal values
+– You must do this regardless of whether or not you do 
+client-side validation!
+10 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Struts Flow of Control
+JSP
+Form
+Determine
+Action
+Action
+Choose
+JSP
+Page
+JSP
+request .../SomeForm.jsp
+submit form
+request .../blah.do
+invoke
+execute
+method
+return condition
+forward to return final result
+struts-config.xml Populate bean. Call validate. 
+Inherited version checks 
+entries in validator.xml. If nonempty result, interrupt process 
+and forward to input page. 
+Otherwise pass to execute 
+method.
+Use bean:write.
+Use html:form 
+to build form.
+forward 
+to11 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Steps in Using Automatic 
+Validation (General)
+1. Configure struts-config.xml
+• List the address of the input form
+• List the properties file (resource bundle)
+• Turn on the automatic validator
+2. Edit the properties file
+• Put errors.footer, errors.header for html:errors as before
+• Edit standard validator messages (errors.invalid, etc)
+• Create names to replace {0}, {1} in standard messages
+3. Put validation rules in validation.xml
+• For each field, specify one or more validation rules 
+• Find the name of the corresponding error message
+• Look in properties file to see how many args needed
+• Supply arg0 ... argN as necessary
+4. Have form bean extend ValidatorForm
+• Instead of ActionForm
+5. Use <html:errors> as before
+12 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Steps in Using Automatic 
+Validation (Details on Third Step)
+1. For each field, specify one or more validation 
+rules from the list of builtin choices
+• required, mask, email, intRange, maxLength, etc.
+2. Find the name of the error message that will 
+be generated if the rule fails
+• Usually errors.ruleName, but given in validatorrules.xml.
+3. Look in properties file to see what {} 
+arguments the error message needs
+• errors.invalid={0} is invalid.
+• errors.maxlength={0} cannot be greater than {1}
+characters.
+4. Supply arg0-argN for each placeholder13 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation
+1. Configure struts-config.xml
+1. List the address of the input form
+<action path="..." type="..." name="..." scope="request" 
+input="...inputFormAddress.jsp">
+2. List properties file (resource bundle). 
+• <message-resources parameter="MessageResources"/>
+– Refers to WEB-INF/classes/MessageResources.properties
+3. Turn on the automatic validator
+• Don't enter by hand: uncomment the entry from struts-blank
+<plug-in
+className="org.apache.struts.validator.ValidatorPlugIn">
+<set-property property="pathnames"
+value="/WEB-INF/validator-rules.xml,
+/WEB-INF/validation.xml"/>
+</plug-in>
+14 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation
+2. Edit properties file
+– Edit "error" entries for formatting error messages
+• Same as in manual validation
+errors.header=<UL>
+errors.prefix=<LI><B><FONT COLOR="RED">
+errors.suffix=</FONT></B></LI>
+errors.footer=</UL>
+– Edit standard "validator" error messages if desired
+• struts-blank has several typos you will want to fix
+– "an" long, "an" byte, "can not", etc.
+errors.invalid={0} is invalid.
+errors.maxlength={0} cannot be greater than {1} characters.
+– Add prompts/messages that will be substituted into error 
+messages for {0}, {1}. etc
+inputForm.firstName=First name
+inputForm.lastName=Last name
+inputForm.zipCode=5-digit ZIP Code15 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation 
+(Continued)
+3. Put validation rules in validation.xml
+– Use <form name="..."> to identify the bean
+• <form name="beanNameFromStrutsConfig">
+– Use <field property="..." depends="..."> to identify the 
+bean property to check and the rule to use to check it
+• <field property="propName" depends="ruleName">
+• See http://struts.apache.org/userGuide/dev_validator.html
+for all available rules and specifics on each
+– Use <argN...> to give values for error messages.
+• <field property="propName" depends="ruleName">
+• <arg0 key="key.Name"/>
+• </field>
+– Look in properties file to see what args needed
+– The name of the error message is usually 
+errors.ruleName, but see validator-rules.xml to be sure
+16 Apache Struts: Validating User Input Automatically www.coreservlets.com
+validation.xml: Structure
+• <form-validation> and <formset>
+– Main enclosing elements
+• <form name="beanName"> – Matches form-bean name from struts-config.xml
+• <field property="firstName"
+– Matches HTML form parameter (ie, bean property) name
+• depends="required"> – Matches name of predefined validator rule
+• required: must be non-empty
+• mask: must match a given regular expression
+• email: must be an email address
+• creditCard: must be a legal credit card number – (Use 4111111111111111 for testing)
+• <arg0 key="property.subname"/> – Replaces {0} in error message from properties file17 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation 
+(Continued)
+3. Put validation rules in validation.xml: example
+– Bean is named orderFormBean in the form-beans 
+section of struts-config.xml
+– Bean has property called firstName
+– One of the standard rules is "required"
+– In the properties file, errors.required is ... {0} ...
+– There is a custom message called inputForm.firstName
+<formset>
+<form name="orderFormBean">
+<field property="firstName"
+depends="required">
+<arg0 key="inputForm.firstName"/> 
+</field>
+</form>
+…
+</formset>
+18 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation 
+(Continued)
+4. Have your form bean extend ValidatorForm, 
+not ActionForm directly
+import org.apache.struts.validator.*;
+public class OrderFormBean
+extends ValidatorForm { … }
+5. Put <html:errors/> in input page
+– Edit properties file to customize form of error message
+6. (Optional) Enable JavaScript validation
+– Add <html:javascript formName="beanName"/> 
+anywhere
+– Add onsubmit="return validateBeanName(this);" to 
+html:form19 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation: 
+Example (Goal)
+20 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation: 
+Example (Goal)
+• JavaScript 
+validation 
+enabled21 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation: 
+Example (Goal)
+• JavaScript 
+validation 
+disabled
+22 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Using Automatic Validation: 
+Example (Goal)23 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Implementing the Example 
+(Background)
+package coreservlets;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+public class Order extends Action {
+public ActionForward execute(ActionMapping mapping,
+ActionForm form,
+HttpServletRequest request,
+HttpServletResponse response)
+throws Exception {
+return(mapping.findForward("success"));
+}
+}
+24 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Step 1: Configure strutsconfig.xml
+<form-beans>
+<form-bean name="orderFormBean"
+type="coreservlets.OrderFormBean"/>
+</form-beans>
+<action-mappings>
+<action path="/actions/order" 
+type="coreservlets.Order"
+name="orderFormBean"
+scope="request" 
+input="/forms/order-form.jsp">
+<forward name="success" 
+path="/WEB-INF/results/order-confirmation.jsp"/>
+</action>
+</action-mappings>
+<message-resources parameter="MessageResources"/>
+<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+<set-property
+property="pathnames"
+value="/WEB-INF/validator-rules.xml, /WEB-INF/validation.xml"/>
+</plug-in>25 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Step 2: Edit Properties File
+(MessageResources.properties)
+# -- Custom messages for this application --
+inputForm.firstName=First name
+inputForm.lastName=Last name
+inputForm.address=Postal address
+inputForm.zipCode=5-digit ZIP Code
+inputForm.creditCardNumber=Credit card number
+inputForm.email=Email address
+# -- Standard errors --
+errors.header=<UL>
+errors.prefix=<LI><B><FONT COLOR="RED">
+errors.suffix=</FONT></B></LI>
+errors.footer=</UL>
+# -- validator --
+errors.invalid={0} is invalid.
+errors.maxlength={0} cannot be greater than {1} characters.
+errors.minlength={0} cannot be less than {1} characters.
+errors.range={0} is not in the range {1} through {2}.
+errors.required={0} is required.
+...
+26 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Step 3: Put Validation Rules in 
+validation.xml
+<formset>
+<form name="orderFormBean">
+<field property="firstName"
+depends="required">
+<arg0 key="inputForm.firstName"/> 
+</field>
+…
+<field property="zipCode"
+depends="required,mask">
+<arg0 key="inputForm.zipCode"/> 
+<var>
+<var-name>mask</var-name>
+<var-value>^\d{5}$</var-value>
+</var>
+</field>
+<field property="creditCardNumber"
+depends="required,creditCard">
+<arg0 key="inputForm.creditCardNumber"/> 
+</field>
+… </form></formset>27 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Step 4: Have Form Bean Extend 
+ValidatorForm
+package coreservlets;
+import org.apache.struts.validator.*;
+public class OrderFormBean extends ValidatorForm {
+private String firstName = "";
+…
+public String getFirstName() {
+return(firstName);
+}
+public void setFirstName(String firstName) {
+this.firstName = firstName;
+}
+…
+}
+28 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Steps 5 & 6: Output <html:errors/> 
+and Enable JavaScript validation
+…
+<%@ taglib uri="http://struts.apache.org/tags-html" 
+prefix="html" %>
+<html:errors/>
+<html:form action="/actions/order"
+onsubmit="return validateOrderFormBean(this);">
+First name: <html:text property="firstName"/><BR>
+Last name: <html:text property="lastName"/><BR>
+Mailing address: <html:text property="address"/><BR>
+ZIP Code: <html:text property="zipCode"/><BR>
+Credit Card Number: 
+<html:text property="creditCardNumber"/><BR>
+Email address for confirmation: 
+<html:text property="email"/><BR>
+<html:submit value="Order Now!"/>
+</html:form>
+<html:javascript formName="orderFormBean"/>
+…29 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Other Validator Capabilities
+• More predefined validators
+– required
+– mask
+• Note that the associated message property name is errors.invalid, 
+not errors.mask. See the "msg" entry in validator-rules.xml
+– intRange, floatRange, doubleRange (note uppercase "R")
+• Note that associated error message is "range"
+– maxlength, minlength (note lowercase "l")
+– integer, float, double, long, short, byte
+– date
+– creditCard
+– email
+– url
+• Specific guidance on using these
+– http://struts.apache.org/userGuide/dev_validator.html
+30 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Combining Manual and 
+Automatic Validation
+• Automatic validators do generic checks
+– Email address, URL, credit card, missing, etc.
+• The validate method does application-specific 
+checks
+– That selected health plan was one of available options, etc
+• The validate method must call super.validate
+for this to work
+public ActionErrors validate
+(ActionMapping mapping,
+HttpServletRequest request) {
+ActionErrors errors = 
+super.validate(mapping, request);
+...
+return(errors);
+}31 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Rolling Your own Pluggable 
+Validators
+• Builtin rules not sufficient
+– For example, one field may depend on another
+• You can assign both server-side and client-side 
+code
+• Declare validators in validator-rules.xml
+• Very powerful
+– Can be easily reused throughout your application
+• Not easy!
+– Complicated 
+– Poorly documented
+32 Apache Struts: Validating User Input Automatically www.coreservlets.com
+Summary
+• Modify struts-config.xml
+– List the input form
+– Load the properties file (resource bundle)
+– Enable validator
+• Update the properties file
+– Edit standard error messages
+– List formatting rules for error messages
+– Add custom messages for substitution into error messages
+• Put validation rules in validation.xml
+• Extend ValidatorForm instead of ActionForm
+• Put <html:errors/> in input page
+• Enable JavaScript validation if desired
+– <html:javascript formName="beanName"/>Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Questions?
+Core Servlets & JSP book: www.coreservlets.com
+More Servlets & JSP book: www.moreservlets.com
+Servlet and JSP Training Courses: courses.coreservlets.co
 
+
+
+
+Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Jakarta Struts:
+Manually
+Validating Input
+Struts 1.2 Version
+Core Servlets & JSP book: www.coreservlets.com
+More Servlets & JSP book: www.moreservlets.com
+Servlet/JSP/Struts/JSF Training: courses.coreservlets.com
+Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+For live Struts training, please see 
+JSP/servlet/Struts/JSF training courses at 
+http://courses.coreservlets.com/.
+Taught by the author of Core Servlets and JSP, More 
+Servlets and JSP, and this tutorial. Available at public 
+venues, or customized versions can be held on-site at 
+your organization.5 Apache Struts: Validating User Input Manually www.coreservlets.com
+Overview
+• Distinguishing manual validation from 
+automatic validation
+• Performing validation in the Action
+– Error messages in beans
+• Performing validation in the ActionForm
+– Fixed error messages
+– Error messages with substitution
+– Separate error messages
+6 Apache Struts: Validating User Input Manually www.coreservlets.com
+Options for Form Field 
+Validation
+• Do validation in the Action
+– Most powerful; has access to business logic, DB, etc.
+– May require repetition in multiple Actions
+– Must manually map conditions back to input page
+– Must write validation rules yourself
+• Do validation in the form bean
+– In individual setter methods
+• Not really validation, but can be used to modify values
+– Using the validate method
+• Not quite as powerful
+• Does not require repetition in multiple Actions
+• Will automatically redisplay input page
+• Still requires you to write validation rules yourself
+• Use automatic validator
+– Handles many common cases; includes JavaScript
+– See next lectureSlides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Performing Validation in 
+the Action's 
+execute Method
+8 Apache Struts: Validating User Input Manually www.coreservlets.com
+Struts Flow of Control
+JSP
+Form
+Determine
+Action
+Action
+Choose
+JSP
+Page
+JSP
+request .../SomeForm.jsp
+submit form
+request .../blah.do
+invoke
+execute
+method
+return condition
+forward to return final result
+struts-config.xml
+Populate bean and pass 
+to execute method.
+Use bean:write.
+Use html:form 
+to build form.
+forward to9 Apache Struts: Validating User Input Manually www.coreservlets.com
+Performing Validation in the Action
+• Start normally
+– Cast ActionForm to specific type
+– Call getter methods to retrieve field values
+• For each missing or incorrect value
+– Add an error message to a bean
+• Using the ActionForm bean is easiest
+– Use mapping.findForward to return error code
+• Use struts-config.xml to map the error code 
+back to the input form
+• Use bean:write to output error messages in 
+input form
+– Use filter="false" if error messages contain HTML tags
+10 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Choosing Colors and 
+Font Sizes for Resume
+• Input form
+– Collects three font sizes (title, heading, body)
+– Collects two colors (foreground, background)
+– Uses bean:write to print out error messages
+• Error messages are empty strings by default
+• Remember the taglib entry for the "bean" library
+• ActionForm
+– Represents form data
+– No error checking
+– Contains extra field for storing error messages
+• Action
+– execute method checks if any params are missing. If so:
+• Returns error code
+• Puts warning message in form bean
+• struts-config.xml
+– Maps error code back to input form11 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Input Form
+<CENTER>
+<%@ taglib uri="http://struts.apache.org/tags-html"
+prefix="html" %>
+<%@ taglib uri="http://struts.apache.org/tags-bean"
+prefix="bean" %>
+<html:form action="/actions/showSample">
+<bean:write name="formatFormBean" 
+property="warning" filter="false"/><BR>
+Title size: <html:text property="titleSize"/><BR>
+Heading size: <html:text property="headingSize"/><BR>
+Body text size: <html:text property="bodySize"/><BR>
+Background color: <html:text property="bgColor"/><BR>
+Foreground color: <html:text property="fgColor"/><BR>
+<html:submit value="Show Sample"/>
+</html:form>
+</CENTER>
+12 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: ActionForm
+package coreservlets;
+import org.apache.struts.action.*;
+public class FormatFormBean extends ActionForm {
+private String titleSize = "";
+private String headingSize = "";
+private String bodySize = "";
+private String bgColor = "";
+private String fgColor = "";
+private String warning = "";
+public String getTitleSize() {
+return(titleSize);
+}
+public void setTitleSize(String titleSize) {
+this.titleSize = titleSize;
+}
+...13 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: ActionForm (Continued)
+public String getStyleSheet() {
+return(
+"<STYLE TYPE=\"text/css\">\n" +
+"<!--\n" +
+"H1 { font-size: " + titleSize + "px; }\n" +
+"H2 { font-size: " + headingSize + "px; }\n" +
+"BODY { font-size: " + bodySize + "px;\n" +
+" background-color: " + bgColor + ";\n" +
+" color: " + fgColor + "; }\n" +
+"-->\n" +
+"</STYLE>");
+}
+14 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: ActionForm (Continued)
+public String getWarning() {
+return(warning);
+}
+public void addWarning(String warning) {
+this.warning =
+this.warning + "<B><FONT COLOR=RED>" +
+warning + "!</FONT></B><BR>";
+}
+public boolean isMissing(String value) {
+return((value == null)||(value.trim().equals("")));
+}15 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Action
+public class ShowSampleAction extends Action {
+public ActionForward execute(ActionMapping mapping,
+ActionForm form,
+HttpServletRequest request,
+HttpServletResponse response)
+throws Exception {
+FormatFormBean formatBean = (FormatFormBean)form;
+ActionForward forward = mapping.findForward("success");
+if (formatBean.isMissing(formatBean.getTitleSize())) {
+formatBean.addWarning("Missing Title Size");
+forward = mapping.findForward("missing-data");
+}
+if (formatBean.isMissing(formatBean.getHeadingSize())) {
+formatBean.addWarning("Missing Heading Size");
+forward = mapping.findForward("missing-data");
+}
+…
+return(forward);
+}
+}
+16 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: struts-config.xml
+<struts-config> 
+<form-beans>
+<form-bean name="formatFormBean"
+type="coreservlets.FormatFormBean"/>
+</form-beans>
+<action-mappings>
+<action path="/actions/showSample" 
+type="coreservlets.ShowSampleAction"
+name="formatFormBean"
+scope="request">
+<forward name="success" 
+path="/WEB-INF/results/sample.jsp"/>
+<forward name="missing-data" 
+path="/forms/form1.jsp"/>
+</action>
+</action-mappings>
+</struts-config>17 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Initial Form
+18 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Incomplete Data19 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Rentering Data
+20 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Complete Data21 Apache Struts: Validating User Input Manually www.coreservlets.com
+Variation: Redirecting Instead of 
+Forwarding
+• In the usual scenario, the address listed by <forward ... 
+path="..."/> is accessed by RequestDispatcher.forward
+<action path="..." type="..." name="..."
+scope="request">
+<forward name="..." path="..."/>
+– User sees URL of Action, not of JSP page
+– Data can be request-scoped
+• By specifying redirect="true", you can tell the system 
+to use response.sendRedirect instead
+<action path="..." type="..." name="..."
+scope="session">
+<forward name="..." path="..." redirect="true"/>
+– User sees URL of JSP page
+– Data must be session-scoped
+– You must clear out error messages each time
+22 Apache Struts: Validating User Input Manually www.coreservlets.com
+Redirecting to Input Page
+• Advantages
+– User sees a familiar URL
+• The one that was entered when the form was originally accessed
+– Bookmarks work normally
+• Can bookmark before or after the form is redisplayed. With forwarding, you cannot bookmark the input form once it is 
+redisplayed (since the URL is the .do address of the Action).
+– User can hit reload on input form
+• Disadvantages
+– Requires your data to be session-scoped
+• Per-request data like error messages must be reset each time!
+• Session data is expensive in clustered servers
+– Requires you to add entries to struts-config.xml
+– Does not directly correspond to other validation schemes
+• Using the validate method of the ActionForm
+• Using the automatic validation framework23 Apache Struts: Validating User Input Manually www.coreservlets.com
+Redirecting to Input Page: Example
+• Input form
+– Unchanged except for action address
+• Action
+– Unchanged
+• ActionForm
+– Added code to reset error messages each time
+public class FormatFormBean extends ActionForm {
+...
+public void resetWarning() {
+warning = "";
+}
+public void reset(ActionMapping mapping,
+HttpServletRequest request) {
+resetWarning();
+}
+}
+24 Apache Struts: Validating User Input Manually www.coreservlets.com
+Redirecting to Input Page: Example 
+(Continued)
+• struts-config.xml
+<action path="/actions/showSample2" 
+type="coreservlets.ShowSampleAction"
+name="formatFormBean"
+scope="session">
+<forward name="success" 
+path="/WEB-INF/results/sample.jsp"/>
+<forward name="missing-data" 
+path="/forms/form2.jsp"
+redirect="true"/>
+</action>25 Apache Struts: Validating User Input Manually www.coreservlets.com
+Redirecting to Input Page: Example 
+(Results)
+Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Performing Validation in 
+the ActionForm's
+validate Method27 Apache Struts: Validating User Input Manually www.coreservlets.com
+Struts Flow of Control
+JSP
+Form
+Determine
+Action
+Action
+Choose
+JSP
+Page
+JSP
+request .../SomeForm.jsp
+submit form
+request .../blah.do
+invoke
+execute
+method
+return condition
+forward to return final result
+struts-config.xml Populate bean. Call 
+validate. If non-empty 
+result, interrupt process 
+and forward to input 
+page. Otherwise pass to 
+execute method.
+Use bean:write.
+Use html:form 
+to build form.
+forward 
+to
+28 Apache Struts: Validating User Input Manually www.coreservlets.com
+Performing Validation in the 
+ActionForm
+• Create an ActionForm method called validate
+– If no errors, return null or an empty ActionErrors object
+– For each error, add ActionMessage entries to ActionErrors
+• ActionErrors.add takes a name and an ActionMessage
+• ActionMessage constructor takes key
+– Key corresponds to entry in a property file
+– Or, supply extra value of false to supply error message directly
+– If you return a non-empty ActionErrors object, the system will 
+automatically forward user to the input form
+• Page listed by input attribute of action in struts-config.xml
+• Create a property file with error messages
+– Property names should match keys used in ActionMessage
+– Also define how multiple error messages are output
+– Use struts-config to declare properties file
+• Use <html:errors/> in input form
+– Prints list of all error messages. Empty if no errors.
+• No validation logic needed in Action29 Apache Struts: Validating User Input Manually www.coreservlets.com
+The validate Method
+public ActionErrors validate(ActionMapping mapping,
+HttpServletRequest request) {
+ActionErrors errors = new ActionErrors();
+if (isSomeProblem(getSomeProperty())) {
+errors.add("someName",
+new ActionMessage("some.key"));
+errors.add("someOtherName",
+new ActionMessage("actual message", false));
+}
+...
+return(errors);
+}
+30 Apache Struts: Validating User Input Manually www.coreservlets.com
+Specifying Input Page in 
+struts-config.xml
+<action path="/somePath/someActionName" 
+type="somePackage.SomeClass"
+name="someFormBean"
+scope="request" 
+input="/somePath/original-form.jsp">31 Apache Struts: Validating User Input Manually www.coreservlets.com
+Preventing Validation
+• The same bean might be used with multiple actions
+• What if some actions want validation to occur, and 
+others do not?
+• Solution: specify validate="false" (in struts-config.xml) 
+for actions that do not want validation
+– true is the default
+<action path="..." 
+type="somePackage.SomeClass"
+name="someFormBean"
+scope="request" 
+input="/somePath/original-form.jsp"
+validate="false">
+<forward name="..." path"..."/>
+</action>
+32 Apache Struts: Validating User Input Manually www.coreservlets.com
+Properties File
+# -- Standard errors --
+errors.header=<UL>
+errors.prefix=<LI><B><FONT COLOR="RED">
+errors.suffix=</FONT></B></LI>
+errors.footer=</UL>
+# -- Custom validation messages --
+some.key=Some Message
+some.other.key=Some Other Message33 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Choosing Colors and 
+Font Sizes for Resume (Take 2)
+• Input form
+– Collects three font sizes (title, heading, body) – Collects two colors (foreground, background) – Uses <html:errors/> to print out error messages
+• Error message list is empty by default
+• ActionForm
+– Represents form data – The validate method checks if any params are missing. If so:
+• Creates ActionMessage keyed to name from properties file
+• Adds ActionMessage to the ActionErrors that is returned
+• Action
+– No validation code
+• struts-config.xml
+– Lists path to input form
+34 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: ActionForm
+package coreservlets;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+public class FormatFormBean extends ActionForm {
+private String titleSize = "";
+private String headingSize = "";
+private String bodySize = "";
+private String bgColor = "";
+private String fgColor = "";
+public String getTitleSize() {
+return(titleSize);
+}
+public void setTitleSize(String titleSize) {
+this.titleSize = titleSize;
+}
+...35 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: ActionForm 
+(Continued: validate method)
+public ActionErrors validate(ActionMapping mapping,
+HttpServletRequest request) {
+ActionErrors errors = new ActionErrors();
+if (isMissing(getTitleSize())) {
+errors.add("title",
+new ActionMessage("titleSize.required"));
+}
+if (isMissing(getHeadingSize())) {
+errors.add("heading",
+new ActionMessage("headingSize.required"));
+}
+...
+if (isMissing(getFgColor())) {
+errors.add("fg",
+new ActionMessage("fgColor.required"));
+} else if (getFgColor().equals(getBgColor())) {
+errors.add("fg",
+new ActionMessage("colors.notMatch"));
+}
+return(errors);
+}
+36 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Properties File
+(WEB-INF/classes/MessageResources.properties)
+# -- Standard errors --
+errors.header=<UL>
+errors.prefix=<LI><B><FONT COLOR="RED">
+errors.suffix=</FONT></B></LI>
+errors.footer=</UL>
+# -- Custom validation messages --
+titleSize.required=Title size required.
+headingSize.required=Heading size required.
+bodySize.required=Body text size required.
+bgColor.required=Background color required.
+fgColor.required=Foreground color required.
+colors.notMatch=Foreground and background 
+colors must be different.37 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: struts-config.xml
+<struts-config>
+<form-beans>
+<form-bean name="formatFormBean"
+type="coreservlets.FormatFormBean"/>
+</form-beans>
+<action-mappings>
+<action path="/actions/showSample" 
+type="coreservlets.ShowSampleAction"
+name="formatFormBean"
+scope="request" 
+input="/forms/index.jsp">
+<forward name="success" 
+path="/WEB-INF/results/sample.jsp"/>
+</action>
+</action-mappings>
+<message-resources parameter="MessageResources"
+null="false"/>
+</struts-config>
+38 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Input Form
+...
+<CENTER>
+<%@ taglib uri="http://struts.apache.org/tags-html"
+prefix="html" %>
+<html:errors/>
+<html:form action="/actions/showSample">
+Title size: <html:text property="titleSize"/><BR>
+Heading size: <html:text property="headingSize"/><BR>
+Body text size: <html:text property="bodySize"/><BR>
+Background color: <html:text property="bgColor"/><BR>
+Foreground color: <html:text property="fgColor"/><BR>
+<html:submit value="Show Sample"/>
+</html:form>
+</CENTER>
+...39 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Action
+package coreservlets;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+public class ShowSampleAction extends Action {
+public ActionForward execute(ActionMapping mapping,
+ActionForm form,
+HttpServletRequest request,
+HttpServletResponse response)
+throws Exception {
+return(mapping.findForward("success"));
+}
+}
+40 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Initial Form41 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Incomplete Data
+42 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Rentering Data43 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Complete Data
+44 Apache Struts: Validating User Input Manually www.coreservlets.com
+Using Parameterized Error 
+Messages
+• Benefits
+– Error messages reflect runtime values
+– Less repetition of error messages
+– More meaningful error messages for situations other than 
+missing-data
+• Properties file
+– Insert placeholders for values with {0}, {1}, etc.
+– E.g.: value.required={0} is required.
+• ActionForm
+– Add extra arguments to ActionMessage constructor
+• One argument for each placeholder
+• Up to four separate arguments allowed
+– If more arguments needed, supply an array
+– Perform more complex validation (types of arguments, 
+relationship among values, etc.)45 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: ActionForm 
+(FormatFormBean)
+...public ActionErrors validate(ActionMapping mapping,
+HttpServletRequest request) {
+ActionErrors errors = new ActionErrors();
+if (isMissing(getTitleSize())) {
+errors.add("titleSizeMissing",
+new ActionMessage("value.required",
+"Title size"));
+} else if (!isInt(getTitleSize())) {
+errors.add("titleNotInt",
+new ActionMessage("value.int",
+"title size",
+getTitleSize()));
+}
+...
+if (isMissing(getFgColor())) {
+errors.add("fgColorMissing",
+new ActionMessage("value.required",
+"Foreground color"));
+} else if (getBgColor().equals(getFgColor())) {
+errors.add("colorsIdentical",
+new ActionMessage("colors.match",
+getBgColor()));
+}
+return(errors);
+}
+46 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: ActionForm (Continued)
+private boolean isMissing(String value) {
+return((value == null) || (value.trim().equals("")));
+}
+private boolean isInt(String potentialInt) {
+boolean isInt = true;
+try {
+int x = Integer.parseInt(potentialInt);
+} catch(NumberFormatException nfe) {
+isInt = false;
+}
+return(isInt);
+}47 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Properties File
+(WEB-INF/classes/MessageResources.properties)
+# -- Standard errors --
+errors.header=<UL>
+errors.prefix=<LI><B><FONT COLOR="RED">
+errors.suffix=</FONT></B></LI>
+errors.footer=</UL>
+# -- Custom validation messages --
+value.required={0} is required.
+value.int=Whole number required for {0}; "{1}" 
+is not an integer.
+colors.match=The foreground and background color 
+are both "{0}".
+48 Apache Struts: Validating User Input Manually www.coreservlets.com
+Unchanged Elements
+• Identical to previous example:
+– Input form
+• Still simply uses <html:errors/>
+– Action
+• Still does not need validation logic or a special return value to 
+indicate redisplaying the input form
+– struts-config.xml
+• Still lists the original form as the value of the input 
+attribute of action49 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Initial Form
+50 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Incomplete Data51 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Rentering Data
+52 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Complete Data53 Apache Struts: Validating User Input Manually www.coreservlets.com
+Displaying Separate Error 
+Messages
+• Instead of a list of errors, you can display 
+separate error messages for each field
+• Use <html:errors property="name"/>
+• The name should match the name given when 
+ActionMessage was created
+• Deficiency
+– Not all warnings can be easily done with optional text
+• Turning the background color of table cells to red
+• Changing the text of a prompt
+54 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Properties File 
+(Shorter Messages)
+# -- Standard errors --
+errors.header=
+errors.prefix=<B><FONT COLOR="RED">
+errors.suffix=</FONT></B>
+errors.footer=
+# -- Custom validation messages --
+value.required={0} required.
+value.int=Need int for {0}; "{1}" invalid.
+colors.match=FG and BG are both "{0}".55 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: ActionForm 
+(FormatFormBean Unchanged)
+...
+public ActionErrors validate(ActionMapping mapping,
+HttpServletRequest request) {
+ActionErrors errors = new ActionErrors();
+if (isMissing(getTitleSize())) {
+errors.add("titleSizeMissing",
+new ActionMessage("value.required",
+"Title size"));
+} else if (!isInt(getTitleSize())) {
+errors.add("titleNotInt",
+new ActionMessage("value.int",
+"title size",
+getTitleSize()));
+}
+...
+} else if (getBgColor().equals(getFgColor())) {
+errors.add("colorsIdentical",
+new ActionMessage("colors.match",
+getBgColor()));
+}
+return(errors);
+}
+56 Apache Struts: Validating User Input Manually www.coreservlets.com
+Example: Input Form
+<html:form action="/actions/showSample">
+<TABLE ALIGN="CENTER">
+<TR><TH ALIGN="RIGHT">
+<html:errors property="titleSizeMissing"/>
+<html:errors property="titleNotInt"/>
+<TH>Title size: <html:text property="titleSize"/>
+<TR><TH ALIGN="RIGHT">
+<html:errors property="headingSizeMissing"/>
+<html:errors property="headingNotInt"/>
+<TH>Heading size: <html:text property="headingSize"/>
+<TR><TH ALIGN="RIGHT">
+<html:errors property="bodySizeMissing"/>
+<html:errors property="bodyNotInt"/>
+<TH>Body text size: <html:text property="bodySize"/>
+<TR><TH ALIGN="RIGHT">
+<html:errors property="bgColorMissing"/>
+<html:errors property="colorsIdentical"/>
+<TH>Background color: <html:text property="bgColor"/>
+<TR><TH ALIGN="RIGHT">
+<html:errors property="fgColorMissing"/>
+<TH>Foreground color: <html:text property="fgColor"/>
+<TR><TH><TH><html:submit value="Show Sample"/>
+</TABLE>
+</html:form>57 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Initial Form
+58 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Incomplete Data59 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Rentering Data
+60 Apache Struts: Validating User Input Manually www.coreservlets.com
+Result: Complete Data61 Apache Struts: Validating User Input Manually www.coreservlets.com
+Summary
+• Perform app-specific validation in the Action
+• Put more reusable validation in ActionForm
+– Return non-empty ActionErrors from validate to trigger 
+redisplay of input form
+• Error messages are given as keys
+• Keys match entries in properties file
+– Possibly with parameterized substitution
+• <html:errors/> prints out error messages
+– Usually in a list; sometimes separately
+– Empty string output if no error messages
+• Preview: automatic validation framework
+– Writing code to check for standard cases is tedious
+– What about JavaScript?
+Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Questions?
+Core Servlets & JSP book: www.coreservlets.com
+More Servlets & JSP book: www.moreservlets.com
+Servlet and JSP Training Courses: courses.coreservlets.co
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Jakarta Struts:
+Declarative Exception 
+Handling
+Struts 1.2 Version
+Core Servlets & JSP book: www.coreservlets.com
+More Servlets & JSP book: www.moreservlets.com
+Servlet, JSP, Struts, JSF, and Java Training Courses: 
+courses.coreservlets.com
+Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+For live Struts training, please see 
+JSP/servlet/Struts/JSF training courses at 
+http://courses.coreservlets.com/.
+Taught by the author of Core Servlets and JSP, More 
+Servlets and JSP, and this tutorial. Available at public 
+venues, or customized versions can be held on-site at 
+your organization.4 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Agenda
+• Transferring to custom error pages when 
+various exception types are thrown
+– Global exceptions
+– Per-Action exceptions
+– Standard web.xml approach
+• Using custom exception handlers
+– Declaring
+– Defining
+5 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Idea
+• Programmatic exception handling
+– Explicit try/catch blocks in any code that can throw 
+exception
+– Works well when custom value (i.e., of variable) needed 
+when error occurs
+• Declarative exception handling
+– Entries in struts-config.xml (or web.xml) indicate what 
+pages should be displayed when various errors occur
+<exception key="some.key" 
+type="package.SomeException" 
+path="/WEB-INF/somepage.jsp"/>
+– Works well when custom page needed when error occurs
+– The Struts approach applies only to exceptions thrown by 
+Actions6 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Entries in struts-config.xml
+• exception element with 4 possible attributes
+– key: entry in a resource bundle (properties file) used to 
+build an ActionMessage and that can be output with 
+html:errors. Ignored now: see validation section
+– type: the fully qualified class of the exception. The most 
+specific match is used. Applies only to Actions.
+– path: the address (relative to the Web app) of the error 
+page. Should normally be in WEB-INF.
+– handler: the class that will handle the error. Usually 
+omitted, and default handler used.
+<exception key="errors.null" 
+type="java.lang.NullPointerException" 
+path="/WEB-INF/errors/null.jsp"/>
+• Used within global-exceptions or action
+7 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Three Basic Approaches
+• Give page for specific type of exception
+– Use exception entry in global-exceptions or 
+action
+• Give page for generic Exception
+– Use exception entry in global-exceptions, or
+– Use exception-type entry in web.xml, or use 
+error-page attribute of page directive
+• Advantage of page directive: the exception object is bound, 
+so you can print a backtrace
+• Give custom handler for specific type of 
+exception
+– Use exception entry in global-exceptions or 
+action, and
+– Define subclass of ExceptionHandlerSlides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Handling Specific 
+Exceptions
+9 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 1: Page for 
+NullPointerException
+• struts-config.xml
+<global-exceptions>
+<exception key="some.key" 
+type="java.lang.NullPointerException" 
+path="/WEB-INF/errors/null.jsp"/>
+</global-exceptions>
+• null.jsp
+<!DOCTYPE ...>
+<HTML>
+<HEAD><TITLE>NullPointerException</TITLE></HEAD>
+<BODY BGCOLOR="#FDF5E6">
+<H1>NullPointerException</H1>
+Blah, blah, blah, blah.
+</BODY></HTML>10 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 1: Page for 
+NullPointerException (Bean)
+package coreservlets;
+import org.apache.struts.action.*;
+public class ColorBean extends ActionForm {
+private String foregroundColor, backgroundColor;
+public String getForegroundColor() {
+return(foregroundColor);
+}
+public void setForegroundColor(String fgColor) {
+if (!fgColor.equals("")) {
+foregroundColor = fgColor;
+}
+}
+...
+}
+11 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 1: Page for 
+NullPointerException (Action)
+public class ShowColorsAction extends Action {
+public ActionForward execute(ActionMapping mapping,
+ActionForm form,
+HttpServletRequest request,
+HttpServletResponse response)
+throws Exception {
+ColorBean colorBean = (ColorBean)form;
+String fg = colorBean.getForegroundColor();
+String bg = colorBean.getBackgroundColor();
+if (fg.equals(bg)) {
+colorBean.setForegroundColor("BLACK");
+colorBean.setBackgroundColor("WHITE");
+}
+...
+return(mapping.findForward("success"));
+}
+}12 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 1: Page for 
+NullPointerException (Results)
+13 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 1: Page for 
+NullPointerException (Results)Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Handling Generic 
+Exceptions 
+(Struts-Specific Approach)
+15 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 2: Page for Generic 
+Exception
+• struts-config.xml
+<global-exceptions>
+<exception key="some.key" 
+type="java.lang.NullPointerException" 
+path="/WEB-INF/errors/null.jsp"/>
+<exception key="some.key" 
+type="java.lang.Exception" 
+path="/WEB-INF/errors/error.jsp"/>
+</global-exceptions>
+• null.jsp
+<!DOCTYPE ...>
+<HTML>
+<HEAD><TITLE>Error</TITLE></HEAD>
+<BODY BGCOLOR="#FDF5E6">
+<H1>Error</H1>
+Blah, blah, blah, blah.
+</BODY></HTML>16 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 2: Page for Generic 
+Exception (Action)
+public class ShowColorsAction extends Action {
+public ActionForward execute(ActionMapping mapping,
+ActionForm form,
+HttpServletRequest request,
+HttpServletResponse response)
+throws Exception {
+ColorBean colorBean = (ColorBean)form;
+String fg = colorBean.getForegroundColor();
+String bg = colorBean.getBackgroundColor();
+if (fg.equals(bg)) {
+colorBean.setForegroundColor("BLACK");
+colorBean.setBackgroundColor("WHITE");
+}
+if (bg.equalsIgnoreCase("papayawhip")) {
+throw(new Exception("Bogus background color!"));
+}
+...
+return(mapping.findForward("success"));
+}
+}
+17 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 2: Page for Generic 
+Exception (Result)Slides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Handling Generic 
+Exceptions 
+(Standard Approaches)
+19 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Alternatives Using Standard 
+Servlet/JSP Elements
+• Pages to use for specific HTTP status codes
+– Use the error-code element
+• Within error-page
+• Pages to use when specific uncaught 
+exceptions are thrown
+– Use the exception-type element
+• Within error-page
+• Page-specific error pages
+– Use <%@ page errorPage="Relative URL" %>
+• In individual JSP page, not in web.xml20 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Error Pages and Status Codes
+<web-app...>
+<error-page>
+<error-code>404</error-code>
+<location>/WEB-INF/NotFound.jsp</location>
+</error-page>
+...
+</web-app>
+21 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Error Pages and Status Codes: 
+Result22 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Error Pages and Exceptions: A 
+Dangerous Computation
+package moreservlets;
+/** Exception used to flag particularly onerous
+programmer blunders. Used to illustrate the
+exception-type web.xml element.
+*/
+public class DumbDeveloperException extends Exception {
+public DumbDeveloperException() {
+super("Duh. What was I *thinking*?");
+}
+public static int dangerousComputation(int n)
+throws DumbDeveloperException {
+if (n < 5) {
+return(n + 10);
+} else {
+throw(new DumbDeveloperException());
+}
+}
+}
+23 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Error Pages and Exceptions: A 
+Risky Page
+<!DOCTYPE HTML PUBLIC 
+"-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><TITLE>Risky JSP Page</TITLE></HEAD>
+<BODY BGCOLOR="#FDF5E6">
+<H2>Risky Calculations</H2>
+<%@ page import="moreservlets.*" %>
+<% int n = ((int)(10 * Math.random())); %>
+<UL>
+<LI>n: <%= n %>
+<LI>dangerousComputation(n): 
+<%= DumbDeveloperException.dangerousComputation(n) %>
+</UL>
+</BODY></HTML>24 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Error Pages and Exceptions: 
+Declaring Error Page for DDE
+<web-app...>
+<error-page>
+<exception-type>
+moreservlets.DumbDeveloperException
+</exception-type>
+<location>/WEB-INF/DDE.jsp</location>
+</error-page>
+...
+</web-app>
+25 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Error Pages and Exceptions: 
+WEB-INF/DDE.jsp
+<!DOCTYPE HTML PUBLIC 
+"-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><TITLE>Dumb</TITLE></HEAD>
+<BODY BGCOLOR="#FDF5E6">
+<H2>Dumb Developer</H2>
+We're brain dead. Consider using our competitors.
+</BODY></HTML>26 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Error Pages and Exceptions: 
+Results
+27 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Page-Specific Error Pages: 
+Example
+…<BODY>
+<%@ page errorPage="/WEB-INF/SpeedErrors.jsp" %>
+<TABLE BORDER=5 ALIGN="CENTER">
+<TR><TH CLASS="TITLE">Computing Speed</TABLE>
+<%! 
+private double toDouble(String value) {
+return(Double.parseDouble(value));
+}
+%>
+<% 
+double furlongs = toDouble(request.getParameter("furlongs")); 
+double fortnights = 
+toDouble(request.getParameter("fortnights"));
+double speed = furlongs/fortnights;
+%>
+<UL>
+<LI>Distance: <%= furlongs %> furlongs.
+<LI>Time: <%= fortnights %> fortnights.
+<LI>Speed: <%= speed %> furlongs per fortnight.
+</UL>
+</BODY></HTML>28 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Page-Specific Error Pages: 
+Example (Continued)
+…<BODY>
+<%@ page isErrorPage="true" %>
+<TABLE BORDER=5 ALIGN="CENTER">
+<TR><TH CLASS="TITLE">
+Error Computing Speed</TABLE>
+<P>
+ComputeSpeed.jsp reported the following error:
+<I><%= exception %></I>. This problem occurred in the
+following place:
+<PRE>
+<%@ page import="java.io.*" %>
+<% exception.printStackTrace(new PrintWriter(out)); %>
+</PRE>
+</BODY></HTML>
+29 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Page-Specific Error Pages: ResultsSlides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Custom Exception 
+Handlers
+31 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Using Custom Handlers
+• Extend ExceptionHandler
+– Use execute method, but with two extra arguments 
+(Exception and ExceptionConfig)
+– Give custom behavior (recording error in database, 
+sending email, etc.)
+– Return super.execute in most cases
+• Declare handler in struts-config.xml
+<exception key="some.key" 
+type="pkg.SomeException" 
+handler="pkg.SomeExceptionHandler"
+path="/WEB-INF/somefile.jsp"/>32 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 3: Custom Handler 
+(struts-config.xml)
+<global-exceptions>
+<exception key="some.key" 
+type="java.lang.NullPointerException" 
+path="/WEB-INF/errors/null.jsp"/>
+<exception key="some.key" 
+type="coreservlets.CriticalProblem" 
+handler=
+"coreservlets.CustomExceptionHandler"
+path="/WEB-INF/errors/error.jsp"/>
+<exception key="some.key" 
+type="java.lang.Exception" 
+path="/WEB-INF/errors/error.jsp"/>
+</global-exceptions>
+33 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 3: Custom Handler 
+(Custom Handler)
+package coreservlets;
+import javax.servlet.http.*;
+import org.apache.struts.action.*;
+import org.apache.struts.config.*;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.*;
+import javax.servlet.*;
+public class CustomExceptionHandler extends ExceptionHandler{
+public ActionForward execute(Exception exception,
+ExceptionConfig config,
+ActionMapping mapping,
+ActionForm form,
+HttpServletRequest request,
+HttpServletResponse response)
+throws ServletException {34 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 3: Custom Handler 
+(Custom Handler, Continued)
+try {
+Properties properties = new Properties();
+properties.put("mail.host", "coreservlets.com");
+Session mailSession =
+Session.getDefaultInstance(properties, null);
+MimeMessage mailMessage = new MimeMessage(mailSession);
+mailMessage.setFrom
+(new InternetAddress("errors@some-company.com"));
+mailMessage.setFrom
+(new InternetAddress("hall@coreservlets.com"));
+mailMessage.setSubject("Error in Struts application");
+mailMessage.setText
+("The struts-errors app had a critical problem:\n" +
+" " + exception + "\n\n" +
+"Get your butt out to the office and fix it NOW.");
+Transport.send(mailMessage);
+System.out.println("Sent emergency email.");
+} catch(Exception e) {}
+return(super.execute(exception, config, mapping,
+form, request, response));
+}}
+35 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 3: Custom Handler 
+(Custom Exception Class)
+package coreservlets;
+public class CriticalProblem extends Exception {
+public CriticalProblem(String message) {
+super(message);
+}
+}36 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Example 3: Custom Handler 
+(Action)
+public class ShowColorsAction extends Action {
+public ActionForward execute(ActionMapping mapping,
+ActionForm form,
+HttpServletRequest request,
+HttpServletResponse response)
+throws Exception {
+ColorBean colorBean = (ColorBean)form;
+String fg = colorBean.getForegroundColor();
+String bg = colorBean.getBackgroundColor();
+if (fg.equals(bg)) {
+colorBean.setForegroundColor("BLACK");
+colorBean.setBackgroundColor("WHITE");
+}
+if (bg.equalsIgnoreCase("papayawhip")) {
+throw(new Exception("Bogus background color!"));
+}
+if (Math.random() < 0.1) {
+String message =
+"Database server exploded. Building is burning!";
+throw(new CriticalProblem(message));
+}
+return(mapping.findForward("success"));
+}
+}
+37 Apache Struts: Declarative Exception Handling www.coreservlets.com
+Summary
+• Give page for specific type of exception
+– Use exception entry in global-exceptions or 
+action
+• Give page for generic Exception
+– Use exception entry in global-exceptions, or
+– Use exception-type entry in web.xml, or use 
+error-page attribute of page directive
+• Give custom handler for specific type of 
+exception
+– Use exception entry in global-exceptions or 
+action, and
+– Define subclass of ExceptionHandlerSlides © Marty Hall, http://www.coreservlets.com, books © Sun Microsystems Press 
+Questions?
+Core Servlets & JSP book: www.coreservlets.com
+More Servlets & JSP book: www.moreservlets.com
+Servlet, JSP, Struts, JSF, and Java Training Courses: 
+courses.coreservlets.co
 
 
 
