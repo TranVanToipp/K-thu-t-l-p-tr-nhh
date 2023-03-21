@@ -1,3 +1,14 @@
+<forward name="success" path="/T002">
+	<param name="action">fjs.cs.action.T002</param>
+	<param name="parameterName">t002Bean</param>
+	<param name="parameter">value</param>
+</forward>
+d
+
+
+
+
+
 <form-beans>
 		<form-bean
             name="loginBean"
