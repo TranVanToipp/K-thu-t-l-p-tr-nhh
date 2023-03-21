@@ -1,10 +1,40 @@
-<forward name="success" path="/T002">
-	<param name="action">fjs.cs.action.T002</param>
-	<param name="parameterName">t002Bean</param>
-	<param name="parameter">value</param>
-</forward>
-d
-
+<form-beans>
+		<form-bean
+            name="loginBean"
+            type="fjs.cs.bean.LoginBean"/>
+	</form-beans>
+	<global-forwards>
+        <forward
+        	name="T001"
+        	path="/pages/T001.jsp"/>
+        
+    </global-forwards>
+    <action-mappings>
+            <!-- Default "Welcome" action -->
+            <!-- Forwards to Welcome.jsp -->
+        <action
+        	input="/pages/T001.jsp"
+           	path="/T001"
+            type="fjs.cs.action.T001"
+            validate="true"
+            name="loginBean"
+			scope="request">
+            <forward name="success" path="/pages/T002.jsp">
+				<param name="action">fjs.cs.action.T002</param>
+				<param name="parameterName">t002Bean</param>
+				<param name="parameter">value</param>
+			</forward>
+            <forward name="fail" path="/pages/T001.jsp"/>
+        </action>
+        
+        <action
+        	path="/T002"
+        	type="fjs.cs.action.T002"
+        	scope="request"
+        	name="t002Bean">
+        	<forward name="success" path="/T002.do"/>
+        </action>
+</action-mappings>  
 
 
 
