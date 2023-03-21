@@ -1,3 +1,7 @@
+[fjs.cs.bean.SearchBean@55b6d23e, fjs.cs.bean.SearchBean@5f106f75, fjs.cs.bean.SearchBean@7fb88b8c, fjs.cs.bean.SearchBean@718b359e, fjs.cs.bean.SearchBean@124f2eb3, fjs.cs.bean.SearchBean@4e788048, fjs.cs.bean.SearchBean@752786e0, fjs.cs.bean.SearchBean@5da87a1f, fjs.cs.bean.SearchBean@36f9fdaf, fjs.cs.bean.SearchBean@3c0941f8, fjs.cs.bean.SearchBean@75d0c01f, fjs.cs.bean.SearchBean@6bb63438, fjs.cs.bean.SearchBean@125ba864, fjs.cs.bean.SearchBean@64ab3d56, fjs.cs.bean.SearchBean@1788d9e4, fjs.cs.bean.SearchBean@4d4528d9, fjs.cs.bean.SearchBean@212b19d, fjs.cs.bean.SearchBean@3f6e7d04, fjs.cs.bean.SearchBean@6ef8c4f4]
+
+
+
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
 <%@ taglib uri="/tags/struts-html" prefix="html" %>
 <%@ taglib uri="/tags/struts-logic" prefix="logic" %>
