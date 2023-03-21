@@ -1,3 +1,28 @@
+@Override
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+		ActionErrors error = new ActionErrors();
+	    String userID = request.getParameter("USERID"); 
+	    String password = request.getParameter("PASSWORD");
+	    if (userID == "") {
+	    	userID = null;
+	    }
+	    if (password == "") {
+	    	password = null;
+	    }
+	    if (userID == null && password != null) {
+	        error.add("loginError", new ActionMessage("LoginBean.username.required"));
+	    }
+	    if (password == null && userID != null) {
+	        error.add("loginError", new ActionMessage("LoginBean.password.required"));
+	    }
+	    return error;
+	}
+
+
+
+
+
+
 public class T001 extends Action {
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
