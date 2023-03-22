@@ -12,6 +12,21 @@
 
 
 
+<%
+    List<ListData> dataList = (List<ListData>) request.getAttribute("ListData");
+    for (ListData dept : dataList) {
+%>
+    <tr>
+        <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="<%=dept.getCUSTOMER_ID()%>"></td>
+        <td ><a href="/CustomerSystem/T003?id=<%=dept.getCUSTOMER_ID()%>" class = "searchtable-id"> <%=dept.getCUSTOMER_ID()%> </a></td>
+        <td class = "searchtable-name"><%=dept.getCUSTOMER_NAME()%></td>
+        <td class = "searchtable-sex"><%=dept.getSEX()%></td>
+        <td class = "searchtable-birthday"><%=dept.getBIRTHDAY()%></td>
+        <td class = "searchtable-address"><%=dept.getADDRESS()%></td>
+    </tr>
+<%
+    }
+%>
 
 
 
