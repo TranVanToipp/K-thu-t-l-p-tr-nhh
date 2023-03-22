@@ -1,23 +1,88 @@
-<table class="search-container__table">
-    <tr class="search-container__table--tieude">
-        <th class="searchtable-trcheck"><input type="checkbox" id="checkAll" name="checkboxAll" value="" onclick="checkBox(this)"></th>
-        <th class="searchtable-trid">Customer ID</th>
-        <th class="searchtable-trname">Customer Name</th>
-        <th class="searchtable-trsex">Sex</th>
-        <th class="searchtable-trbirthday">Birthday</th>
-        <th class="searchtable-traddress">Address</th>
-    </tr>
-    <c:forEach items="${ListA}" var="dept">
-        <tr>
-            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
-            <td><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class="searchtable-id">${dept.CUSTOMER_ID}</a></td>
-            <td class="searchtable-name">${dept.CUSTOMER_NAME }</td>
-            <td class="searchtable-sex">${dept.SEX}</td>
-            <td class="searchtable-birthday">${dept.BIRTHDAY}</td>
-            <td class="searchtable-address">${dept.ADDRESS}</td>
-        </tr>
-    </c:forEach>
-</table>
+<%@ taglib uri="/tags/struts-bean" prefix="bean" %>
+<%@ taglib uri="/tags/struts-html" prefix="html" %>
+<%@ taglib uri="/tags/struts-logic" prefix="logic" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<style type="text/css">
+  <%@include file="/WEB-INF/css/T001.css"%>
+</style>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/common.css"%>
+</style>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title><bean:message key="login.title"/></title>
+</head>
+<body>
+<div id="main">
+    <div class="header">
+        <h3 class="header-text"><bean:message key="header.customerstruts"/></h3>
+        <div class="header-br"></div>
+    </div>
+    <div class="content">
+        <div class="content-text"><bean:message key="header2.cusomerstruts"/></div>
+
+        <div class="content-login">
+            <form action="/Struts-blank/T001.do" name="frmLogin" method="POST">
+                <div class="content-login__header">
+                    <h3><bean:message key="login.screen"/></h3>
+                    <label id="lblErrorMessage">
+                        <html:errors/>
+                        <%if (request.getAttribute("messageErrorLogin") != null) { %>
+                        	<lable><%=request.getAttribute("messageErrorLogin") %></lable>
+                        <%} %>
+                    </label>
+                </div>
+                <div class="content-login__container">
+                    <div class="form-group">
+                        <label for="fullname" class="form-label form-label__userID"><bean:message key="username.text"/></label>
+                       <%if (request.getAttribute("Password") == null) { %>
+                        	<input id="txtUserID" name="USERID" maxlength="8"
+                               type="text" class="form-control">
+                        <%} %>
+                        <%if (request.getAttribute("Password") != null) { %>
+                        	<input id="txtUserID" name="USERID" maxlength="8"
+                               type="text" value="<%=request.getAttribute("Password") %>" class="form-control">
+                         <%} %>
+                       
+                    </div>
+                    <div class="form-group__password">
+                        <label for="password" class="form-label"><bean:message key="password.text"/></label>
+                      	<%if (request.getAttribute("UserId") == null){ %>
+                        	<input id="txtPassword" name="PASSWORD" type="password" maxlength="8"
+                                class="form-control">
+                        <%} %>
+                        <%if (request.getAttribute("UserId") != null) { %>
+                        	<input id="txtPassword" name="PASSWORD" type="password" maxlength="8"
+                              value="<%=request.getAttribute("UserId") %>"  class="form-control">
+                        <%} %>
+                        
+                    </div>
+                    <div class="form-group__btn">
+                        <button type="submit" id="btnLogin" class="form-submit"><bean:message key="login.button.Login"/></button>
+                        <button type="button" id="btnClear" class="form-submit"><bean:message key="login.button.clear"/></button>
+                    </div>
+                    <c:if test="${not empty errors.loginError}">
+                        <div class="form-group__error">
+                            <c:out value="${errors.loginError}"/>
+                        </div>
+                    </c:if>
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="header-br"></div>
+        <div class="footer-text__copyright"><bean:message key="login.footer"/></div>
+    </footer>
+</div>
+</body>
+<script>
+    <%@include file="/WEB-INF/js/T001.js"%>
+</script>
+</html>
 
 
 
