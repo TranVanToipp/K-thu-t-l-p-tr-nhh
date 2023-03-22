@@ -1,3 +1,101 @@
+
+<html:if condition="${empty requestScope.listDataSearch}">
+<html:if condition="${empty requestScope.ListData}">
+<button id="btnFirst" disabled="true" style="pointer-events: none;">
+<<
+</button>
+<button id="btnPrevious" disabled="true" style="pointer-events: none;">
+<
+</button>
+</html:if>
+
+php
+Copy code
+<html:if condition="${not empty requestScope.ListData}">
+  <logic:equal name="tag" value="1">
+    <button id="btnFirst" disabled="true" style="pointer-events: none;">
+      &lt;&lt;
+    </button>
+    <button id="btnPrevious" disabled="true" style="pointer-events: none;">
+      &lt;
+    </button>
+  </logic:equal>
+  
+  <logic:notEqual name="tag" value="1">
+    <button id="btnFirst">
+      <html:link page="/CustomerSystem/T002">
+        &lt;&lt;
+        <html:param name="index" value="1" />
+      </html:link>
+    </button>
+    <button id="btnPrevious">
+      <html:link page="/CustomerSystem/T002">
+        &lt;
+        <html:param name="index" value="${tag - 1}" />
+      </html:link>
+    </button>
+  </logic:notEqual>
+</html:if>
+</html:if>
+
+<html:if condition="${not empty requestScope.listDataSearch}">
+<lable class="search-container__btnContext--textstart search-container__text_text">Previous</lable>
+</html:if>
+
+<html:if condition="${empty requestScope.listDataSearch}">
+<lable class="search-container__btnContext--textstart search-container__text_text">Previous</lable>
+<html:if condition="${empty requestScope.ListData}">
+<button id="btnNext" disabled="true" style="pointer-events: none;">
+>
+</button>
+<button id="btnPrevious" disabled="true" style="pointer-events: none;">
+>>
+</button>
+</html:if>
+
+php
+Copy code
+<html:if condition="${not empty requestScope.ListData}">
+  <logic:greaterEqual name="tag" value="${endP}">
+    <button id="btnNext" disabled="true" style="pointer-events: none;">
+      &gt;
+    </button>
+    <button id="btnPrevious" disabled="true" style="pointer-events: none;">
+      &gt;&gt;
+    </button>
+  </logic:greaterEqual>
+  
+  <logic:less name="tag" value="${endP}">
+    <button id="btnNext">
+      <html:link page="/CustomerSystem/T002">
+        &gt;
+        <html:param name="index" value="${tag + 1}" />
+      </html:link>
+    </button>
+    <button id="btnPrevious">
+      <html:link page="/CustomerSystem/T002">
+        &gt;&gt;
+        <html:param name="index" value="${endP}" />
+      </html:link>
+    </button>
+  </logic:less>
+</html:if>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <c:choose>
