@@ -1,3 +1,18 @@
+org.apache.jasper.JasperException: An exception occurred processing JSP page [/pages/T002.jsp] at line [43]
+
+40: 	<logic:notEmpty name="ListData">
+41: 	    <logic:iterate name="ListData" id="dept">
+42: 	        <tr>
+43: 	            <td class="searchtable-check"><html:checkbox property="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID' />" /></td>
+44: 	            <td><a href="/CustomerSystem/T003?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
+45: 	            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
+46: 	            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+
+
+
+
+
+
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
 <%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
