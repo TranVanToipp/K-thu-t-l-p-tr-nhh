@@ -5,6 +5,25 @@
 <%@ taglib prefix="s" uri="/struts-tags" %>
 
 
+<%@ taglib prefix="s" uri="/struts-tags" %>
+
+<s:if test="%{empty ListData}">
+    <tr>
+        <td colspan="6" class="searchtable-noresult">No data found</td>
+    </tr>
+</s:if>
+<s:else>
+    <s:iterator value="ListData" var="dept">
+        <tr>
+            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="%{dept.CUSTOMER_ID}"></td>
+            <td><a href="/CustomerSystem/T003?id=%{dept.CUSTOMER_ID}" class="searchtable-id">%{dept.CUSTOMER_ID}</a></td>
+            <td class="searchtable-name">%{dept.CUSTOMER_NAME}</td>
+            <td class="searchtable-sex">%{dept.SEX}</td>
+            <td class="searchtable-birthday">%{dept.BIRTHDAY}</td>
+            <td class="searchtable-address">%{dept.ADDRESS}</td>
+        </tr>
+    </s:iterator>
+</s:else>
 
 
 
