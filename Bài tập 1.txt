@@ -1,12 +1,57 @@
-org.apache.jasper.JasperException: An exception occurred processing JSP page [/pages/T002.jsp] at line [43]
-
-40: 	<logic:notEmpty name="ListData">
-41: 	    <logic:iterate name="ListData" id="dept">
-42: 	        <tr>
-43: 	            <td class="searchtable-check"><html:checkbox property="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID' />" /></td>
-44: 	            <td><a href="/CustomerSystem/T003?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
-45: 	            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
-46: 	            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+<%if (request.getAttribute("listDataSearch") == null) {%>
+			<%
+				if (request.getAttribute("ListData") == null) {
+			%>
+					<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+					<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+			<%
+				}
+			%>
+			<%
+				if (request.getAttribute("ListData") != null) {
+			%>
+				<c:if test="${tag == 1}">				
+					<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+					<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+				</c:if>
+				<c:if test="${tag > 1 }">	
+					<button id = "btnFirst"><a href="/CustomerSystem/T002?index=<%=1 %>"><<</a></button>			
+					<button id = "btnPrevious"><a href="/CustomerSystem/T002?index=${tag-1}"><</a></button>
+				</c:if>
+			<%
+				}
+			%>
+			
+			
+			<lable class = "search-container__btnContext--textstart search-container__text_text">Previous</lable>
+		</div>
+		
+		<div class = "search-container__btnContext--end">
+			<lable class = "search-container__btnContext--textend search-container__text_text">Next</lable>
+			<%
+				if (request.getAttribute("ListData") == null) {
+			%>
+				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+			<%
+				}
+			%>
+			<%
+				if (request.getAttribute("ListData") != null) {
+				int endP = (Integer) request.getAttribute("endP"); 
+			%>
+			<c:if test="${tag >= endP}">			
+				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+			</c:if>
+			<c:if test="${tag < endP}">			
+				<button id = "btnNext" ><a href="/CustomerSystem/T002?index=${tag+1}">></a></button>
+				<button id="btnPrevious"><a href="/CustomerSystem/T002?index=<%= endP %>">>></a></button>
+			</c:if>		
+			<%
+				}
+			%>
+		<%} %>
 
 
 
