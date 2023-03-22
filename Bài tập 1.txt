@@ -1,4 +1,14 @@
- <c:choose>
+<%@ taglib uri="/tags/struts-bean" prefix="bean" %>
+<%@ taglib uri="/tags/struts-html" prefix="html" %>
+<%@ taglib uri="/tags/struts-logic" prefix="logic" %>
+
+
+
+
+
+
+
+<c:choose>
         <c:when test="${empty ListData}">
             <tr>
                 <td colspan="6" class="searchtable-noresult">No data found</td>
