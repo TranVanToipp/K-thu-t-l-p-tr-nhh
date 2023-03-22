@@ -1,5 +1,22 @@
-<%@ page import="java.util.List" %>
-<%@ page import="package_name.ListData" %>
+ <c:choose>
+        <c:when test="${empty ListData}">
+            <tr>
+                <td colspan="6" class="searchtable-noresult">No data found</td>
+            </tr>
+        </c:when>
+        <c:otherwise>
+            <c:forEach items="${ListData}" var="dept">
+                <tr>
+                    <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+                    <td><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class="searchtable-id">${dept.CUSTOMER_ID}</a></td>
+                    <td class="searchtable-name">${dept.CUSTOMER_NAME}</td>
+                    <td class="searchtable-sex">${dept.SEX}</td>
+                    <td class="searchtable-birthday">${dept.BIRTHDAY}</td>
+                    <td class="searchtable-address">${dept.ADDRESS}</td>
+                </tr>
+            </c:forEach>
+        </c:otherwise>
+    </c:choose>
 
 
 
