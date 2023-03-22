@@ -1,3 +1,33 @@
+<table class="search-container__table">
+    <tr class="search-container__table--tieude">
+        <th class="searchtable-trcheck"><input type="checkbox" id="checkAll" name="checkboxAll" value="" onclick="checkBox(this)"></th>
+        <th class="searchtable-trid">Customer ID</th>
+        <th class="searchtable-trname">Customer Name</th>
+        <th class="searchtable-trsex">Sex</th>
+        <th class="searchtable-trbirthday">Birthday</th>
+        <th class="searchtable-traddress">Address</th>
+    </tr>
+    <c:forEach items="${ListA}" var="dept">
+        <tr>
+            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
+            <td><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class="searchtable-id">${dept.CUSTOMER_ID}</a></td>
+            <td class="searchtable-name">${dept.CUSTOMER_NAME }</td>
+            <td class="searchtable-sex">${dept.SEX}</td>
+            <td class="searchtable-birthday">${dept.BIRTHDAY}</td>
+            <td class="searchtable-address">${dept.ADDRESS}</td>
+        </tr>
+    </c:forEach>
+</table>
+
+
+
+
+
+
+
+
+
+
 public class T002 extends Action {
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
