@@ -1,11 +1,46 @@
-ActionErrors errors = new ActionErrors();
-errors.add(ActionErrors.GLOBAL_ERROR, new ActionError("error.message"));
-saveErrors(request, errors);
-return mapping.findForward("error");
+重大: Parse Error at line 222 column 17: 要素タイプ"struts-config"のコンテンツは"(display-name?,description?,data-sources?,form-beans?,global-exceptions?,global-forwards?,action-mappings?,controller?,message-resources*,plug-in*)"と一致する必要があります。
+org.xml.sax.SAXParseException; systemId: file:/C:/Users/toi-tv-ttv/Desktop/CustomerStruts/WEB-INF/struts-config.xml; lineNumber: 222; columnNumber: 17; 要素タイプ"struts-config"のコンテンツは"(display-name?,description?,data-sources?,form-beans?,global-exceptions?,global-forwards?,action-mappings?,controller?,message-resources*,plug-in*)"と一致する必要があります。
 
 
 
-
+<form-beans>
+		<form-bean
+            name="loginBean"
+            type="fjs.cs.bean.LoginBean"/>
+        <form-bean
+        	name="searchBean"
+        	type="fjs.cs.bean.SearchBean"/>
+	</form-beans>
+	<global-forwards>
+        <forward
+        	name="T001"
+        	path="/pages/T001.jsp"/>
+        
+    </global-forwards>
+    <action-mappings>
+            <!-- Default "Welcome" action -->
+            <!-- Forwards to Welcome.jsp -->
+        <action
+        	input="/pages/T001.jsp"
+           	path="/T001"
+            type="fjs.cs.action.T001"
+            validate="true"
+            name="loginBean"
+			scope="request">
+            <forward name="success" path="/T002.do">
+				
+			</forward>
+            <forward name="fail" path="/pages/T001.jsp"/>
+        </action>
+        
+        <action
+        	path="/T002"
+        	type="fjs.cs.action.T002"
+        	scope="request"
+        	name="searchBean">
+        	<forward name="T002" path="/pages/T002.jsp"/>
+        	<forward name="T003" path="/pages/T003.jsp"/>
+        </action>
 
 
 
