@@ -1,6 +1,25 @@
-<%@ taglib uri="/tags/struts-bean" prefix="bean" %>
-<%@ taglib uri="/tags/struts-html" prefix="html" %>
-<%@ taglib uri="/tags/struts-logic" prefix="logic" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-html" prefix="html" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-bean" prefix="bean" %>
+<%@ taglib uri="http://jakarta.apache.org/struts/tags-logic" prefix="logic" %>
+
+<logic:empty name="ListData">
+    <tr>
+        <td colspan="6" class="searchtable-noresult">No data found</td>
+    </tr>
+</logic:empty>
+<logic:notEmpty name="ListData">
+    <logic:iterate name="ListData" id="dept">
+        <tr>
+            <td class="searchtable-check"><html:checkbox property="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID' />" /></td>
+            <td><a href="/CustomerSystem/T003?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
+            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
+            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY' /></td>
+            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS' /></td>
+        </tr>
+    </logic:iterate>
+</logic:notEmpty>
+
 
 <%@ taglib prefix="s" uri="/struts-tags" %>
 
