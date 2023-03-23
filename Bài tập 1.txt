@@ -1,6 +1,13 @@
-<logic:equal name="requestScope" property="dataTo" value="">
-    <html:text property="txtBirthdayToName" styleClass="txtCustomerValidateTO" maxlength="10" />
-</logic:equal>
+<logic:notEqual name="requestScope" property="dataTo" value="" 
+        formName="myForm" scope="request">
+  <logic:notEqual name="requestScope" property="birthDayToTo" value="" 
+          formName="myForm" scope="request">
+    <html:text property="txtBirthdayToName" 
+               styleClass="txtCustomerValidateTO" maxlength="10" 
+               styleId="txtBirthdayTo"/>
+  </logic:notEqual>
+</logic:notEqual>
+
 
 
 
