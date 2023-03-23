@@ -1,12 +1,11 @@
-<%
-	if (request.getAttribute("messageFrom") != null) {
-%>
-window.onload = function () {		
-	alert('<%=request.getAttribute("messageFrom")%>')
-}
-<%
-	}
-%>
+<logic:notEmpty name="request" property="messageFrom">
+	<script type="text/javascript">
+		window.onload = function() {
+			alert('<bean:write name="request" property="messageFrom" />');
+		};
+	</script>
+</logic:notEmpty>
+
 
 
 
