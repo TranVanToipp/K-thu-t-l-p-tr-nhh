@@ -1,3 +1,19 @@
+<%
+	if (request.getAttribute("messageFrom") != null) {
+%>
+window.onload = function () {		
+	alert('<%=request.getAttribute("messageFrom")%>')
+}
+<%
+	}
+%>
+
+
+
+
+
+
+
 Bean: Thành phần Bean trong Struts 1 được sử dụng để đóng gói dữ liệu từ form và truyền dữ liệu này đến các thành phần xử lý của ứng dụng. Để sử dụng Bean, bạn cần định nghĩa các lớp Bean và đăng ký chúng trong file struts-config.xml. Sau đó, bạn có thể sử dụng các thuộc tính của Bean trong file JSP bằng cách sử dụng đối tượng bean:write.
 
 HTML: Thành phần HTML trong Struts 1 được sử dụng để tạo các trang HTML của ứng dụng web. Struts 1 hỗ trợ các thẻ HTML thông thường như <html>, <head>, <body>, <form>, <input>, <textarea>, vv. để tạo các trang web. Bạn có thể sử dụng các thẻ HTML này trong file JSP bằng cách sử dụng các thẻ struts-html.
