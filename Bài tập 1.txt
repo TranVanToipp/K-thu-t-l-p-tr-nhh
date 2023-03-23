@@ -1,18 +1,15 @@
-<%
-	if (request.getAttribute("ListData") != null) {
-	int endP = (Integer) request.getAttribute("endP"); 
-	%>
-	<c:if test="${tag >= endP}">			
-	<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
-	<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
-	</c:if>
-	<c:if test="${tag < endP}">			
-	<button id = "btnNext" ><a href="/CustomerSystem/T002?index=${tag+1}">></a></button>
-	<button id="btnPrevious"><a href="/CustomerSystem/T002?index=<%= endP %>">>></a></button>
-	</c:if>		
-	<%
-	}
-	%>
+<logic:notEmpty name="requestScope" property="ListData">
+	<c:set var="endP" value="${requestScope.endP}"/>
+	<logic:equal name="requestScope" property="tag" value="${endP}">
+		<button id="btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+		<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+	</logic:equal>
+	<logic:notEqual name="requestScope" property="tag" value="${endP}">
+		<button id="btnNext"><a href="/CustomerSystem/T002?index=${tag+1}">></a></button>
+		<button id="btnPrevious"><a href="/CustomerSystem/T002?index=<%= endP %>">>></a></button>
+	</logic:notEqual>
+</logic:notEmpty>
+
 
 
 
