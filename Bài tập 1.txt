@@ -1,7 +1,13 @@
+<%@ taglib prefix="s" uri="/struts-tags" %>
 <logic:notEqual name="tag" value="1">
-<button id = "btnFirst"><a href="/Struts-blank/T002.do?index=<%=1 %>"><<</a></button>			
-<button id = "btnPrevious"><a href="/Struts-blank/T002?index=${tag-1}"><</a></button>
+	<button id="btnFirst">
+		<a href="<s:url action='T002'><s:param name='index' value='1'/></s:url>"><<</a>
+	</button>
+	<button id="btnPrevious">
+		<a href="<s:url action='T002'><s:param name='index' value='%{#tag-1}'/></s:url>"><</a>
+	</button>
 </logic:notEqual>
+
 
 
 
