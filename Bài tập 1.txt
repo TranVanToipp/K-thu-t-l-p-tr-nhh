@@ -1,11 +1,6 @@
-<html:if test="${tag == 1}">
-    <html:button disabled="true" style="pointer-events: none;" id="btnFirst">
-        &lt;&lt;
-    </html:button>
-    <html:button disabled="true" style="pointer-events: none;" id="btnPrevious">
-        &lt;
-    </html:button>
-</html:if>
+<%if (request.getAttribute("dataTo") == null && request.getAttribute("birthDayToTo") == null){%>
+				<input id = "txtBirthdayTo" class = "txtCustomerValidateTO" name = "txtBirthdayToName" maxLength = "10"/>
+			<%} %>
 
 
 
