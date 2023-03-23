@@ -1,10 +1,18 @@
-<logic:notEmpty name="request" property="messageFrom">
-	<script type="text/javascript">
-		window.onload = function() {
-			alert('<bean:write name="request" property="messageFrom" />');
-		};
-	</script>
-</logic:notEmpty>
+private void deleteData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+	    T002Dao daoSearch = new T002Dao();
+	    String[] ids = request.getParameterValues("selectedValues");
+	    if (ids == null) {
+	    	return;
+	    }
+	    if (ids != null && ids.length > 0) {
+	        String idList = String.join(",", ids);
+	        idList = idList.replace("[\"", "").replace("\"]", "");
+	        String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
+	        String[] result2 = result.split(",");
+	        daoSearch.deleteData(result2);
+            return; 
+	    }
+	}
 
 
 
