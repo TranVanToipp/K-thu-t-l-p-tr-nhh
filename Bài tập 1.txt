@@ -1,3 +1,14 @@
+request.setAttribute("tag", index);
+
+
+<logic:notEqual name="tag" value="1">
+<button id = "btnFirst"><a href="/Struts-blank/T002.do?index=<%=1 %>"><<</a></button>
+<c:set var="tag" value="${tag}"/>			
+<button id = "btnPrevious"><a href="/Struts-blank/T002?index=${tag-1}"><</a></button>
+</logic:notEqual>
+
+
+
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <logic:notEqual name="tag" value="1">
 	<button id="btnFirst">
