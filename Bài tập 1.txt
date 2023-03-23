@@ -1,4 +1,7 @@
-alert('<bean:message key="MESSAGE_ERROR_FROM"/>');
+<c:if test="${tag == 1}">				
+<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+</c:if>
 
 
 
