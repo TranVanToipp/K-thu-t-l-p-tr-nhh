@@ -1,19 +1,4 @@
-private void deleteData(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-	    T002Dao daoSearch = new T002Dao();
-	    String[] ids = request.getParameterValues("selectedValues");
-	    if (ids == null) {
-	    	return;
-	    }
-	    if (ids != null && ids.length > 0) {
-	        String idList = String.join(",", ids);
-	        idList = idList.replace("[\"", "").replace("\"]", "");
-	        String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
-	        String[] result2 = result.split(",");
-	        daoSearch.deleteData(result2);
-            return; 
-	    }
-	}
-
+alert('<bean:message key="MESSAGE_ERROR_FROM"/>');
 
 
 
