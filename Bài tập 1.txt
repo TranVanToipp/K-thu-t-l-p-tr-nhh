@@ -1,3 +1,14 @@
+<html:if test="${tag == 1}">
+    <html:button disabled="true" style="pointer-events: none;" id="btnFirst">
+        &lt;&lt;
+    </html:button>
+    <html:button disabled="true" style="pointer-events: none;" id="btnPrevious">
+        &lt;
+    </html:button>
+</html:if>
+
+
+
 <c:if test="${tag == 1}">				
 <button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
 <button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
