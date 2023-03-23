@@ -1,15 +1,7 @@
-<logic:notEmpty name="requestScope" property="ListData">
-	<c:set var="endP" value="${requestScope.endP}"/>
-	<logic:equal name="requestScope" property="tag" value="${endP}">
-		<button id="btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
-		<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
-	</logic:equal>
-	<logic:notEqual name="requestScope" property="tag" value="${endP}">
-		<button id="btnNext"><a href="/CustomerSystem/T002?index=${tag+1}">></a></button>
-		<button id="btnPrevious"><a href="/CustomerSystem/T002?index=<%= endP %>">>></a></button>
-	</logic:notEqual>
-</logic:notEmpty>
-
+<logic:notEqual name="tag" value="1">
+<button id = "btnFirst"><a href="/Struts-blank/T002.do?index=<%=1 %>"><<</a></button>			
+<button id = "btnPrevious"><a href="/Struts-blank/T002?index=${tag-1}"><</a></button>
+</logic:notEqual>
 
 
 
