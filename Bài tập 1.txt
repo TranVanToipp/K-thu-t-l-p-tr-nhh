@@ -1,6 +1,7 @@
-<%if (request.getAttribute("dataTo") == null && request.getAttribute("birthDayToTo") == null){%>
-				<input id = "txtBirthdayTo" class = "txtCustomerValidateTO" name = "txtBirthdayToName" maxLength = "10"/>
-			<%} %>
+<logic:equal name="requestScope" property="dataTo" value="">
+    <html:text property="txtBirthdayToName" styleClass="txtCustomerValidateTO" maxlength="10" />
+</logic:equal>
+
 
 
 
