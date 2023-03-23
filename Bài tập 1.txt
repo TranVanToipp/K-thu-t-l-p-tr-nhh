@@ -1,4 +1,4 @@
-request.setAttribute("tag", index);
+	<button id="btnNext"><a href="/Struts-blank/T002.do?index=<%=request.getAttribute("tag")%>">></a></button>d
 
 
 <logic:notEqual name="tag" value="1">
