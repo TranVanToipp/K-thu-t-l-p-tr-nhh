@@ -1,3 +1,10 @@
+Bean: Thành phần Bean trong Struts 1 được sử dụng để đóng gói dữ liệu từ form và truyền dữ liệu này đến các thành phần xử lý của ứng dụng. Để sử dụng Bean, bạn cần định nghĩa các lớp Bean và đăng ký chúng trong file struts-config.xml. Sau đó, bạn có thể sử dụng các thuộc tính của Bean trong file JSP bằng cách sử dụng đối tượng bean:write.
+
+HTML: Thành phần HTML trong Struts 1 được sử dụng để tạo các trang HTML của ứng dụng web. Struts 1 hỗ trợ các thẻ HTML thông thường như <html>, <head>, <body>, <form>, <input>, <textarea>, vv. để tạo các trang web. Bạn có thể sử dụng các thẻ HTML này trong file JSP bằng cách sử dụng các thẻ struts-html.
+
+Logic: Thành phần Logic trong Struts 1 được sử dụng để xử lý các yêu cầu từ người dùng và chuyển hướng các yêu cầu này đến các thành phần xử lý tương ứng của ứng dụng. Logic được định nghĩa trong file struts-config.xml và sử dụng trong các trang JSP bằng cách sử dụng các thẻ struts-logic.
+
+
 
 
 
