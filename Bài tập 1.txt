@@ -18,6 +18,23 @@
 
 
 
+<%@ taglib prefix="logic" uri="/struts-logic" %>
+
+<logic:notEqual name="listDataSearch" value="" scope="request">
+    <logic:notEqual name="ListA" value="" scope="request">
+        <button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
+    </logic:notEqual>
+</logic:notEqual>
+
+<logic:equal name="buttonDelete" value="true" scope="request">
+    <button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
+</logic:equal>
+
+<logic:equal name="listDataSearch" value="" scope="request">
+    <logic:equal name="ListA" value="" scope="request">
+        <button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
+    </logic:equal>
+</logic:equal>
 
 
 
