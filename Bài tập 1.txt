@@ -1,3 +1,13 @@
+ <logic:notEqual name="tag" value="1">
+				<button id = "btnFirst"><a href="/StrutsExample/T002.do?index=<%=1 %>"><<</a></button>
+				<c:set var="tag" value="${tag }"/>			
+				<button id="btnPrevious"><a href="/StrutsExample/T002.do?index=<%= (Integer.parseInt(request.getAttribute("tag").toString()) - 1) %>"><</a></button>
+
+			</logic:notEqual>d
+ 
+ 
+ 
+ 
  /pages/T002.jsp (line: [133], column: [3]) jasper.error.bad.bodycontent.type
  
  
