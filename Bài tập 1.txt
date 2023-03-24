@@ -1,41 +1,29 @@
-<c:choose>
-    <c:when test="${not empty listDataSearch}">
-        <c:forEach items="${listDataSearch}" var="dept">
-            <tr>
-                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
-                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
-                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
-                <td class = "searchtable-sex">${dept.SEX}</td>
-                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
-                <td class = "searchtable-address">${dept.ADDRESS}</td>
-            </tr>
-        </c:forEach>
-    </c:when>
-    <c:when test="${not empty ListA}">
-        <c:forEach items="${ListA}" var="dept">
-            <tr>
-                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
-                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
-                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
-                <td class = "searchtable-sex">${dept.SEX}</td>
-                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
-                <td class = "searchtable-address">${dept.ADDRESS}</td>
-            </tr>
-        </c:forEach>
-    </c:when>
-    <c:otherwise>
-        <c:forEach items="${ListA}" var="dept">
-            <tr>
-                <td class = "searchtable-check"><input type="checkbox" name="checkboxAll" value="${dept.CUSTOMER_ID}"></td>
-                <td ><a href="/CustomerSystem/T003?id=${dept.CUSTOMER_ID}" class = "searchtable-id"> ${dept.CUSTOMER_ID} </a></td>
-                <td class = "searchtable-name">${dept.CUSTOMER_NAME }</td>
-                <td class = "searchtable-sex">${dept.SEX}</td>
-                <td class = "searchtable-birthday">${dept.BIRTHDAY}</td>
-                <td class = "searchtable-address">${dept.ADDRESS}</td>
-            </tr>
-        </c:forEach>
-    </c:otherwise>
-</c:choose>
+<logic:present name="listDataSearch">
+    <logic:iterate id="dept" name="listDataSearch">
+        <tr>
+            <td class="searchtable-check"><html:checkbox name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"/></td>
+            <td><a href="<%=request.getContextPath()%>/CustomerSystem/T003?id=<bean:write name='dept' property='CUSTOMER_ID'/>" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID'/></a></td>
+            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME'/></td>
+            <td class="searchtable-sex"><bean:write name='dept' property='SEX'/></td>
+            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY'/></td>
+            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS'/></td>
+        </tr>
+    </logic:iterate>
+</logic:present>
+
+<logic:notPresent name="listDataSearch">
+    <logic:iterate id="dept" name="ListA">
+        <tr>
+            <td class="searchtable-check"><html:checkbox name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"/></td>
+            <td><a href="<%=request.getContextPath()%>/CustomerSystem/T003?id=<bean:write name='dept' property='CUSTOMER_ID'/>" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID'/></a></td>
+            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME'/></td>
+            <td class="searchtable-sex"><bean:write name='dept' property='SEX'/></td>
+            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY'/></td>
+            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS'/></td>
+        </tr>
+    </logic:iterate>
+</logic:notPresent>
+
 	
 
 
