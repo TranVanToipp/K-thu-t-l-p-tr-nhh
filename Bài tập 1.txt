@@ -1,29 +1,17 @@
-<logic:present name="listDataSearch">
-    <logic:iterate id="dept" name="listDataSearch">
-        <tr>
-            <td class="searchtable-check"><html:checkbox name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"/></td>
-            <td><a href="<%=request.getContextPath()%>/CustomerSystem/T003?id=<bean:write name='dept' property='CUSTOMER_ID'/>" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID'/></a></td>
-            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME'/></td>
-            <td class="searchtable-sex"><bean:write name='dept' property='SEX'/></td>
-            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY'/></td>
-            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS'/></td>
-        </tr>
-    </logic:iterate>
-</logic:present>
+<%
+	Object listDataSearch = request.getAttribute("listDataSearch");
+	Object ListA = request.getAttribute("ListA");
+	%>
+	<%if (request.getAttribute("listDataSearch") == null && request.getAttribute("ListA") == null){ %>
+	<button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
 
-<logic:notPresent name="listDataSearch">
-    <logic:iterate id="dept" name="ListA">
-        <tr>
-            <td class="searchtable-check"><html:checkbox name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"/></td>
-            <td><a href="<%=request.getContextPath()%>/CustomerSystem/T003?id=<bean:write name='dept' property='CUSTOMER_ID'/>" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID'/></a></td>
-            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME'/></td>
-            <td class="searchtable-sex"><bean:write name='dept' property='SEX'/></td>
-            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY'/></td>
-            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS'/></td>
-        </tr>
-    </logic:iterate>
-</logic:notPresent>
 
+	<% }else if (request.getAttribute("buttonDelete") != null) { %>
+	<button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
+
+	<% } else {%>
+	<button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
+	<%} %>
 	
 
 
