@@ -1,3 +1,21 @@
+<logic:notEqual name="tag" value="${endP}">
+</logic:notEqual>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <%@ taglib uri="http://struts.apache.org/tags-bean" prefix="bean"%>
 <%@ taglib uri="http://struts.apache.org/tags-html" prefix="html"%>
 
