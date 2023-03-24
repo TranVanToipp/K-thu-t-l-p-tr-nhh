@@ -1,17 +1,8 @@
-<%
-	Object listDataSearch = request.getAttribute("listDataSearch");
-	Object ListA = request.getAttribute("ListA");
-	%>
-	<%if (request.getAttribute("listDataSearch") == null && request.getAttribute("ListA") == null){ %>
-	<button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
-
-
-	<% }else if (request.getAttribute("buttonDelete") != null) { %>
-	<button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
-
-	<% } else {%>
-	<button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
-	<%} %>
+ /pages/T002.jsp (line: [133], column: [3]) jasper.error.bad.bodycontent.type
+ 
+ 
+ <logic:notEqual name="tag" value="1">
+ </logic:notEqual>
 	
 
 
