@@ -1,15 +1,4 @@
-<logic:notEmpty name="dtoCustomerSex">
-  <logic:present name="form" property="customerSex">
-    <logic:equal name="form" property="customerSex" value="0">
-      <html:option value="0" selected="true">Male</html:option>
-      <html:option value="1">Female</html:option>
-    </logic:equal>
-    <logic:equal name="form" property="customerSex" value="1">
-      <html:option value="0">Male</html:option>
-      <html:option value="1" selected="true">Female</html:option>
-    </logic:equal>
-  </logic:present>
-</logic:notEmpty>
+TLDによると、タグ [option] の属性 [selected] は無効ですd
 
 
 
