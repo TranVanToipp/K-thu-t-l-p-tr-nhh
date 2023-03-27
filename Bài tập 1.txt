@@ -1,3 +1,11 @@
+ <%=request.getAttribute("idUser")%>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  package fjs.cs.action;
 import java.io.IOException;
 import java.sql.SQLException;
