@@ -1,4 +1,10 @@
- <%=request.getAttribute("idUser")%>
+<%
+  Object idUserObj = request.getAttribute("idUser");
+  String idUser = idUserObj == null ? "" : idUserObj.toString();
+%>
+
+<%= idUser %>
+
  
  
  
