@@ -1,3 +1,968 @@
+<%@ taglib uri="/tags/struts-bean" prefix="bean" %>
+<%@ taglib uri="/tags/struts-html" prefix="html" %>
+<%@ taglib uri="/tags/struts-logic" prefix="logic" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page import="javax.servlet.http.HttpServletResponse" %>
+
+<title>Search - Training</title>
+</head>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/common.css"%>
+</style>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/T002.css"%>
+</style>
+<body>
+<style type="text/jsp">
+  <%@include file="/WEB-INF/include/header.jsp"%>
+</style>
+
+<div class = "search-container">
+	<div class = "search-container__dan">
+		<div class = "search-container__text search-container__text_text">
+			Login > Search Customer
+		</div>
+	<div class = "search-container__context">
+				<div class = "search-container__logo">
+				Welcome
+				<logic:notEmpty name="namenamewellcom">
+				    <div class="search-container__logo--wellcomname">
+				        <%= " " + session.getAttribute("namenamewellcom") %>
+				    </div>
+				</logic:notEmpty>
+				</div>
+			<a href = "/Struts-blank/pages/T001.jsp" class = "search-container__logout search-container__text_text" onclick = "Logout() ">
+    			Log Out
+			</a>
+	</div>
+	
+	<div class = "search-container__line"></div>
+	
+	
+<form id = "form-Search" action ="/Struts-blank/T002.do" method = "POST" >
+	<div class = "search-container__handalSearch">
+		<div class = "search-container__handalSearch--margin handalSearch-customerName">
+			<div class = "handalSearch-customercommon handalSearch-customerName__text search-container__text_text">Customer Name</div>
+			<%if (request.getAttribute("nameSearch") != null){ %>
+				<input id = "txtCustomerName" name = "CUSTOMER_NAME" value ="<%=request.getAttribute("nameSearch")%>" maxLength = "50"/>
+			<%} %>
+			<%if (request.getAttribute("nameSearch") == null){ %>
+				<input id = "txtCustomerName" name = "CUSTOMER_NAME" maxLength = "50"/>
+			<%} %>
+		</div>
+		
+		<%if (request.getAttribute("sexSearch") == null) { %>
+		<div class = "search-container__handalSearch--margin handalSearch-customerSex">
+			<div class = "handalSearch-customercommon handalSearch-customerSex__text search-container__text_text">Sex</div>
+			<select name="SEX" value = "1" id = "cboSex">
+				<option value=""></option>
+		      	<option value="0">Male</option>
+		     	<option value="1">Female</option>
+			</select>
+		</div>
+		<%} %>
+		<%if (request.getAttribute("sexSearch") != null) { %>
+			<div class="search-container__handalSearch--margin handalSearch-customerSex">
+			  <div class="handalSearch-customercommon handalSearch-customerSex__text search-container__text_text">Sex</div>
+			  <select name="SEX" id="cboSex">
+			    <option value=""></option>
+			    <option value="0" <% if(request.getAttribute("sexSearch")!=null && request.getAttribute("sexSearch").equals("0")){ %>selected<% } %>>Male</option>
+			    <option value="1" <% if(request.getAttribute("sexSearch")!=null && request.getAttribute("sexSearch").equals("1")){ %>selected<% } %>>Female</option>
+			  </select>
+			</div>
+		<%} %>
+		
+		<div class = "search-container__handalSearch--margin handalSearch-BirthdayFrom">
+			<div class = "handalSearch-customercommon handalSearch-BirthdayFrom__text search-container__text_text">Birthday</div>
+			
+			<%if (request.getAttribute("birthdayFromSearch") != null && request.getAttribute("birthDayFromFrom") == null){%>
+			<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<%=request.getAttribute("birthdayFromSearch")%>" name = "txtBirthdayFromName"  maxLength = "10"/>
+			<%} %>
+			
+			<%if (request.getAttribute("dataFrom") == null && request.getAttribute("birthDayFromFrom") == null && request.getAttribute("birthdayFromSearch") == null){%>
+			<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" name = "txtBirthdayFromName"  maxLength = "10"/>
+			<%} %>
+			
+			<%if (request.getAttribute("birthDayFromFrom") != null){%>
+			<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<%=request.getAttribute("birthDayFromFrom")%>" name = "txtBirthdayFromName"  maxLength = "10"/>
+			<%} %>
+			<lable class = "handalSearch-BirthdayFrom__ngangcach">～</lable>
+			<%if (request.getAttribute("dataTo") == null && request.getAttribute("birthDayToTo") == null){%>
+				<input id = "txtBirthdayTo" class = "txtCustomerValidateTO" name = "txtBirthdayToName" maxLength = "10"/>
+			<%} %>
+			
+			<%if (request.getAttribute("dataTo") != null) { %>
+				<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<%=request.getAttribute("dataTo")%>" name = "txtBirthdayFromName"  maxLength = "10"/>
+			<%} %>
+			
+			<%if (request.getAttribute("birthDayToTo") != null){%>
+				<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<%=request.getAttribute("birthDayToTo")%>" name = "txtBirthdayFromName"  maxLength = "10"/>
+			<%} %>
+		</div>
+		
+		<div class = "handalSearch-btnSearch">
+			<button type = "submit" id = "btnSearch">Search</button>
+		</div>
+	</div>
+
+	
+	<div class = "search-container__btnContext--chuyenhuong">
+		<div class = "search-container__btnContext--start">
+	<logic:empty name="ListSearch">
+		<logic:empty name="ListData">
+			<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+			<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+		</logic:empty>
+		<logic:notEmpty name = "ListData">
+			<logic:equal name="tag" value="1">
+				<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+				<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+			</logic:equal>
+			<%
+				String tag = String.valueOf(request.getAttribute("tag"));
+				String endP = String.valueOf(request.getAttribute("endP"));
+			%>
+			<%if (Integer.parseInt(tag) > 1 && Integer.parseInt(tag) <= Integer.parseInt(endP)) { %>
+				<button id = "btnFirst"><a href="/Struts-blank/T002.do?index=<%=1 %>"><<</a></button>		
+				<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%= (Integer.parseInt(request.getAttribute("tag").toString()) - 1) %>"><</a></button>
+			<%} %>
+		</logic:notEmpty>
+		<lable class = "search-container__btnContext--textstart search-container__text_text">Previous</lable>
+	</div>
+	
+	<div class = "search-container__btnContext--end">
+		<lable class = "search-container__btnContext--textend search-container__text_text">Next</lable>
+		<logic:empty name="ListData">
+			<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+			<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+		</logic:empty>
+		<logic:notEmpty name="ListData">
+			<%
+				String enadP = String.valueOf(request.getAttribute("endP"));
+				String tagg = String.valueOf(request.getAttribute("tag"));
+				if (Integer.parseInt(tagg) >= Integer.parseInt(enadP)) {
+					%>
+					<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+					<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+				<% }%>
+				<%String listDataSearch = String.valueOf("ListSearch"); %>
+			
+				<%if (Integer.parseInt(tagg) < Integer.parseInt(enadP)) {%>
+					<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%=(Integer.parseInt(request.getAttribute("tag").toString()) + 1) %>">></a></button>
+				    <button id="btnNext"><a href="/Struts-blank/T002.do?index=<%=request.getAttribute("endP")%>">>></a></button>
+				<%} %>
+			
+	</logic:notEmpty>	
+</logic:empty>
+<logic:notEmpty name="ListSearch">
+		<logic:empty name="ListSearch">
+			<button id = "btnFirst" disabled style="pointer-events: none;"><a href="#"><<1</a></button>
+			<button id = "btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+		</logic:empty>
+		<logic:notEmpty name="ListSearch">
+			<%String currentPage = String.valueOf(request.getAttribute("currentPage"));%>
+			<%if (Integer.parseInt(currentPage) == 1) { %>
+				<button id="btnFirst" disabled style="pointer-events: none;"><a href="#"><<</a></button>
+	            <button id="btnPrevious" disabled style="pointer-events: none;"><a href="#"><</a></button>
+			<%} %>
+			<%if (Integer.parseInt(currentPage) > 1) { %>
+				<button id="btnFirst" class="withinput-search" type="submit" onclick="sendPostRequest(1)"><<</button>
+       			<button id="btnPrevious" class="withinput-search" type="submit" onclick="sendPostRequest(<%=(Integer.parseInt(request.getAttribute("currentPage").toString()) - 1)%>)"><</button>
+       			<input name="pagepage" hidden value=""/>
+			<%} %>
+		</logic:notEmpty>
+			<lable class = "search-container__btnContext--textstart search-container__text_text">Previous</lable>
+		</div>
+		<div class = "search-container__btnContext--end">
+			<lable class = "search-container__btnContext--textend search-container__text_text">Next</lable>
+			<logic:empty name="ListSearch">
+				<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+				<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+			</logic:empty>
+			<logic:notEmpty name="ListSearch">
+				<%String currentPage = String.valueOf(request.getAttribute("currentPage"));%>
+				<%String totalPages = String.valueOf(request.getAttribute("totalPages"));%>
+				<%if (Integer.parseInt(currentPage) >= Integer.parseInt(totalPages)) {%>
+					<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+					<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+				<%} %>
+				<%if (Integer.parseInt(currentPage) < Integer.parseInt(totalPages)) {%>
+					<button id="btnNext" class="withinput-search" type="submit" onclick="sendPostRequest(<%=(Integer.parseInt(request.getAttribute("currentPage").toString()) + 1)%>)">></button>
+	            	<button id="btnLast" class="withinput-search" type="submit" onclick="sendPostRequest(<%=totalPages%>)">>></button>
+	            	<input name="pagepage" hidden value=""/>
+				<%} %>
+			</logic:notEmpty>
+	</logic:notEmpty>
+		</div>
+	</div>
+	<table class = "search-container__table">
+        <tr class = "search-container__table--tieude">
+        	<th class = "searchtable-trcheck"><input type="checkbox" id = "checkAll" name="checkboxAll" value="" onclick = "checkBox(this)"></th>
+            <th class = "searchtable-trid">Customer ID</th>
+            <th class = "searchtable-trname">Customer Name</th>
+            <th class = "searchtable-trsex">Sex</th>
+            <th class = "searchtable-trbirthday">Birthday</th>
+            <th class = "searchtable-traddress">Address</th>
+        </tr>
+
+<logic:present name="ListSearch">
+    <logic:iterate id="dept" name="ListSearch">
+        <tr>
+            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"></td>
+            <td><a href="/Struts-blank/T003.do?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
+            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
+            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY' /></td>
+            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS' /></td>
+        </tr>
+    </logic:iterate>
+</logic:present>
+<logic:notPresent name="ListSearch">
+    <logic:iterate name="ListData" id="dept">
+	        <tr>
+	            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"></td>
+	            <td><a href="/Struts-blank/T003.do?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
+	            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
+	            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+	            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY' /></td>
+	            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS' /></td>
+	        </tr>
+	    </logic:iterate>
+</logic:notPresent>
+    </table>
+    <div class = "search-btn__form">
+		<button class = "search-container__nav-btnAddNew">
+			<a href="/Struts-blank/pages/T003.jsp">Add new</a>
+		</button>
+		
+	
+	 <logic:notEmpty name="ListData">
+	 		<button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
+	</logic:notEmpty>
+	
+	<logic:notEmpty name="ListSearch">
+			<button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
+	</logic:notEmpty>
+	
+	
+	<logic:empty name="ListData">
+		<button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
+	</logic:empty>
+	
+	
+
+	<logic:notEmpty name="buttonDelete">
+	    <button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
+	</logic:notEmpty>
+	
+		<logic:empty name="ListData">
+	<logic:empty name="ListSearch" >
+			<button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
+		</logic:empty>
+	</logic:empty>
+		
+    </div>
+	</form>
+	</div>
+	<footer class="footer">
+		<div class="header-br"></div>
+		<div class="footer-text__copyright">Copyright (c) 2000-2008
+			FUJINET, All Rights Reserved.</div>
+	</footer>
+</div>
+</div>
+
+<logic:notEmpty name="dataFrom" >
+<script type="text/javascript">
+	window.onload = function() {
+		alert('<bean:message key="MESSAGE_ERROR_FROM"/>');
+	};
+</script>
+</logic:notEmpty>
+
+<logic:notEmpty name="dataTo">
+<script type="text/javascript">
+	window.onload = function () {		
+		alert('<bean:message key="MESSAGE_ERROR_TO"/>');
+	};
+</script>
+</logic:notEmpty>
+
+<logic:notEmpty name="birthDayFromFrom" >
+	<logic:notEmpty name="birthDayToTo">
+		<script type="text/javascript">
+			window.onload = function () {	
+				alert('<bean:message key="MESSAGE_ERROR_FROM_BIGGER_TO"/>');
+			};
+		</script>
+	</logic:notEmpty>
+</logic:notEmpty>
+
+<script>
+	<%@include file="/WEB-INF/js/T002.js"%>
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+package fjs.cs.bean;
+
+
+
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+
+public class SearchBean extends ActionForm {
+public String CUSTOMER_ID, CUSTOMER_NAME, SEX, BIRTHDAY, ADDRESS;
+	
+	public SearchBean() {
+		super();
+	}
+	
+	public SearchBean(String cUSTOMER_ID, String cUSTOMER_NAME, String sEX, String bIRTHDAY, String aDDRESS) {
+		super();
+		CUSTOMER_ID = cUSTOMER_ID;
+		CUSTOMER_NAME = cUSTOMER_NAME; 
+		SEX = sEX;
+		BIRTHDAY = bIRTHDAY;
+		ADDRESS = aDDRESS;
+	}
+
+	public String getCUSTOMER_ID() {
+		return CUSTOMER_ID;
+	}
+
+	public void setCUSTOMER_ID(String cUSTOMER_ID) {
+		CUSTOMER_ID = cUSTOMER_ID;
+	}
+
+	public String getCUSTOMER_NAME() {
+		return CUSTOMER_NAME;
+	}
+
+	public void setCUSTOMER_NAME(String cUSTOMER_NAME) {
+		CUSTOMER_NAME = cUSTOMER_NAME;
+	}
+
+	public String getSEX() {
+		return SEX;
+	}
+
+	public void setSEX(String sEX) {
+		SEX = sEX;
+	}
+
+	public String getBIRTHDAY() {
+		return BIRTHDAY;
+	}
+
+	public void setBIRTHDAY(String bIRTHDAY) {
+		BIRTHDAY = bIRTHDAY;
+	}
+
+	public String getADDRESS() {
+		return ADDRESS;
+	}
+
+	public void setADDRESS(String aDDRESS) {
+		ADDRESS = aDDRESS;
+	}
+	
+	@Override
+	public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+		ActionErrors errors = new ActionErrors();
+		String birthdayFrom = request.getParameter("txtBirthdayFromName");
+		String birthdayTo = request.getParameter("txtBirthdayToName");
+		
+		try {
+			validateDates(mapping, request, birthdayFrom, birthdayTo);
+		} catch (ServletException | IOException e) {
+			e.printStackTrace();
+		}
+		return errors;
+	}
+	
+	
+	private ActionErrors validateDates(ActionMapping mapping, HttpServletRequest request, String birthdayFrom, String birthdayTo) throws ServletException, IOException {
+	    ActionErrors errors = new ActionErrors();
+		if (birthdayFrom != null && !birthdayFrom.isEmpty() && !isValidDate(birthdayFrom)) {
+			errors.add("loginError", new ActionMessage("MESSAGE_ERROR_FROM"));
+	        request.setAttribute("dataFrom", birthdayFrom);
+	    }
+	    if (birthdayTo != null && !birthdayTo.isEmpty() && !isValidDate(birthdayTo)) {
+	    	errors.add("loginError", new ActionMessage("MESSAGE_ERROR_TO"));
+	        request.setAttribute("dataTo", birthdayTo);
+	    }
+	    if (birthdayFrom != null && birthdayTo != null && !birthdayFrom.isEmpty() && !birthdayTo.isEmpty()) {   
+	        if (isValidDate(birthdayFrom) && isValidDate(birthdayTo)) {
+	            String dayFrom = birthdayFrom.replaceAll("/", "");
+	            String dayTo = birthdayTo.replaceAll("/", "");
+	            if (Integer.parseInt(dayTo) < Integer.parseInt(dayFrom)) {
+	            	errors.add("loginError", new ActionMessage("MESSAGE_ERROR_FROM_BIGGER_TO"));
+	            	request.setAttribute("birthDayFromFrom", birthdayFrom);
+	    	        request.setAttribute("birthDayToTo", birthdayTo);
+	            }
+	        }
+	    }
+		return errors;
+	}
+	
+	private boolean isValidDate(String txtDate) {
+	    String rxDatePattern = "^(\\d{4})(\\/|-)(\\d{1,2})(\\/|-)(\\d{1,2})$";
+	    Pattern pattern = Pattern.compile(rxDatePattern);
+	    Matcher matcher = pattern.matcher(txtDate);
+	    if (!matcher.matches()) {
+	        return false;
+	    }
+	    int dtMonth = Integer.parseInt(matcher.group(3));
+	    int dtDay = Integer.parseInt(matcher.group(5));
+	    int dtYear = Integer.parseInt(matcher.group(1));
+	    if (dtMonth < 1 || dtMonth > 12) {
+	        return false;
+	    } else if (dtDay < 1 || dtDay > 31) {
+	        return false;
+	    } else if ((dtMonth == 4 || dtMonth == 6 || dtMonth == 9 || dtMonth == 11) && dtDay == 31) {
+	        return false;
+	    } else if (dtMonth == 2) {
+	        boolean isLeap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+	        if (dtDay > 29 || (dtDay == 29 && !isLeap)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+package fjs.cs.action;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+
+import fjs.cs.bean.SearchBean;
+import fjs.cs.dao.T002Dao;
+
+
+public class T002 extends Action {
+	@Override
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+			try {
+				pagePT(request,mapping);
+				deleteData(request, mapping);
+				SearchBean searchBean = (SearchBean)form;
+				String name = searchBean.getCUSTOMER_NAME();
+				String sex = searchBean.getSEX();
+				String birthdayFrom = request.getParameter("txtBirthdayFromName");
+				String birthdayTo = request.getParameter("txtBirthdayToName");
+				
+			String page2 = request.getParameter("pagepage");
+	        HttpSession session = request.getSession();
+
+	        if (page2 != null && !page2.isEmpty()) {
+	            String sex1 = (String) session.getAttribute("sex");
+	            String birthdayFrom1 = (String) session.getAttribute("birthdayFrom");
+	            String birthdayTo1 = (String) session.getAttribute("birthdayTo");
+	            processSearch(request, response, name, sex1, birthdayFrom1, birthdayTo1, page2);
+	        } else if(name != null && name != ""  || sex != null && sex != "" || birthdayFrom != null && birthdayFrom != "" || birthdayTo != null && birthdayTo != "") {
+	        	page2 = "1";
+	            request.setAttribute("nameSearch", name);
+	            request.setAttribute("sexSearch", sex);
+	            request.setAttribute("birthdayFromSearch", birthdayFrom);
+	            request.setAttribute("birthdayToSearch", birthdayTo);
+	            processSearch(request, response, name, sex, birthdayFrom, birthdayTo, page2);
+	            session.setAttribute("sex", sex);
+	            session.setAttribute("birthdayFrom", birthdayFrom);
+	            session.setAttribute("birthdayTo", birthdayTo);
+	        }
+			return (mapping.findForward("T002"));
+		}catch(Exception e) {
+			e.printStackTrace();
+			return (mapping.findForward("T002"));
+		}
+	}
+	
+	private ActionForward pagePT(HttpServletRequest request, ActionMapping mapping) throws SQLException {
+		String indexPage = request.getParameter("index");
+		if (indexPage == null) {
+			indexPage = "1";
+		}
+		String pages = request.getParameter("page");
+		if (pages == null) {
+			pages= "1";
+		}
+		int page = Integer.parseInt(pages);
+		int index = Integer.parseInt(indexPage);
+		request.setAttribute("tag", index);
+		T002Dao dao = new T002Dao();
+		//get data
+		List<SearchBean> list = null;
+		int count = dao.getDataPage();
+		int endpage = count/15;
+		if (count % 15 != 0) {
+			endpage++;
+		}
+		List<SearchBean> listPage = dao.pagingData(index);
+		request.setAttribute("ListData", listPage);
+		request.setAttribute("endP", endpage);
+		return mapping.findForward("T002");
+	}
+	
+	private void processSearch(HttpServletRequest request, HttpServletResponse response, String name, String sex, String birthdayFrom, String birthdayTo, String page) throws ServletException, IOException {
+	    T002Dao daoSearch = new T002Dao();
+	    List<SearchBean> resultSearch = daoSearch.getDataSearch(name, sex, birthdayFrom, birthdayTo);
+	    int recordsPerPage = 15;
+	    int startIndex = (Integer.parseInt(page) - 1) * recordsPerPage;
+	    int endIndex = startIndex + recordsPerPage;
+	    int totalRecords = resultSearch.size();
+	    int totalPages = (int) Math.ceil((double) totalRecords / recordsPerPage);
+	    List<SearchBean> resultPaginated = resultSearch.subList(startIndex, Math.min(endIndex, totalRecords));
+	    if (resultPaginated.size() == 0) {
+	    	request.setAttribute("buttonDelete", resultPaginated);
+	    }
+	    request.setAttribute("ListSearch", resultPaginated);
+	    request.setAttribute("currentPage", page);
+	    request.setAttribute("recordsPerPage", recordsPerPage);
+	    request.setAttribute("totalRecords", totalRecords);
+	    request.setAttribute("totalPages", totalPages);  
+	}
+	
+	private ActionErrors deleteData(HttpServletRequest request, ActionMapping mapping) throws ServletException, IOException, SQLException {
+	    T002Dao daoSearch = new T002Dao();
+	    ActionErrors errors = new ActionErrors();
+	    String[] ids = request.getParameterValues("selectedValues");
+	    if (ids == null) {	    	
+	    	errors.add("logerError", new ActionMessage("MESSAGE_CHECKOFF"));
+	    	return errors;
+	    }
+	    if (ids != null && ids.length > 0) {
+	        String idList = String.join(",", ids);
+	        idList = idList.replace("[\"", "").replace("\"]", "");
+	        String result = idList.replaceAll("[^\\d,]", "").replace("\"", "");
+	        String[] result2 = result.split(",");
+	        daoSearch.deleteData(result2);
+	    }
+	    return errors;
+	}
+}
+
+
+
+
+
+
+
+
+package fjs.cs.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import fjs.cs.common.DBConnection;
+import fjs.cs.dto.T002Dto;
+
+public class T002Dao {
+	public List<T002Dto> getData() throws SQLException {
+		List<T002Dto> list = new ArrayList<T002Dto>();
+		Connection conn = null;
+		try {
+			String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME,\r\n" + 
+					"CASE WHEN SEX = 0 THEN 'Male' ELSE 'Female' END AS SEX,BIRTHDAY, ADDRESS\r\n" + 
+					"FROM MSTCUSTOMER WHERE DELETE_YMD IS NULL ORDER BY CUSTOMER_ID";
+			conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				T002Dto dataT002 = new T002Dto();
+				dataT002.setCUSTOMER_ID(rs.getString(1));
+				dataT002.setCUSTOMER_NAME(rs.getString(2));
+				dataT002.setSEX(rs.getString(3));
+				dataT002.setBIRTHDAY(rs.getString(4));
+				dataT002.setADDRESS(rs.getString(5));
+				list.add(dataT002);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
+		}
+		return list;
+	}
+	
+	public List<T002Dto> getDataSearch(String name, String sex, String birthdayFrom, String birthdayTo) {
+	    List<T002Dto> listSearch = new ArrayList<T002Dto>();
+	    Connection conn = null;
+	    try {
+	    	String query = "SELECT CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male' else 'Female' end as SEX, BIRTHDAY, ADDRESS \r\n"
+	    	        + "FROM MSTCUSTOMER "
+	    	        + "WHERE DELETE_YMD IS NULL AND 1=1";
+	        if (name != null && !name.isEmpty()) {
+	            query += "AND CUSTOMER_NAME LIKE ? ";
+	        }
+	        if (sex != null && !sex.isEmpty()) {
+	            query += "AND SEX = ? ";
+	        }
+	        if (birthdayFrom != null && !birthdayFrom.isEmpty()) {
+	            query += "AND BIRTHDAY >= ? ";
+	        }
+	        if (birthdayTo != null && !birthdayTo.isEmpty()) {
+	            query += "AND BIRTHDAY <= ? ";
+	        }
+	        query += "ORDER BY CUSTOMER_ID;\r\n";
+	       
+	        conn =  new DBConnection().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        int parameterIndex = 1;
+	        if (name != null && !name.isEmpty()) {
+	            ps.setString(parameterIndex++, "%" + name + "%");
+	        }
+	        if (sex != null && !sex.isEmpty()) {
+	            ps.setString(parameterIndex++, sex);
+	        }
+	        if (birthdayFrom != null && !birthdayFrom.isEmpty()) {
+	            ps.setString(parameterIndex++, birthdayFrom);
+	        }
+	        if (birthdayTo != null && !birthdayTo.isEmpty()) {
+	            ps.setString(parameterIndex++, birthdayTo);
+	        }
+	        ResultSet rs = ps.executeQuery();
+	        while(rs.next()) {
+	            T002Dto dataT002Search = new T002Dto();
+	            dataT002Search.setCUSTOMER_ID(rs.getString(1));
+	            dataT002Search.setCUSTOMER_NAME(rs.getString(2));
+	            dataT002Search.setSEX(rs.getString(3));
+	            dataT002Search.setBIRTHDAY(rs.getString(4));
+	            dataT002Search.setADDRESS(rs.getString(5));
+	            listSearch.add(dataT002Search);
+	        }
+	        conn.close();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return listSearch;
+	}
+	
+	public List<T002Dto> deleteData(String[] selecValue) throws SQLException {
+	    List<T002Dto> listDelete = new ArrayList<T002Dto>();
+	    Connection conn = null;
+	    try {
+	        String query = "UPDATE MSTCUSTOMER "
+	                     + "SET Delete_YMD = CURRENT_TIMESTAMP "
+	                     + "WHERE customer_Id IN (";
+	        for (int i = 0; i < selecValue.length; i++) {
+	        	String[] ids = selecValue[0].split(",");
+	            for (int j = 0; j < ids.length; j++) {
+	                query += "?,";
+	            }
+	        }
+	        query = query.substring(0, query.length() - 1) + ")";
+	        conn = new DBConnection().getConnection();
+	        PreparedStatement ps = conn.prepareStatement(query);
+	        for (int i = 0; i < selecValue.length; i++) {
+	            ps.setLong(i + 1, Long.parseLong(selecValue[i]));
+	        }
+	        ps.executeUpdate();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }finally {
+	    	DBConnection.disconnectDB(conn);
+	    }
+	    return listDelete;
+	}
+	
+	
+	public int getDataPage() throws SQLException {
+		String query = "select count(*) from MSTCUSTOMER where DELETE_YMD IS NULL";
+		Connection conn = null;
+		try {
+			conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				return rs.getInt(1);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
+	    }
+		return 0;
+	}
+	
+	public List<T002Dto> pagingData(int index) throws SQLException {
+		List<T002Dto> list = new ArrayList<>();
+		Connection conn = null;
+		String query = "select CUSTOMER_ID, CUSTOMER_NAME, CASE WHEN SEX = 0 THEN 'Male'"+ 
+				" else 'Female' end as SEX, BIRTHDAY, ADDRESS from MSTCUSTOMER where DELETE_YMD is null order by CUSTOMER_ID "
+				+ "OFFSET ? ROWS FETCH NEXT 15 ROWS ONLY";
+		try {
+			conn = new DBConnection().getConnection();
+			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setInt(1, (index-1)*15);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				T002Dto datapagin = new T002Dto();
+				datapagin.setCUSTOMER_ID(rs.getString(1));
+				datapagin.setCUSTOMER_NAME(rs.getString(2));
+				datapagin.setSEX(rs.getString(3));
+				datapagin.setBIRTHDAY(rs.getString(4));
+				datapagin.setADDRESS(rs.getString(5));
+	            list.add(datapagin);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			DBConnection.disconnectDB(conn);
+	    }
+		return list;
+	}
+	
+}
+
+
+
+
+
+
+
+function deleteRows() {
+	var checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+	var uncheckedCheckboxes = document.querySelectorAll('input[type="checkbox"]:not(:checked)');
+	var selectedValues = [];
+	if (uncheckedCheckboxes.length === 0) {
+		for (var i = 1; i < checkboxes.length; i++) {
+			  selectedValues.push(checkboxes[i].value);
+		}
+	}else if (uncheckedCheckboxes.length !== 0) {
+		for (var i = 0; i < checkboxes.length; i++) {
+			 selectedValues.push(checkboxes[i].value);
+		}
+	}
+	
+	if (selectedValues == "") {
+		alert('<bean:message key="MESSAGE_CHECKOFF"/>');
+		return false;
+	}
+	else {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+		  if (this.readyState == 4 && this.status == 200) {
+			  location.reload();
+		  }
+		};
+		xhttp.open("POST", "/CustomerSystem/T002", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("selectedValues=" + JSON.stringify(selectedValues));
+	}
+	
+} 
+
+function sendPostRequest(page) {
+    var pageInput = document.getElementsByName("pagepage")[0];
+    pageInput.value = page; 
+}
+
+checkBox = (source) => {
+	var checkBoxAll = document.getElementsByName("checkboxAll");
+	for (var i = 0; i < checkBoxAll.length; i++) {
+		checkBoxAll[i].checked = source.checked;
+	}
+}
+
+function sendPostRequest(page) {
+    var pageInput = document.getElementsByName("pagepage")[0];
+    pageInput.value = page; 
+}
+
+
+
+
+
+
+
+var btnClear = document.getElementById("btnClearEdit")
+btnClear.addEventListener('click', (event) => {
+		event.preventDefault();
+		document.getElementById("cboSex").value = "";
+		document.querySelector(".edit-container__content--error").innerHTML = "";
+		document.querySelector(".edit-container__content-IdLable").innerHTML = "";
+		document.querySelector("#txtCustomerName").value = "";
+		document.querySelector("#txtCustomerBirthday").value = "";
+		document.querySelector("#txtCustomerEmail").value = "";
+		document.querySelector("#txaAddress").value = "";
+	});
+
+function Logout() {
+    <% session.removeAttribute("name1"); %>
+    location.reload();
+    window.location.href="T001";
+}
+
+function forgetButon() {
+	var a = document.querySelector(".edit-container__btnContent-Save").innerHTML = "Add New";
+}
+
+<%if (request.getAttribute("messageErrEmail") != null) {%>
+const lblMessage = document.querySelector(".edit-container__content--error");
+	lblMessage.innerHTML = '<%=request.getAttribute("messageErrEmail")%>';
+<%} %>
+
+<%if (request.getAttribute("messageErrBirthDay") != null) {%>
+
+const lblMessage = document.querySelector(".edit-container__content--error");
+lblMessage.innerHTML = '<%=request.getAttribute("messageErrBirthDay")%>';
+
+<%} %>
+
+
+
+
+	
+	
+	 
+	
+
+
+
+
+
+package fjs.cs.action;
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.struts.action.Action;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+
+import fjs.cs.bean.EditBean;
+import fjs.cs.dao.T003Dao;
+
+public class T003 extends Action {
+	@Override
+	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		EditBean editBean = (EditBean)form;
+		String id = request.getParameter("CUSTOMER_ID");
+		String name = editBean.getCUSTOMER_NAME();
+		String sex = editBean.getSEX();
+		String birthday = editBean.getBIRTHDAY();
+		String email = editBean.getEMAIL();
+		String address = editBean.getADDRESS();
+		T003Dao dao = new T003Dao();
+		try {
+			String idUser = request.getParameter("id");
+			if (idUser != null) {
+				EditBean editBean2;
+				editBean2 = dao.getCustomerById(Integer.parseInt(idUser));
+				request.setAttribute("dtoCustomerId", editBean2.getCUSTOMER_ID());
+				request.setAttribute("dtoCustomerName", editBean2.getCUSTOMER_NAME());
+				request.setAttribute("dtoCustomerSex", editBean2.getSEX());
+				request.setAttribute("dtoCustomerBirthDay", editBean2.getBIRTHDAY());
+				request.setAttribute("dtoCustomerEmail", editBean2.getEMAIL());
+				request.setAttribute("dtoCustomerAddress", editBean2.getADDRESS());
+				return mapping.findForward("T003");
+			}
+			
+			HttpSession session = request.getSession();
+	        /**
+	         * Ki盻ノ tra n蘯ｿu id mﾃ� cﾃｳ d盻ｯ li盻㎡ thﾃｬ lﾃ� update
+	         * Ngoﾃ�i ra: id khﾃｴng cﾃｳ d盻ｯ li盻㎡ lﾃ� save
+	         */
+	        int status = 0;
+	        
+	        if (id == null) {
+	        	EditBean dtosave = new EditBean();
+	        	dtosave.setCUSTOMER_NAME(name);
+	        	dtosave.setSEX(sex);
+	        	dtosave.setBIRTHDAY(birthday);
+	        	dtosave.setEMAIL(email);
+	        	dtosave.setADDRESS(address);
+	            status = dao.save(dtosave, session);
+	            
+	        }else if (id != "") {	 
+	        	EditBean dto = new EditBean();
+		        dto.setCUSTOMER_ID(Integer.parseInt(id));
+		        dto.setCUSTOMER_NAME(name);
+		        dto.setSEX(sex);
+		        dto.setBIRTHDAY(birthday);
+		        dto.setEMAIL(email);
+		        dto.setADDRESS(address);
+	        	status = dao.update(dto, session);
+	        	
+	        }
+	        if (status > 0) {
+	        	return mapping.findForward("T002");
+	        }
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return mapping.findForward("T002SU");
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <logic:present name="ListSearch">
     <logic:iterate id="dept" name="ListSearch">
         <tr>
