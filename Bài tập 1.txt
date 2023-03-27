@@ -1,4 +1,24 @@
 <logic:notEmpty name="dtoCustomerSex">
+  <logic:present name="form" property="customerSex">
+    <logic:equal name="form" property="customerSex" value="0">
+      <html:option value="0" selected="true">Male</html:option>
+      <html:option value="1">Female</html:option>
+    </logic:equal>
+    <logic:equal name="form" property="customerSex" value="1">
+      <html:option value="0">Male</html:option>
+      <html:option value="1" selected="true">Female</html:option>
+    </logic:equal>
+  </logic:present>
+</logic:notEmpty>
+
+
+
+
+
+
+
+
+<logic:notEmpty name="dtoCustomerSex">
 <%Object sexEdit = request.getAttribute("dtoCustomerSex"); %>
 <div class = "edit-container__content-Sex edit-container__btnContent-margin">
 	<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
