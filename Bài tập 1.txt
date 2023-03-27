@@ -1,3 +1,19 @@
+<logic:notEmpty name="dtoCustomerSex">
+<%Object sexEdit = request.getAttribute("dtoCustomerSex"); %>
+<div class = "edit-container__content-Sex edit-container__btnContent-margin">
+	<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
+	<select  id="cboSex" name = "SEX">
+	  <option class = "cbooption" value=""></option>
+	  <option class = "cbooption" value="0" <%=sexEdit == "0" ? "selected" : "" %>>Male</option>
+	  <option class = "cbooption" value="1" <%=sexEdit == "1" ? "selected" : "" %>>Female</option>
+	</select>
+</div>
+</logic:notEmpty>
+
+
+
+
+
 <%
   Object idUserObj = request.getAttribute("idUser");
   String idUser = idUserObj == null ? "" : idUserObj.toString();
