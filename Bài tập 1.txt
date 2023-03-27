@@ -1,11 +1,27 @@
-<logic:notEmpty name="dtoCustomerSex">
-<logic:present name="form" property="customerSex">
-<html:select property="customerSex">
-<html:option value="0" <logic:equal name="form" property="customerSex" value="0">selected</logic:equal>>Male</html:option>
-<html:option value="1" <logic:equal name="form" property="customerSex" value="1">selected</logic:equal>>Female</html:option>
-</html:select>
+<logic:present name="ListSearch">
+    <logic:iterate id="dept" name="ListSearch">
+        <tr>
+            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"></td>
+            <td><a href="/Struts-blank/T003.do?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
+            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
+            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY' /></td>
+            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS' /></td>
+        </tr>
+    </logic:iterate>
 </logic:present>
-</logic:notEmpty>
+<logic:notPresent name="ListSearch">
+    <logic:iterate name="ListData" id="dept">
+	        <tr>
+	            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"></td>
+	            <td><a href="/Struts-blank/T003.do?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
+	            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
+	            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+	            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY' /></td>
+	            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS' /></td>
+	        </tr>
+	    </logic:iterate>
+</logic:notPresent>
 
 
 TLDによると、タグ [option] の属性 [selected] は無効ですd
