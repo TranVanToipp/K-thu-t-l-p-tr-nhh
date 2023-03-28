@@ -1,3 +1,20 @@
+<logic:present name="tag" scope="request">
+  <logic:greaterThan value="${tag}" compareValue="1">
+    <logic:lessEqual value="${tag}" compareValue="${endP}">
+      <html:button styleClass="btnFirst" styleId="btnFirst">
+        <a href="/Struts-blank/T002.do?index=1">&lt;&lt;</a>
+      </html:button>
+      <html:button styleClass="btnPrevious" styleId="btnPrevious">
+        <a href="/Struts-blank/T002.do?index=${tag-1}">&lt;</a>
+      </html:button>
+    </logic:lessEqual>
+  </logic:greaterThan>
+</logic:present>
+
+
+
+
+
 <%
 				String tag = String.valueOf(request.getAttribute("tag"));
 				String endP = String.valueOf(request.getAttribute("endP"));
