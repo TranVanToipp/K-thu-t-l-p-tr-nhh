@@ -1,3 +1,12 @@
+<logic:present name="dataFrom" scope="request">
+  <logic:notPresent name="birthDayFromFrom" scope="request">
+    <html:text property="BIRTHDAYFROM" styleClass="txtCustomerValidateFROM" styleId="txtBirthdayForm" maxLength="10" value="${dataFrom}" />
+  </logic:notPresent>
+</logic:present>
+
+
+
+
 <%if (request.getAttribute("dataFrom") != null && request.getAttribute("birthDayFromFrom") == null){%>
 				<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<%=request.getAttribute("dataFrom")%>" name = "BIRTHDAYFROM"  maxLength = "10"/>
 			<%} %>
