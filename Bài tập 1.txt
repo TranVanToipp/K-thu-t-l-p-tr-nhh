@@ -1,6 +1,9 @@
 
 http://localhost:8080/Struts-blank/T003.do?id=146d
 
+String url = mapping.getPath(); // lấy URL của yêu cầu
+String[] urlParts = url.split("/"); // phân tách URL thành các phần
+String id = urlParts[urlParts.length - 1]; // lấy giá trị ID từ URL
 
 
 
