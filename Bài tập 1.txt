@@ -1,8 +1,11 @@
-<logic:present name="dataFrom" scope="request">
-  <logic:notPresent name="birthDayFromFrom" scope="request">
-    <html:text property="BIRTHDAYFROM" styleClass="txtCustomerValidateFROM" styleId="txtBirthdayForm" maxLength="10" value="${dataFrom}" />
-  </logic:notPresent>
-</logic:present>
+<%
+				String tag = String.valueOf(request.getAttribute("tag"));
+				String endP = String.valueOf(request.getAttribute("endP"));
+			%>
+			<%if (Integer.parseInt(tag) > 1 && Integer.parseInt(tag) <= Integer.parseInt(endP)) { %>
+				<button id = "btnFirst"><a href="/Struts-blank/T002.do?index=<%=1 %>"><<</a></button>		
+				<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%= (Integer.parseInt(request.getAttribute("tag").toString()) - 1) %>"><</a></button>				
+			<%} %>
 
 
 
