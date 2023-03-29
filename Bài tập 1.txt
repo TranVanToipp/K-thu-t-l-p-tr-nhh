@@ -1,3 +1,21 @@
+ <%
+				String enadP = String.valueOf(request.getAttribute("endP"));
+				String tagg = String.valueOf(request.getAttribute("tag"));
+				if (Integer.parseInt(tagg) >= Integer.parseInt(enadP)) {
+					%>
+					<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">&gt;</a></button>
+					<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">&gt;&gt;</a></button>
+				<% }%>
+				<%String listDataSearch = String.valueOf("ListSearch"); %>
+				
+				<%if (Integer.parseInt(tagg) < Integer.parseInt(enadP)) {%>
+					<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%=(Integer.parseInt(request.getAttribute("tag").toString()) + 1) %>">&gt;</a></button>
+				    <button id="btnNext"><a href="/Struts-blank/T002.do?index=<%=request.getAttribute("endP")%>">&gt;&gt;</a></button>			   
+				<%} %>
+ 
+ 
+ 
+ 
  <lable for="userId" class = "edit-container__content-IdLable edit-container__headerText" id ="lblCustomerID" name = "lblCustomerID"><bean:write name="idUser"/></lable>
 
 
