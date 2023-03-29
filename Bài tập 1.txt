@@ -1,4 +1,16 @@
- <%
+<%@ taglib prefix="logic" uri="http://struts.apache.org/tags-logic" %>
+
+<logic:lessThan value="<%=tagg%>" compareValue="<%=enadP%>">
+	<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%=Integer.parseInt(request.getAttribute("tag").toString()) + 1 %>">&gt;</a></button>
+	<button id="btnNext"><a href="/Struts-blank/T002.do?index=<%=request.getAttribute("endP")%>">&gt;&gt;</a></button>
+</logic:lessThan>
+
+
+
+
+
+
+<%
 				String enadP = String.valueOf(request.getAttribute("endP"));
 				String tagg = String.valueOf(request.getAttribute("tag"));
 				if (Integer.parseInt(tagg) >= Integer.parseInt(enadP)) {
