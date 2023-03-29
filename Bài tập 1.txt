@@ -1,3 +1,18 @@
+<%
+    // Lấy đối tượng HttpSession
+    HttpSession session = request.getSession();
+    
+    // Xóa thuộc tính "myAttribute" trong session
+    session.removeAttribute("myAttribute");
+    
+    // Hủy session
+    session.invalidate();
+%>
+
+
+
+
+
 <%@ taglib uri="/tags/struts-bean" prefix="bean" %>
 <%@ taglib uri="/tags/struts-html" prefix="html" %>
 <%@ taglib uri="/tags/struts-logic" prefix="logic" %>
