@@ -1,3 +1,11 @@
+<a id="btnPrevious" href="/Struts-blank/T002.do?index=<bean:write name="tag"/>-1">&lt;</a>
+
+
+
+
+
+
+
 <%@ taglib prefix="struts" uri="http://struts.apache.org/tags-struts" %>
 
 <struts:bean id="tagValue" type="java.lang.Integer">
