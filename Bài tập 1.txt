@@ -1,3 +1,11 @@
+ <lable for="userId" class = "edit-container__content-IdLable edit-container__headerText" id ="lblCustomerID" name = "lblCustomerID"><bean:write name="idUser"/></lable>
+
+
+
+
+
+
+
 <logic:notEmpty name="namenamewellcom">
 	<div class = "edit-container__wellcomname">
 		<%="  "+session.getAttribute("namenamewellcom") %>
