@@ -1,3 +1,17 @@
+<%@ taglib prefix="html" uri="http://struts.apache.org/tags-html" %>
+<%@ taglib prefix="struts" uri="http://struts.apache.org/tags-struts" %>
+
+<html:link
+  page="/T002.do"
+  paramId="index"
+  paramValue="<%=Integer.parseInt(request.getAttribute("tag").toString()) - 1%>">
+  &lt;
+</html:link>
+
+
+
+
+
 <a id="btnPrevious" href="/Struts-blank/T002.do?index=<%=Integer.parseInt(request.getAttribute("tag").toString()) - 1%>">&lt;</a>
 
 
