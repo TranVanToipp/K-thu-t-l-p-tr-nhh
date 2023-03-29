@@ -2,7 +2,15 @@
 
 
 
-
+<logic:equal name="tag" value="1" scope="request">
+<button id="btnFirst"><a href="/Struts-blank/T002.do?index=1">>></a></button>
+</logic:equal>
+<logic:greaterThan name="tag" value="1" scope="request">
+<logic:lessEqual name="tag" value="endP" scope="request">
+<button id="btnFirst"><a href="/Struts-blank/T002.do?index=1">>></a></button>
+<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%=Integer.parseInt(request.getAttribute("tag").toString()) - 1%>"><</a></button>
+</logic:lessEqual>
+</logic:greaterThan>
 
 
 
