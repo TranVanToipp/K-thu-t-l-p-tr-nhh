@@ -4,8 +4,16 @@
 	</div>
 </logic:notEmpty>
 
+	<logic:present name="namenamewellcom">
+		<div class="edit-container__wellcomname">
+			<bean:write name="session" property="namenamewellcom" />
+		</div>
+	</logic:present>
+
+
 
 <input hidden type="text" name ="CUSTOMER_ID" id ="userId" value="<bean:write name="dtoCustomerId"/>"/>
+<html:hidden property="CUSTOMER_ID" value="<bean:write name='dtoCustomerId'/>" />
 
 
 
@@ -20,7 +28,15 @@
 			</logic:empty>
 				
 				
-				
+
+
+	<logic:empty name="dtoCustomerId">
+	    <html:hidden property="CUSTOMER_ID" value="<bean:write name='dtoCustomerId'/>"/>
+	    <html:label for="userId" class="edit-container__content-IdLable edit-container__headerText" id="lblCustomerID" name="lblCustomerID"><%= 			request.getAttribute("idUser") %></html:label>
+	</logic:empty>
+
+
+
 				
 <logic:notEmpty name="dtoCustomerSex">
 <%Object sexEdit = request.getAttribute("dtoCustomerSex"); %>
@@ -33,6 +49,17 @@
 	</select>
 </div>
 </logic:notEmpty>
+
+
+	<logic:notEmpty name="dtoCustomerSex">
+    <html:select property="SEX" styleClass="edit-container__content-Sex">
+        <html:option value="" class="cbooption"/>
+		<html:option value="0" class="cbooption" <logic:equal name="dtoCustomerSex" value="0">selected</logic:equal>>Male</html:option>
+		<html:option value="1" class="cbooption" <logic:equal name="dtoCustomerSex" value="1">selected</logic:equal>>Female</html:option>
+	    </html:select>
+	</logic:notEmpty>
+
+
 
 
 
@@ -56,6 +83,18 @@
 			
 			
 			
+			<logic:empty name="dtoCustomerSex">
+			  <div class="edit-container__content-Sex edit-container__btnContent-margin">
+			    <div class="edit-container__content-Sexlable edit-container__headerText">Sex</div>
+			    <html:select property="SEX" styleClass="cbooption" id="cboSex">
+			      <option value=""></option>
+			      <option value="0" <logic:equal name="sexUserEdit" value="0">selected</logic:equal>>Male</option>
+			      <option value="1" <logic:equal name="sexUserEdit" value="1">selected</logic:equal>>Female</option>
+			    </html:select>
+			  </div>
+			</logic:empty>
+
+			
 			
 T002
 
@@ -71,6 +110,30 @@ T002
 				<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%=(Integer.parseInt(request.getAttribute("tag").toString()) - 1) %>"><</a></button>
 			<%} %>
 		</logic:notEmpty>
+		
+		
+		
+		
+				<logic:notEmpty name="tag">
+					    <logic:notEmpty name="endP">
+						<logic:notEmpty name="index">
+						    <logic:equal name="index" value="1">
+							<button id="btnNext"><a href="/Struts-blank/T002.do?index=<%= Integer.parseInt(request.getAttribute("tag").toString()) + 1 %>">&gt;</a></button>
+							<button id="btnLast"><a href="/Struts-blank/T002.do?index=<%= request.getAttribute("endP") %>">&gt;&gt;</a></button>
+						    </logic:equal>
+						    <logic:notEqual name="index" value="1">
+							<button id="btnNext"><a href="/Struts-blank/T002.do?index=<%= Integer.parseInt(request.getAttribute("tag").toString()) + 1 %>">&gt;</a></button>
+							<button id="btnLast"><a href="/Struts-blank/T002.do?index=<%= request.getAttribute("endP") %>">&gt;&gt;</a></button>
+							<button id ="btnFirst"><a href="/Struts-blank/T002.do?index=<%=1 %>">&gt;&gt;</a></button>
+							<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%= Integer.parseInt(request.getAttribute("tag").toString()) - 1 %>"><</a></button>
+						    </logic:notEqual>
+						</logic:notEmpty>
+					    </logic:notEmpty>
+					</logic:notEmpty>
+
+
+
+		
 		
 		
 		
