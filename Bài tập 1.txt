@@ -1,3 +1,420 @@
+<%@ taglib uri="/tags/struts-bean" prefix="bean" %>
+<%@ taglib uri="/tags/struts-html" prefix="html" %>
+<%@ taglib uri="/tags/struts-logic" prefix="logic" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>  
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<style type="text/css">
+  <%@include file="/WEB-INF/css/T001.css"%>
+</style>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/T003.css"%>
+</style>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/common.css"%>
+</style>
+<title>Edit - Training</title>
+</head>
+<body>
+	<div id="main">
+		<div class="header">
+			<h3 class="header-text">Training</h3>
+			<div class="header-br"></div>
+		</div>
+		<div class = "edit-container">
+			<div class = "edit-container__header">
+				<span class = "edit-container__headerText edit-container__headerText">Login > Search Customer > Edit Customer Info</span>
+				<div class = "edit-container__wellcom">
+				<div class = "edit-container__wellcomLeft edit-container__headerText">
+				Welcome
+				<logic:present name="namenamewellcom">
+					<div class = "edit-container__wellcomname">
+						<bean:write name="namenamewellcom"/>
+					</div>
+				</logic:present>
+				</div>
+					<div class = "edit-container__wellcomRight edit-container__headerText">
+						<a href ="/Struts-blank/pages/T001.jsp" onclick = "Logout() ">Log Out</a>
+					</div>
+				</div>
+			<logic:empty name="dtoCustomerId">
+				<div class = "line-br">Add New</div>
+			</logic:empty>
+			<logic:notEmpty name="dtoCustomerId">
+				<div class = "line-br">Edit</div>
+			</logic:notEmpty>
+		</div>
+	<form action = "/Struts-blank/T003.do" method = "POST">
+		<div class = "edit-container__content">
+			<div class = "edit-container__content--error">
+				<html:errors/>
+			</div>
+			
+			<div class = "edit-container__content-Id">
+				<div class = "edit-container__content-IdText edit-container__headerText">Customer Id</div>
+			<logic:notEmpty name="dtoCustomerId">
+				<label for="userId"  class = "edit-container__content-IdLable edit-container__headerText" id = "lblCustomerID" ><bean:write name="dtoCustomerId"/></label>
+				<input type="hidden"  type="text" name ="CUSTOMER_ID" id ="userId" value="<bean:write name="dtoCustomerId"/>"/>
+			</logic:notEmpty>
+			<logic:empty name="dtoCustomerId">
+				 <html:hidden property="CUSTOMER_ID" value="<bean:write name='dtoCustomerId'/>"/>
+				 <label for="userId" class = "edit-container__content-IdLable edit-container__headerText" id ="lblCustomerID"></label>
+			</logic:empty>
+		</div>
+			<div class = "edit-container__content-Name">
+				<label class = "edit-container__contentName-input edit-container__headerText">Customer Name</label>
+				<logic:notEmpty name="dtoCustomerName">
+					<input id = "txtCustomerName" type="text" class = "form-with__input" name = "CUSTOMER_NAME" maxlength="50" value = "<bean:write name="dtoCustomerName"/>"/>
+				</logic:notEmpty>
+				<logic:empty name="dtoCustomerName">
+					<input id = "txtCustomerName" type="text" class = "form-with__input" name = "CUSTOMER_NAME" maxlength="50" value =""/>
+				</logic:empty>
+			</div>
+			
+			<logic:notEmpty name="dtoCustomerSex">
+				<div class = "edit-container__content-Sex edit-container__btnContent-margin">
+					<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
+				   <select  id="cboSex" name = "SEX">
+				        <option value="" class="cbooption"></option>
+				        <option class="cbooption" <logic:equal name="dtoCustomerSex" value="0">selected</logic:equal>>Male</option>
+					  	<option class="cbooption" <logic:equal name="dtoCustomerSex" value="1">selected</logic:equal>>Female</option>
+					</select>
+				</div>
+			</logic:notEmpty>
+			<logic:empty name="dtoCustomerSex">
+				<div class = "edit-container__content-Sex edit-container__btnContent-margin">
+				<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
+				  <select id="cboSex" name="SEX">
+				    <option value="" class="cbooption"></option>
+				    <option class = "cbooption" value="0">Male</option>
+				    <option class = "cbooption" value="1">Female</option>
+				  </select>
+			</div>
+			</logic:empty>
+			<div class = "edit-container__content-Birthday edit-container__btnContent-margin">
+				<div class = "edit-container__contentBirthday-input edit-container__headerText">Birthday</div>
+				<logic:empty name="dtoCustomerBirthDay">
+					<input id = "txtCustomerBirthday"  class = "form-with__input" name = "BIRTHDAY" maxlength ="10" value= ""/>
+				</logic:empty>
+				<logic:notEmpty name="dtoCustomerBirthDay">
+					<input id = "txtCustomerBirthday"  class = "form-with__input" value="<bean:write name="dtoCustomerBirthDay"/>" name = "BIRTHDAY" maxlength="10"/>
+				</logic:notEmpty>
+			</div>
+			<div class = "edit-container__content-Email edit-container__btnContent-margin">
+				<div class = "edit-container__contentEmail-input edit-container__headerText">Email</div>
+				<logic:notEmpty name="dtoCustomerEmail">
+					<input id ="txtCustomerEmail" type="text"  class = "form-with__input" name ="EMAIL" maxlength="40" value="<bean:write name="dtoCustomerEmail"/>" />
+				</logic:notEmpty>
+				<logic:empty name="dtoCustomerEmail">
+					<input id = "txtCustomerEmail" type="text" class = "form-with__input" name ="EMAIL" maxlength="40" value=""/>
+				</logic:empty>
+			</div>
+			
+			<div class = "edit-container__content-Address edit-container__btnContent-margin">
+				<div class = "test-aline__editAddress">				
+					<div class = "edit-container__contentAddress-input edit-container__headerText">Address</div>
+				</div>
+				<logic:empty  name="dtoCustomerAddress">
+					<textarea id="txaAddress" rows="3"  name ="ADDRESS"></textarea>
+				</logic:empty>
+				<logic:notEmpty name="dtoCustomerAddress">
+					<textarea id="txaAddress"  name ="ADDRESS"><bean:write name="dtoCustomerAddress"/></textarea>
+				</logic:notEmpty>
+			</div>
+			<div class = "edit-container__btnContent">
+				<button type = "submit" class = "edit-container__btnContent-Save">Save</button>
+				<button  id = "btnClearEdit" class = "edit-container__btnContent-Clear">Clear</button>
+			</div>
+		</div>
+	</form>
+		</div>
+		<div class="footer">
+			<div class="header-br"></div>
+			<div class="footer-text__copyright">Copyright (c) 2000-2008
+			FUJINET, All Rights Reserved.</div>
+		</div>
+	</div>
+	<script>
+		<%@include file ="/WEB-INF/js/T003.js"%>
+	</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<%@ taglib uri="/tags/struts-bean" prefix="bean" %>
+<%@ taglib uri="/tags/struts-html" prefix="html" %>
+<%@ taglib uri="/tags/struts-logic" prefix="logic" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page import="javax.servlet.http.HttpServletResponse" %>
+<title>Search - Training</title>
+</head>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/common.css"%>
+</style>
+<style type="text/css">
+  <%@include file="/WEB-INF/css/T002.css"%>
+</style>
+<style type="text/jsp">
+  <%@include file="/WEB-INF/include/header.jsp"%>
+</style>
+<body>
+
+<div class = "search-container">
+	<div class = "search-container__dan">
+		<div class = "search-container__text search-container__text_text">
+			Login > Search Customer
+		</div>
+	<div class = "search-container__context">
+				<div class = "search-container__logo">
+				Welcome
+				<logic:notEmpty name="namenamewellcom">
+				    <div class="search-container__logo--wellcomname">
+				        <bean:write name="namenamewellcom"/>
+				    </div>
+				</logic:notEmpty>
+				</div>
+			<a href = "/Struts-blank/pages/T001.jsp" class = "search-container__logout search-container__text_text" onclick = "Logout() ">
+    			Log Out
+			</a>
+	</div>
+	<div class = "search-container__line"></div>
+<form id ="form-Search" action ="/Struts-blank/T002.do" method = "POST" >
+	<div class = "search-container__handalSearch">
+		<div class = "search-container__handalSearch--margin handalSearch-customerName">
+			<div class = "handalSearch-customercommon handalSearch-customerName__text search-container__text_text">Customer Name</div>
+			<logic:empty name="nameSearch">
+				<input id = "txtCustomerName" name = "CUSTOMER_NAME" maxLength = "50"/>
+			</logic:empty>
+			<logic:notEmpty name="nameSearch">
+				<input id = "txtCustomerName" name = "CUSTOMER_NAME" value ="<bean:write name="nameSearch"/>" maxLength = "50"/>
+			</logic:notEmpty>
+		</div>
+		<logic:empty name="sexSearch">
+			<div class = "search-container__handalSearch--margin handalSearch-customerSex">
+				<div class = "handalSearch-customercommon handalSearch-customerSex__text search-container__text_text">Sex</div>
+				<select name="SEX" id = "cboSex">
+					<option value=""></option>
+			      	<option value="0">Male</option>
+			     	<option value="1">Female</option>
+				</select>
+			</div>
+		</logic:empty>
+		<logic:notEmpty name="sexSearch">
+			<div class="search-container__handalSearch--margin handalSearch-customerSex">
+			  <div class="handalSearch-customercommon handalSearch-customerSex__text search-container__text_text">Sex</div>
+			  <select name="SEX" id="cboSex">
+			    <option value=""></option>
+			    <option value="0">Male</option>
+			    <option value="1">Female</option>
+			  </select>
+			</div>
+		</logic:notEmpty>
+		<div class = "search-container__handalSearch--margin handalSearch-BirthdayFrom">
+			<div class = "handalSearch-customercommon handalSearch-BirthdayFrom__text search-container__text_text">Birthday</div>
+			
+			<logic:present name="dataFrom" scope="request">
+			  <logic:notPresent name="birthDayFromFrom" scope="request">
+			    <input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<bean:write name="dataFrom"/>" name ="BIRTHDAYFROM"  maxLength = "10"/>
+			  </logic:notPresent>
+			</logic:present>
+				<logic:notEmpty name="birthdayFromSearch">
+					<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<bean:write name="birthdayFromSearch"/>" name ="BIRTHDAYFROM"  maxLength = "10"/>
+				</logic:notEmpty>
+			<logic:notPresent name="dataFrom" scope="request">
+				<logic:notPresent name="birthDayFromFrom" scope="request">
+					<logic:notPresent name="birthdayFromSearch" scope="request">
+						<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" name = "BIRTHDAYFROM"  maxLength = "10"/>
+					</logic:notPresent>
+				</logic:notPresent>
+			</logic:notPresent>
+			<logic:notEmpty name="birthDayFromFrom">
+				<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<bean:write name="birthDayFromFrom"/>" name ="BIRTHDAYFROM"  maxLength = "10"/>
+			</logic:notEmpty>
+			<label class = "handalSearch-BirthdayFrom__ngangcach">～</label>
+			<logic:notPresent name="dataTo">
+				<logic:notPresent name="birthDayToTo">
+					<logic:notPresent name="birthdayToSearch">
+						<input id = "txtBirthdayTo" class = "txtCustomerValidateTO" name = "BIRTHDAYTO" maxLength = "10"/>
+					</logic:notPresent>
+				</logic:notPresent>
+			</logic:notPresent>
+			<logic:notEmpty name="dataTo">
+				<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<bean:write name="dataTo"/>" name = "BIRTHDAYFROM"  maxLength = "10"/>
+			</logic:notEmpty>
+			<logic:notEmpty name="birthdayToSearch">
+				<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<bean:write name="birthdayToSearch"/>" name = "BIRTHDAYTO"  maxLength = "10"/>
+			</logic:notEmpty>
+			<logic:notEmpty name="birthDayToTo">
+				<input id = "txtBirthdayForm" class = "txtCustomerValidateFROM" value="<bean:write name="birthDayToTo"/>" name = "txtBirthdayFromName"  maxLength = "10"/>
+			</logic:notEmpty>
+		</div>
+		<div class = "handalSearch-btnSearch">
+			<input name="ACTION" value="Search" type = "submit" id = "btnSearch"/>
+		</div>
+	</div>
+	<div class = "search-container__btnContext--chuyenhuong">
+		<div class = "search-container__btnContext--start">
+		<logic:empty name="ListData">
+			<a href="#" id = "btnFirst" style="pointer-events: none;">&lt;&lt;</a>
+			<a href="#" id ="btnPrevious" style="pointer-events: none;">&lt;</a>
+		</logic:empty>
+		<logic:notEmpty name = "ListData">
+			<logic:equal name="tag" value="1">
+				<a href="#" id ="btnFirst" style="pointer-events: none;">&lt;&lt;</a>
+				<a href="#" id ="btnPrevious" style="pointer-events: none;">&lt;</a>
+			</logic:equal>
+			<logic:greaterThan name="tag" value="1" scope="request">
+				<logic:lessEqual name="tag" value="endP" scope="request">
+					<a id="btnFirst" href="/Struts-blank/T002.do?index=1">&lt;&lt;</a>
+					<input type="submit" id="btnPrevious" name="ACTION" value="<"/>
+					<a id="btnPrevious" href="/Struts-blank/T002.do?index=">&lt;</a>
+					
+				</logic:lessEqual>
+			</logic:greaterThan>
+		</logic:notEmpty>
+		<label class = "search-container__btnContext--textstart search-container__text_text">Previous</label>
+	</div>
+	<div class = "search-container__btnContext--end">
+		<label class = "search-container__btnContext--textend search-container__text_text">Next</label>
+		<logic:empty name="ListData">
+			<a href="#" id = "btnNext" style="pointer-events: none;">&gt;</a>
+			<a href="#" id="btnPrevious" style="pointer-events: none;">&gt;&gt;</a>
+		</logic:empty>
+		<logic:notEmpty name="ListData">
+			<logic:greaterEqual name="tag" value="endP">
+				<a href="#" id = "btnNext" style="pointer-events: none;">&gt;</a>
+				<a href="#" id="btnPrevious" style="pointer-events: none;">&gt;&gt;</a>
+			</logic:greaterEqual>
+			<logic:lessThan name="tag" value="endP">
+				<a id="btnPrevious" href="/Struts-blank/T002.do?index=<%=Integer.parseInt(request.getAttribute("tag").toString()) + 1 %>">&gt;</a>
+				<input type="submit" id="btnPrevious" name="ACTION" value=">"/>
+				<a id="btnNext" href="/Struts-blank/T002.do?index=<bean:write name="endP"/>">&gt;&gt;</a>
+			</logic:lessThan>	
+		</logic:notEmpty>	
+		</div>
+	</div>
+	<table class = "search-container__table">
+        <tr class = "search-container__table--tieude">
+        	<th class = "searchtable-trcheck"><input type="checkbox" id = "checkAll" name="checkboxAll" value="" onclick = "checkBox(this)"></th>
+            <th class = "searchtable-trid">Customer ID</th>
+            <th class = "searchtable-trname">Customer Name</th>
+            <th class = "searchtable-trsex">Sex</th>
+            <th class = "searchtable-trbirthday">Birthday</th>
+            <th class = "searchtable-traddress">Address</th>
+        </tr>
+<logic:notEmpty name="ListSearch">
+	<logic:iterate id="dept" name="ListSearch">
+        <tr>
+            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"></td>
+            <td><a href="/Struts-blank/T003.do?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
+            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
+            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY' /></td>
+            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS' /></td>
+        </tr>
+    </logic:iterate>
+</logic:notEmpty>
+<logic:empty name="ListData">
+	
+</logic:empty>
+<logic:notEmpty name="ListData">
+	<logic:iterate name="ListData" id="dept">
+	        <tr>
+	            <td class="searchtable-check"><input type="checkbox" name="checkboxAll" value="<bean:write name='dept' property='CUSTOMER_ID'/>"></td>
+	            <td><a href="/Struts-blank/T003.do?id=<bean:write name='dept' property='CUSTOMER_ID' />" class="searchtable-id"><bean:write name='dept' property='CUSTOMER_ID' /></a></td>
+	            <td class="searchtable-name"><bean:write name='dept' property='CUSTOMER_NAME' /></td>
+	            <td class="searchtable-sex"><bean:write name='dept' property='SEX' /></td>
+	            <td class="searchtable-birthday"><bean:write name='dept' property='BIRTHDAY' /></td>
+	            <td class="searchtable-address"><bean:write name='dept' property='ADDRESS' /></td>
+	        </tr>
+	    </logic:iterate>
+</logic:notEmpty>
+    </table>
+    <div class = "search-btn__form">
+		<a class ="search-container__nav-btnAddNew" href="/Struts-blank/pages/T003.jsp">Add new</a>
+	 <logic:notEmpty name="ListData">
+	 		<button type="button" class="search-container__delete" onclick="deleteRows()">Delete</button>
+	</logic:notEmpty>
+	<logic:empty name="ListData">
+		<button type="button" disabled style="pointer-events: none;" class="search-container__delete" onclick="deleteRows()">Delete</button>
+	</logic:empty>		
+    </div>
+	</form>
+	</div>
+	<footer class="footer">
+		<div class="header-br"></div>
+		<div class="footer-text__copyright">Copyright (c) 2000-2008
+			FUJINET, All Rights Reserved.</div>
+	</footer>
+</div>
+<logic:notEmpty name="dataFrom" >
+<script type="text/javascript">
+	window.onload = function() {
+		alert('<bean:message key="MESSAGE_ERROR_FROM"/>');
+	};
+</script>
+</logic:notEmpty>
+
+<logic:notEmpty name="dataTo">
+<script type="text/javascript">
+	window.onload = function () {		
+		alert('<bean:message key="MESSAGE_ERROR_TO"/>');
+	};
+</script>
+</logic:notEmpty>
+
+<logic:notEmpty name="birthDayFromFrom" >
+	<logic:notEmpty name="birthDayToTo">
+		<script type="text/javascript">
+			window.onload = function () {	
+				alert('<bean:message key="MESSAGE_ERROR_FROM_BIGGER_TO"/>');
+			};
+		</script>
+	</logic:notEmpty>
+</logic:notEmpty>
+
+<script>
+	<%@include file="/WEB-INF/js/T002.js"%>
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 package fjs.cs.action;
 import java.io.IOException;
