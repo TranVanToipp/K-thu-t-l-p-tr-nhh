@@ -1,3 +1,120 @@
+<logic:notEmpty name="namenamewellcom">
+	<div class = "edit-container__wellcomname">
+		<%="  "+session.getAttribute("namenamewellcom") %>
+	</div>
+</logic:notEmpty>
+
+
+<input hidden type="text" name ="CUSTOMER_ID" id ="userId" value="<bean:write name="dtoCustomerId"/>"/>
+
+
+
+<logic:empty name="dtoCustomerId">
+				<%
+				  Object idUserObj = request.getAttribute("idUser");
+				  String idUserError = idUserObj == null ? "" : idUserObj.toString();
+				%>
+				<input hidden type="text" name ="CUSTOMER_ID" id ="userId" value="<bean:write name="dtoCustomerId"/>"/>
+				
+				<lable for="userId" class = "edit-container__content-IdLable edit-container__headerText" id ="lblCustomerID" name = "lblCustomerID"><%=idUserError %></lable>			
+			</logic:empty>
+				
+				
+				
+				
+<logic:notEmpty name="dtoCustomerSex">
+<%Object sexEdit = request.getAttribute("dtoCustomerSex"); %>
+<div class = "edit-container__content-Sex edit-container__btnContent-margin">
+	<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
+	<select  id="cboSex" name = "SEX">
+	   <option value="" class="cbooption"></option>
+	  <option class="cbooption" value="0" <% if(sexEdit.equals("0")) out.print("selected"); %> >Male</option>
+	  <option class="cbooption" value="1" <% if(sexEdit.equals("1")) out.print("selected"); %> >Female</option>
+	</select>
+</div>
+</logic:notEmpty>
+
+
+
+
+
+<logic:empty name="dtoCustomerSex">
+				<div class = "edit-container__content-Sex edit-container__btnContent-margin">
+				<div class = "edit-container__content-Sexlable edit-container__headerText">Sex</div>
+				  <select id="cboSex" name="SEX">
+				  	<%
+					  Object sexUserObj = request.getAttribute("sexUserEdit");
+					%>
+				    <option value="" class="cbooption"></option>
+				    <option class = "cbooption" value="0" <% if(sexUserObj !=null && sexUserObj.equals("0")) out.print("selected"); %>>Male</option>
+				    <option class = "cbooption" value="1" <% if(sexUserObj !=null && sexUserObj.equals("1")) out.print("selected"); %>>Female</option>
+				  </select>
+			</div>
+			</logic:empty>
+			
+			
+			
+			
+			
+			
+T002
+
+
+
+</logic:equal>
+			<%
+				String tag = String.valueOf(request.getAttribute("tag"));
+				String endP = String.valueOf(request.getAttribute("endP"));
+			%>
+			<%if (Integer.parseInt(tag) > 1 && Integer.parseInt(tag) <= Integer.parseInt(endP)) { %>
+				<button id ="btnFirst"><a href="/Struts-blank/T002.do?index=<%=1 %>">&gt;&gt;</a></button>
+				<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%=(Integer.parseInt(request.getAttribute("tag").toString()) - 1) %>"><</a></button>
+			<%} %>
+		</logic:notEmpty>
+		
+		
+		
+		
+		
+<logic:notEmpty name="ListData">
+			<%
+				String enadP = String.valueOf(request.getAttribute("endP"));
+				String tagg = String.valueOf(request.getAttribute("tag"));
+				if (Integer.parseInt(tagg) >= Integer.parseInt(enadP)) {
+					%>
+					<button id = "btnNext" disabled style="pointer-events: none;"><a href="#">></a></button>
+					<button id="btnPrevious" disabled style="pointer-events: none;"><a href="#">>></a></button>
+				<% }%>
+				<%String listDataSearch = String.valueOf("ListSearch"); %>
+			
+				<%if (Integer.parseInt(tagg) < Integer.parseInt(enadP)) {%>
+					<button id="btnPrevious"><a href="/Struts-blank/T002.do?index=<%=(Integer.parseInt(request.getAttribute("tag").toString()) + 1) %>">></a></button>
+				    <button id="btnNext"><a href="/Struts-blank/T002.do?index=<%=request.getAttribute("endP")%>">>></a></button>			   
+				<%} %>
+		</logic:notEmpty>	
+		
+		
+		
+		
+		
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <%=(Integer.parseInt(request.getAttribute("tag").toString()) - 1) %>">
 
 
