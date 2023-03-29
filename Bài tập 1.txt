@@ -1,3 +1,21 @@
+<%@ taglib prefix="struts" uri="http://struts.apache.org/tags-struts" %>
+
+<struts:bean id="tagValue" type="java.lang.Integer">
+  <struts:setProperty property="intValue" value="%{#request.tag}" />
+</struts:bean>
+
+<struts:define name="previousIndex" value="#tagValue.intValue - 1" />
+
+<a id="btnPrevious" href="/Struts-blank/T002.do?index=<struts:property value='previousIndex' />">&lt;</a>
+
+
+
+
+
+
+
+
+
 <%@ taglib prefix="html" uri="http://struts.apache.org/tags-html" %>
 <%@ taglib prefix="struts" uri="http://struts.apache.org/tags-struts" %>
 
