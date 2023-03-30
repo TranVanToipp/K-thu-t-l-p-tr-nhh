@@ -2,6 +2,9 @@ errors.add("loginError", new ActionError("LoginBean.loginnullerror.required"));
 				saveErrors(request, errors);
 
 
+ActionMessages messages = new ActionMessages();
+messages.add(ActionMessages.GLOBAL_MESSAGE, new ActionMessage("LoginBean.loginnullerror.required"));
+saveMessages(request, messages);
 
 
 
