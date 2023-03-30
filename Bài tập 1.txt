@@ -1,3 +1,11 @@
+errors.add("loginError", new ActionError("LoginBean.loginnullerror.required"));
+				saveErrors(request, errors);
+
+
+
+
+
+
 <%
     // Lấy đối tượng HttpSession
     HttpSession session = request.getSession();
